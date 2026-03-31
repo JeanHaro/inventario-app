@@ -1,0 +1,37 @@
+<div class="card" [class]="'card ' + estadoClass">
+  <div class="card-header">
+    <h3>{{ producto().nombre }}</h3>
+    <span class="precio">{{ producto().precio | currency:'PEN':'S/. ' }}</span>
+  </div>
+
+
+  <div class="card-body">
+    <ul>
+      @for (variante of producto().variantes; track variante) {
+        <li>
+          {{ variante[0] }} / {{ variante[1] }} - Stock: {{ variante[2] }}
+        </li>
+      }
+    </ul>
+  </div>
+
+  <div class="card-footer">
+    <select (change)="onEstadoChange($event)">
+      <option
+        [value]="EstadoProducto.Disponible"
+        [selected]="producto().estado === EstadoProducto.Disponible"
+      >Disponible</option>
+      <option
+        [value]="EstadoProducto.Agotado"
+        [selected]="producto().estado === EstadoProducto.Agotado"
+      >Agotado</option>
+      <option
+        [value]="EstadoProducto.Descontinuado"
+        [selected]="producto().estado === EstadoProducto.Descontinuado"
+      >Descontinuado</option>
+    </select>
+
+    <button (click)="onEliminar()">Eliminar</button>
+  </div>
+</div>
+

@@ -1,0 +1,40 @@
+<div class="dashboard">
+  <h1>📦 Dashboard de Inventario</h1>
+
+  <!-- Estadísticas con getters -->
+  <ul>
+    <li>Total de productos: {{ productos.length }}</li>
+    <li>Disponibles: {{ totalDisponibles }}</li>
+    <li>Agotados: {{ totalAgotados }}</li>
+  </ul>
+
+  <app-dashboard-filtros
+    [productos]="productos"
+    (categoriaChange)="categoriaSeleccionada.set($event)"
+  ></app-dashboard-filtros>
+
+  <button (click)="toggleFormulario()">➕ Agregar Producto</button>
+
+  <!-- Formulario -->
+  @if (mostrarFormulario) {
+    <app-dashboard-form
+      (productoCreado)="onProductoCreado($event)"
+      (cancelar)="toggleFormulario()"
+    ></app-dashboard-form>
+  }
+
+  <!-- Tabla FUERA del @for -->
+  @if (productosFiltrados.length === 0) {
+    <p>No hay productos en esta categoría.</p>
+  } @else {
+    <div class="cards-grid">
+      @for (producto of productosFiltrados; track producto.id) {
+        <app-dashboard-producto-card
+          [producto]="producto"
+          (estadoChange)="onEstadoChange($event.id, $event.evento)"
+          (eliminar)="eliminarProducto($event)"
+        ></app-dashboard-producto-card>
+      }
+    </div>
+  }
+</div>
