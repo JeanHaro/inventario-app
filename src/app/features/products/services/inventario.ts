@@ -6,7 +6,7 @@ import {
   EstadoProducto,
   Variante,
   Producto
-} from '../models/producto.model';
+} from '../features/products/products.model';
 
 @Injectable({
   providedIn: 'root',

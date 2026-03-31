@@ -4,18 +4,18 @@ import { Component, OnInit, signal } from '@angular/core';
 import {
   EstadoProducto,
   Producto
-} from '../../models/producto.model';
+} from './models/products.model';
 
 // Servicios
-import { InventarioService } from '../../services/inventario';
+import { InventarioService } from './services/inventario';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-products',
   standalone: false,
-  templateUrl: './dashboard.html',
-  styleUrl: './dashboard.scss',
+  templateUrl: './products.html',
+  styleUrl: './products.scss',
 })
-export class Dashboard implements OnInit {
+export class Products implements OnInit {
   // Propiedades
   productos: Producto[] = [];
   categoriaSeleccionada= signal<string>('Todas');

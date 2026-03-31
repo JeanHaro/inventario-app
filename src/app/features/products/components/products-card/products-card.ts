@@ -4,15 +4,15 @@ import { Component, input, output } from '@angular/core';
 import {
   EstadoProducto,
   Producto
-} from '../../models/producto.model';
+} from '../../models/products.model';
 
 @Component({
-  selector: 'app-dashboard-producto-card',
+  selector: 'app-products-card',
   standalone: false,
-  templateUrl: './producto-card.html',
-  styleUrl: './producto-card.scss',
+  templateUrl: './products-card.html',
+  styleUrl: './products-card.scss',
 })
-export class ProductoCard {
+export class ProductsCard {
   // Propiedades
   producto = input.required<Producto>();
   estadoChange = output<{ id: number, evento: Event }>();

@@ -1,14 +1,15 @@
 import { Component, input,  output } from '@angular/core';
 
-import { Categoria, Producto } from '../../models/producto.model';
+// Modelos
+import { Categoria, Producto } from '../../models/products.model';
 
 @Component({
-  selector: 'app-dashboard-filtros',
+  selector: 'app-products-filtros',
   standalone: false,
-  templateUrl: './filtros.html',
-  styleUrl: './filtros.scss',
+  templateUrl: './products-filters.html',
+  styleUrl: './products-filters.scss',
 })
-export class Filtros {
+export class ProductsFilters {
     // Propiedades
     categorias: string[] = Object.values(Categoria);
 

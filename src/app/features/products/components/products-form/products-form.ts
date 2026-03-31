@@ -1,17 +1,19 @@
 import { Component, output } from '@angular/core';
+
+// Modelos
 import {
   Categoria,
   EstadoProducto,
   Producto
-} from '../../models/producto.model';
+} from '../../models/products.model';
 
 @Component({
-  selector: 'app-dashboard-form',
+  selector: 'app-products-form',
   standalone: false,
-  templateUrl: './form.html',
-  styleUrl: './form.scss',
+  templateUrl: './products-form.html',
+  styleUrl: './products-form.scss',
 })
-export class Form {
+export class ProductsForm {
   // Propiedades
   categorias: string[] = Object.values(Categoria);
   nuevoProducto: Partial<Producto> = {

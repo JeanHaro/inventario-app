@@ -8,19 +8,19 @@
     <li>Agotados: {{ totalAgotados }}</li>
   </ul>
 
-  <app-dashboard-filtros
+  <app-products-filtros
     [productos]="productos"
     (categoriaChange)="categoriaSeleccionada.set($event)"
-  ></app-dashboard-filtros>
+  ></app-products-filtros>
 
   <button (click)="toggleFormulario()">➕ Agregar Producto</button>
 
   <!-- Formulario -->
   @if (mostrarFormulario) {
-    <app-dashboard-form
+    <app-products-form
       (productoCreado)="onProductoCreado($event)"
       (cancelar)="toggleFormulario()"
-    ></app-dashboard-form>
+    ></app-products-form>
   }
 
   <!-- Tabla FUERA del @for -->
@@ -29,11 +29,11 @@
   } @else {
     <div class="cards-grid">
       @for (producto of productosFiltrados; track producto.id) {
-        <app-dashboard-producto-card
+        <app-products-card
           [producto]="producto"
           (estadoChange)="onEstadoChange($event.id, $event.evento)"
           (eliminar)="eliminarProducto($event)"
-        ></app-dashboard-producto-card>
+        ></app-products-card>
       }
     </div>
   }
