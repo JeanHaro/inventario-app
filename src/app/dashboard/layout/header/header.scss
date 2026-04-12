@@ -1,0 +1,221 @@
+  // ------------------
+  // Header
+  // ------------------
+.header {
+  position: relative; // Ancestro del search--mobile
+
+  z-index: 10;
+
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    height: 7rem;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+
+    background-color: var(--color-blanco-1);
+
+    z-index: 2;
+  }
+
+  // ------------------
+  // Menubar
+  // ------------------
+  &__menubar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+    box-shadow: 0 0.1rem 0.3rem rgba(0, 29, 61, 0.5);
+
+    transform: rotate(0);
+
+    &:active {
+      box-shadow: 0 0.1rem 0.2rem rgba(0, 29, 61, 0.3);
+    }
+  }
+
+  &__bar {
+    height: 0.1rem;
+    background-color: var(--color-primario);
+
+    transition: all 0.2s ease;
+
+    &--1 {
+      width: 1rem;
+      transform: translate(0.4rem, -0.1rem) rotate(35deg);
+
+      .header__menubar.active & {
+        width: 0.7rem;
+        transform: translate(0.4rem, -0.1rem) rotate(135deg);
+      }
+    }
+
+    &--2 {
+      width: 1rem;
+      transform: translate(0.4rem, 0.3rem) rotate(-35deg);
+
+      .header__menubar.active & {
+        width: 0.7rem;
+        transform: translate(0.4rem, 0.3rem) rotate(-135deg);
+      }
+    }
+
+    &--3 {
+      width: 0.7rem;
+      transform: translate(-0.4rem, -0.2rem) rotate(35deg);
+
+      .header__menubar.active & {
+        width: 1rem;
+        transform: translate(-0.4rem, -0.4rem) rotate(135deg);
+      }
+    }
+
+    &--4 {
+      width: 0.7rem;
+      transform: translate(-0.4rem, 0rem) rotate(-35deg);
+
+      .header__menubar.active & {
+        width: 1rem;
+        transform: translate(-0.4rem, 0.1rem) rotate(-135deg);
+      }
+    }
+  }
+
+  // ------------------
+  // Herramientas
+  // ------------------
+  &__tools {
+    display: flex;
+    align-items: center;
+    gap: 3.5rem;
+
+    margin-right: 2rem;
+
+    &-btn {
+      position: relative;
+
+      background-color: transparent;
+
+      padding: 0;
+
+      // Cuando el botón tiene la clase .dark
+      &.dark {
+        .header__tools-icon--sun {
+          opacity: 0;
+          transform: rotate(90deg) scale(0.5);
+        }
+
+        .header__tools-icon--moon {
+          opacity: 1;
+          transform: rotate(0deg) scale(1);
+        }
+      }
+    }
+
+    &-icon  {
+      &:hover {
+        animation: rotateBell 0.5s infinite alternate forwards cubic-bezier(.49,.8,.94,.77);
+      }
+
+      &--sun,
+      &--moon {
+        position: absolute;
+
+        transition: opacity 0.3s ease, transform 0.4s ease;
+
+        &:hover {
+          animation: none;
+        }
+      }
+
+      &--sun {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+      }
+
+      &--moon {
+        opacity: 0;
+        transform: rotate(-90deg) scale(0.5);
+      }
+    }
+  }
+
+  // ------------------
+  // Buscador
+  // ------------------
+  &__search {
+    @media (min-width: 768px) {
+      position: relative;
+
+      .header__tools-btn {
+        position: absolute;
+        right: 1rem;
+        top: 0;
+
+        padding: 1.4rem 0;
+      }
+    }
+
+    > input[type="text"] {
+      display: none;
+      visibility: hidden;
+
+      @media (min-width: 768px) {
+        display: block;
+        visibility: visible;
+        padding-right: 4rem;
+        width: 25rem;
+
+        background-color: var(--color-blanco-2);
+
+        transition: width 0.5s ease;
+
+        &:focus {
+          border: 1px solid var(--color-primario);
+          width: 35rem;
+        }
+      }
+    }
+
+    // ------------------
+    // Buscador (Mobile)
+    // ------------------
+    &-mobile {
+      position: absolute;
+
+      width: 100%;
+
+      transform: translateY(-7rem);
+
+      z-index: -1;
+      opacity: 0;
+      transition: all 0.5s ease;
+
+      @media (min-width: 768px) {
+        display: none;
+        visibility: hidden;
+      }
+
+      &.active {
+        opacity: 1;
+        transform: translateY(6rem);
+
+        @media (min-width: 768px) {
+          transform: translateY(-7rem);
+        }
+      }
+
+      input[type="text"] {
+        border-radius: 0 !important;
+        border-bottom: 1.5px solid #dddd;
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+      }
+    }
+  }
+}

@@ -1,1 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+// Abstracts
+@forward '../public/scss/abstracts/variables';
+
+// Base
+@forward '../public/scss/base/base';
+@forward '../public/scss/base/typography';
+@forward '../public/scss/base/utilities';
+@forward '../public/scss/base/animations';
+
+// Componentes
+@forward '../public/scss/components/input';
+@forward '../public/scss/components/buttons';

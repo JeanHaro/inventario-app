@@ -1,0 +1,17 @@
+.hidden {
+  display: none;
+  visibility: hidden;
+}
+
+.b-none {
+  border: none;
+}
+
+.o-none {
+  outline: none;
+}
+
+.none {
+  @extend .b-none;
+  @extend .o-none;
+}

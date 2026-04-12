@@ -1,3 +1,19 @@
-<app-header></app-header>
-<router-outlet></router-outlet>
-<app-footer></app-footer>
+<app-header
+  (sidebarActive)="toggleSidebar($event)"
+  [showSidebar]="showSidebar"
+></app-header>
+
+<div class="layout-body">
+  <app-sidebar
+    [class.active]="showSidebar"
+  ></app-sidebar>
+
+  <main
+    class="main-content"
+    [class.active]="showSidebar"
+    (click)="toggleSidebar($event)"
+  >
+    <router-outlet></router-outlet>
+    <app-footer></app-footer>
+  </main>
+</div>

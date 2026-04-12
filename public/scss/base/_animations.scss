@@ -1,0 +1,14 @@
+@keyframes rotateBell {
+  0% {
+    transform: rotate(10deg);
+    filter: drop-shadow(0.1rem 0.5rem rgba(0, 0, 0, 0.14));
+  }
+  50% {
+    transform: rotate(0);
+    filter: none;
+  }
+  100% {
+    transform: rotate(-10deg);
+    filter: drop-shadow(0.1rem 0.5rem rgba(0, 0, 0, 0.14));
+  }
+}

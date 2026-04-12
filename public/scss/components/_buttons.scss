@@ -1,0 +1,16 @@
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+
+  background-color: var(--color-blanco-2);
+
+  font-size: 1.8rem;
+  color: var(--color-primario);
+
+  transition: 0.5s ease;
+  cursor: pointer;
+}

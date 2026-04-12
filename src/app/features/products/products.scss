@@ -3,8 +3,10 @@
   margin: 0 auto;
   padding: 32px 24px;
   font-family: 'Segoe UI', sans-serif;
-  background-color: #f1f5f9;
-  min-height: 100vh;
+  background-color: var(--color-blanco-2);
+  max-height: calc(100vh - 12rem);
+  height: 100%;
+  overflow: hidden;
 
   h1 {
     font-size: 1.8rem;

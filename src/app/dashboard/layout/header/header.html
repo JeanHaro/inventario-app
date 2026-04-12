@@ -1,1 +1,62 @@
-<p>header works!</p>
+<header class="header">
+  <div class="header__container">
+    <button
+      [class.active]="showSidebar()"
+      class="header__menubar none btn"
+      (click)="openSidebar($event)"
+      name="sidebar-active"
+    >
+      <span class="header__bar header__bar--1"></span>
+      <span class="header__bar header__bar--2"></span>
+
+      <span class="header__bar header__bar--3"></span>
+      <span class="header__bar header__bar--4"></span>
+    </button><!-- Menubar-->
+
+    <div class="header__search-mobile" [class.active]="showSearch()">
+      <input
+        class="none input"
+        type="text"
+        placeholder="Buscar artefacto (Ej: iPhone, Lavadora, etc.)"
+        name="search"
+      >
+    </div><!-- Buscador (Mobile) -->
+
+    <div class="header__tools">
+      <div class="header__search">
+        <input
+          class="none input"
+          type="text"
+          placeholder="Buscar artefactos"
+          name="search"
+        >
+
+        <button (click)="openSearch()" class="header__tools-btn none btn">
+          <fa-icon
+            [icon]="faMagnifyingGlass"
+            class="header__tools-icon"
+          ></fa-icon>
+        </button>
+      </div><!-- Buscador -->
+
+      <button (click)="toggleDarkMode()" [class.dark]="isDarkMode()"  class="header__tools-btn none btn">
+        <fa-icon
+          [icon]="faSun"
+          class="header__tools-icon header__tools-icon--sun"
+        ></fa-icon>
+        <fa-icon
+          [icon]="faMoon"
+          class="header__tools-icon header__tools-icon--moon"
+        ></fa-icon>
+      </button><!-- Dark Mode -->
+
+      <button class="header__tools-btn none btn">
+        <fa-icon
+          [icon]="faBell"
+          class="header__tools-icon"
+        ></fa-icon>
+      </button><!-- Notificaciones -->
+
+    </div><!-- Herramientas -->
+  </div><!-- Contenedor -->
+</header><!-- Header -->

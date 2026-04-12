@@ -38,6 +38,7 @@
               }
             ],
             "styles": [
+              "public/css/normalize.css",
               "src/styles.scss"
             ]
           },

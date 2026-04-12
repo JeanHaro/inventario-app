@@ -20,8 +20,6 @@ export class ProductsForm {
     categoria: Categoria.Electronica,
   };
 
-  Categoria = Categoria;
-
   productoCreado = output<Producto>();
   cancelar = output<void>();
 

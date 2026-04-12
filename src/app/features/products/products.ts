@@ -28,7 +28,6 @@ export class Products implements OnInit {
 
   ngOnInit(): void {
     this.productos = this.inventarioService.obtenerProductos();
-    console.log(this.productos);
   }
 
   // Getters - productos filtrados según categoría seleccionada
@@ -47,7 +46,7 @@ export class Products implements OnInit {
   }
 
   // Métodos
-  onEstadoChange(id: number, event: Event): void {
+  onEstadoChange ( id: number, event: Event ): void {
     const select = event.target as HTMLSelectElement;
     const estado = +select.value as EstadoProducto;
 
