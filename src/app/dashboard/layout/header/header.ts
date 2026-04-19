@@ -25,9 +25,11 @@ export class Header {
   readonly faMoon: IconDefinition = faMoon;
   readonly faBell: IconDefinition = faBell;
 
+  // Propiedades de salida y entrada
   sidebarActive = output<Event>();
   showSidebar = input<boolean>(false);
 
+  // Propiedades
   showSearch = signal<boolean>(false);
   isDarkMode = signal<boolean>(false);
 

@@ -1,13 +1,18 @@
+<!-- HEADER -->
 <app-header
   (sidebarActive)="toggleSidebar($event)"
   [showSidebar]="showSidebar"
 ></app-header>
 
-<div class="layout-body">
+<!-- CUERPO -->
+<div class="layout-body" [class.active]="showSidebar">
+  <!-- SIDEBAR -->
   <app-sidebar
     [class.active]="showSidebar"
+    [showSidebar]="showSidebar"
   ></app-sidebar>
 
+  <!-- MAIN (Contenido) -->
   <main
     class="main-content"
     [class.active]="showSidebar"

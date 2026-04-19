@@ -1,1 +1,62 @@
-<p>sidebar works!</p>
+<!-- ================================
+  NAVEGACIÓN LATERAL (Sidebar)
+================================ -->
+<nav class="navigation">
+
+  <!-- ENLACES PRINCIPALES --->
+  <div class="navigation__main">
+
+    <!-- ENLACE -->
+    <a
+      routerLink="home"
+      routerLinkActive="active"
+      class="navigation__link"
+      [class.show]="showSidebar()"
+    >
+      <div class="navigation__link-icon">
+        <fa-icon [icon]="faHome"></fa-icon>
+      </div>
+
+      <span class="navigation__link-text">
+        Inicio
+      </span>
+    </a>
+
+    <!-- ENLACE -->
+    <a
+      routerLink="products"
+      routerLinkActive="active"
+      class="navigation__link"
+      [class.show]="showSidebar()"
+    >
+      <div class="navigation__link-icon">
+        <fa-icon [icon]="faBox"></fa-icon>
+      </div>
+
+      <span class="navigation__link-text">
+        Mis Productos
+      </span>
+    </a>
+    
+  </div>
+
+  <!-- PERFIL DE USUARIO -->
+  <div class="navigation__profile">
+    <button class="navigation__profile-btn none btn" [class.show]="showSidebar()">
+      <!-- Avatar + Nombre/Rol -->
+      <div class="navigation__profile-myself">
+          <img class="navigation__profile-img" src="./img/profile.jpg" alt="Imagen del perfil">
+
+          <div class="navigation__profile-description">
+            <span class="navigation__profile-name">Jean Haro</span>
+            <span class="navigation__profile-rol">Admin</span>
+          </div>
+      </div>
+
+      <div class="navigation__profile-icon">
+        <fa-icon [icon]="faChevronRight"></fa-icon>
+      </div>
+    </button>
+  </div>
+
+</nav>

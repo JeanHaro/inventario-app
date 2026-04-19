@@ -1,0 +1,204 @@
+// ================================
+// NAVEGACIÓN LATERAL (Sidebar)
+// ================================
+.navigation {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  height: 100%;
+
+  overflow: hidden;
+
+  // ================================
+  // ENLACES PRINCIPALES
+  // ================================
+  &__main {
+    display: flex;
+    flex-direction: column;
+
+    gap: 1.5rem;
+
+    padding: 4.5rem 1.4rem 2.5rem;
+    height: 100%;
+
+    overflow-y: scroll;
+
+    // Scrollbar oculto pero funcional
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+      display: none;
+    }
+
+  }
+
+  // ================================
+  // ENLACE
+  // ================================
+  &__link {
+    display: flex;
+    align-items: center;
+
+    gap: 1rem;
+
+    width: 100%;
+    max-width: 25rem;
+    padding: 1.4rem 1rem;
+    border-radius: 0.8rem;
+
+    cursor: pointer;
+    transition: 0.4s ease-out;
+
+    @media (min-width: 768px) {
+      gap: 3rem;
+
+      &-icon {
+        width: 1.6rem;
+      }
+    }
+
+    &:hover {
+      background-color: var(--color-primario);
+      color: var(--color-blanco-1);
+    }
+
+    &.active {
+      position: relative;
+
+      background-color: var(--color-primario);
+      color: var(--color-blanco-1);
+      box-shadow: 0px 0px 8px 1px rgba(0, 29, 61, 0.2),
+                  0px 0px 8px 2px rgba(0, 29, 61, 0.2);
+
+      &::after {
+        content: '';
+        position: absolute;
+        right: -1.4rem;
+
+        width: 1rem;
+        height: 100%;
+        background-color: var(--color-primario);
+        border-radius: 0.8rem 0 0 0.8rem;
+      }
+    }
+
+    &-text {
+      opacity: 0;
+      white-space: nowrap;
+      transition: opacity 0.4s ease-out;
+    }
+
+    // Texto visible cuando el sidebar está expandido
+    &.show {
+      .navigation__link-text {
+        opacity: 1;
+      }
+    }
+  }
+
+  // ================================
+  // PERFIL DE USUARIO
+  // ================================
+  &__profile {
+    border-top: 0.1rem solid var(--color-blanco-3);
+
+    // Botón que envuelve todo el perfil
+    &-btn {
+      position: relative;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 1rem;
+
+      width: 100%;
+      max-width: 25rem;
+      border-radius: 0;
+      background-color: transparent;
+
+      overflow: hidden;
+
+      transition: background-color 0.4s ease-out;
+
+      &:hover {
+        background-color: var(--color-blanco-2);
+
+        .navigation__profile-icon {
+          animation: moveX 0.5s ease forwards infinite alternate;
+        }
+      }
+
+      // Nombre, rol e ícono visibles cuando sidebar está expandido
+      &.show {
+        .navigation__profile-name,
+        .navigation__profile-rol,
+        .navigation__profile-icon {
+          opacity: 1;
+        }
+      }
+    }
+
+    // Agrupa avatar + Nombre/rol
+    &-myself {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      @media (min-width: 768px) {
+        gap: 2rem;
+      }
+    }
+
+    // Avatar del usuario
+    &-img {
+      margin-left: -0.5rem;
+
+      width: 5rem;
+
+      border-radius: 0.8rem;
+      vertical-align: middle;
+      box-shadow: 0px 0px 8px 1px rgba(0, 29, 61, 0.2),
+                0px 0px 8px 2px rgba(0, 29, 61, 0.2);
+
+    }
+
+    &-name,
+    &-rol {
+      display: block;
+      font-weight: 500;
+
+      white-space: nowrap;
+      text-align: left;
+
+      opacity: 0;
+      transition: opacity 0.4s ease-out;
+    }
+
+    &-name {
+      font-size: 1.4rem;
+
+      @media (min-width: 768px) {
+        font-size: 1.6rem;
+
+        margin-bottom: 0.3rem;
+      }
+    }
+
+    &-rol {
+      font-size: 1.2rem;
+    }
+
+    &-icon {
+      font-size: 1.2rem;
+
+      opacity: 0;
+      transition: opacity 0.4s ease-out;
+
+      @media (min-width: 768px) {
+        font-size: 1.4rem;
+      }
+    }
+  }
+}

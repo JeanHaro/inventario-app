@@ -1,5 +1,11 @@
+<!-- ================================
+  HEADER
+================================ -->
 <header class="header">
+  <!--- CONTENEDOR -->
   <div class="header__container">
+
+    <!-- MENUBAR -->
     <button
       [class.active]="showSidebar()"
       class="header__menubar none btn"
@@ -11,8 +17,9 @@
 
       <span class="header__bar header__bar--3"></span>
       <span class="header__bar header__bar--4"></span>
-    </button><!-- Menubar-->
+    </button>
 
+    <!-- BUSCADOR (Mobile) -->
     <div class="header__search-mobile" [class.active]="showSearch()">
       <input
         class="none input"
@@ -20,9 +27,12 @@
         placeholder="Buscar artefacto (Ej: iPhone, Lavadora, etc.)"
         name="search"
       >
-    </div><!-- Buscador (Mobile) -->
+    </div>
 
+    <!-- HERRAMIENTAS -->
     <div class="header__tools">
+
+      <!-- BUSCADOR -->
       <div class="header__search">
         <input
           class="none input"
@@ -31,32 +41,42 @@
           name="search"
         >
 
-        <button (click)="openSearch()" class="header__tools-btn none btn">
+        <button
+          (click)="openSearch()"
+          class="header__tools-btn none btn"
+        >
           <fa-icon
             [icon]="faMagnifyingGlass"
             class="header__tools-icon"
           ></fa-icon>
         </button>
-      </div><!-- Buscador -->
+      </div>
 
-      <button (click)="toggleDarkMode()" [class.dark]="isDarkMode()"  class="header__tools-btn none btn">
+      <!-- DARK MODE -->
+      <button
+        (click)="toggleDarkMode()"
+        [class.dark]="isDarkMode()"
+        class="header__tools-btn none btn"
+      >
         <fa-icon
           [icon]="faSun"
           class="header__tools-icon header__tools-icon--sun"
-        ></fa-icon>
+        ></fa-icon><!-- Light -->
+
         <fa-icon
           [icon]="faMoon"
           class="header__tools-icon header__tools-icon--moon"
-        ></fa-icon>
-      </button><!-- Dark Mode -->
+        ></fa-icon><!-- Dark -->
+      </button>
 
+      <!-- NOTIFICACIONES -->
       <button class="header__tools-btn none btn">
         <fa-icon
           [icon]="faBell"
           class="header__tools-icon"
         ></fa-icon>
-      </button><!-- Notificaciones -->
+      </button>
+    </div>
 
-    </div><!-- Herramientas -->
-  </div><!-- Contenedor -->
-</header><!-- Header -->
+  </div>
+</header>
