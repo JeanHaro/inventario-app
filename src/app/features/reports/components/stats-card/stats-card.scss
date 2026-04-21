@@ -1,0 +1,48 @@
+.stats-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: 12px;
+  border-left: 4px solid transparent;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
+  animation: fadeInUp 0.4s ease both;
+
+  // Retraso escalonado — cada card entra un poco después que la anterior
+  @for $i from 1 through 6 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{($i - 1) * 0.08}s;
+    }
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  &--blue   { border-left-color: #3b82f6; .stats-card__value { color: #3b82f6; } }
+  &--green  { border-left-color: #22c55e; .stats-card__value { color: #22c55e; } }
+  &--orange { border-left-color: #f97316; .stats-card__value { color: #f97316; } }
+  &--gray   { border-left-color: #94a3b8; .stats-card__value { color: #94a3b8; } }
+
+  &__icon  { font-size: 2rem; }
+
+  &__info  { display: flex; flex-direction: column; }
+
+  &__value {
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+
+  &__label {
+    font-size: 0.8rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+

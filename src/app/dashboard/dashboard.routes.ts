@@ -20,6 +20,10 @@ export const DashboardRoutes: Routes = [
       {
         path: 'products',
         loadChildren: () => import('../features/products/products-module').then(m => m.ProductsModule)
+      },
+      {
+        path: 'reports',
+        loadChildren: () => import('../features/reports/reports-module').then(m => m.ReportsModule)
       }
     ]
   }

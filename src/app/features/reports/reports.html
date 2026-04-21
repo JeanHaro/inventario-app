@@ -1,0 +1,108 @@
+<div class="reports">
+
+  <!-- ENCABEZADO -->
+  <div class="reports__header">
+    <h1>📊 Reportes del Inventario</h1>
+    <p>Analizá el estado actual de tus productos por categoría.</p>
+  </div>
+
+  <!-- FILTROS DE CATEGORÍA -->
+  <div class="reports__filters">
+    @for (categoria of categorias; track categoria) {
+      <button
+        class="reports__filter-btn"
+        [class.active]="categoriaSeleccionada() === categoria"
+        (click)="onCategoriaChange(categoria)"
+      >
+        {{ categoria }}
+      </button>
+    }
+  </div>
+
+  <!-- TARJETAS DE ESTADÍSTICAS -->
+  <div class="reports__stats-grid">
+    <app-stats-card
+      label="Total Productos"
+      [value]="stats().totalProducts"
+      icon="📦"
+      color="blue"
+    />
+    <app-stats-card
+      label="Disponibles"
+      [value]="stats().totalAvailable"
+      icon="✅"
+      color="green"
+    />
+    <app-stats-card
+      label="Agotados"
+      [value]="stats().totalOutOfStock"
+      icon="⚠️"
+      color="orange"
+    />
+    <app-stats-card
+      label="Descontinuados"
+      [value]="stats().totalDiscontinued"
+      icon="🚫"
+      color="gray"
+    />
+    <app-stats-card
+      label="Valor Total"
+      [value]="'S/. ' + stats().totalValue"
+      icon="💰"
+      color="blue"
+    />
+    <app-stats-card
+      label="Precio Promedio"
+      [value]="'S/. ' + stats().averagePrice"
+      icon="📈"
+      color="green"
+    />
+  </div>
+
+  <!-- PRODUCTO DESTACADO -->
+  @if (productosFiltrados().length > 0) {
+    <div class="reports__highlights">
+      <div class="reports__highlight">
+        <span>🏆 Más caro:</span>
+        <strong>{{ stats().mostExpensive.nombre }}</strong>
+        <span>S/. {{ stats().mostExpensive.precio }}</span>
+      </div>
+      <div class="reports__highlight">
+        <span>💸 Más barato:</span>
+        <strong>{{ stats().cheapest.nombre }}</strong>
+        <span>S/. {{ stats().cheapest.precio }}</span>
+      </div>
+    </div>
+  }
+
+  <!-- GUARDAR REPORTE -->
+  <div class="reports__save">
+    <h2>💾 Guardar snapshot</h2>
+    <div class="reports__save-form">
+      <input
+        type="text"
+        class="reports__input"
+        placeholder="Título del reporte..."
+        [value]="reportTitle()"
+        (input)="reportTitle.set($any($event.target).value)"
+      />
+      <button
+        class="reports__btn-save"
+        [disabled]="!reportTitle().trim()"
+        (click)="onSaveReport()"
+      >
+        Guardar reporte
+      </button>
+    </div>
+  </div>
+
+  <!-- TABLA DE REPORTES GUARDADOS -->
+  <div class="reports__saved">
+    <h2>📋 Reportes guardados</h2>
+    <app-reports-table
+      [reports]="savedReports()"
+      (onDelete)="onDeleteReport($event)"
+    />
+  </div>
+
+</div>

@@ -1,0 +1,37 @@
+<div class="reports-table">
+  @if (reports().length === 0) {
+    <p class="reports-table__empty">No hay reportes guardados aún.</p>
+  } @else {
+    <table class="reports-table__table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Título</th>
+          <th>Generado</th>
+          <th>Filtros activos</th>
+          <th>Total productos</th>
+          <th>Valor total</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (report of reports(); track report.id) {
+          <tr>
+            <td>{{ report.id }}</td>
+            <td>{{ report.title }}</td>
+            <td>{{ report.generatedAt }}</td>
+            <td>{{ report.activeFilters.join(', ') || 'Ninguno' }}</td>
+            <td>{{ report.stats.totalProducts }}</td>
+            <td>S/. {{ report.stats.totalValue }}</td>
+            <td>
+              <button
+                class="reports-table__btn-delete"
+                (click)="onDelete.emit(report.id)"
+              >🗑️</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
