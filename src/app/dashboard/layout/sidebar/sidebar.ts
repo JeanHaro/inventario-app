@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 
 import {
   IconDefinition,
@@ -25,4 +25,11 @@ export class Sidebar {
 
   // Propiedades de salida y entrada
   showSidebar = input<boolean>(false);
+
+  showProfileMenu = signal<boolean>(false);
+
+  // Métodos
+  openProfileMenu() {
+    this.showProfileMenu.set(!this.showProfileMenu())
+  }
 }

@@ -24,6 +24,14 @@ export const DashboardRoutes: Routes = [
       {
         path: 'reports',
         loadChildren: () => import('../features/reports/reports-module').then(m => m.ReportsModule)
+      },
+      {
+        path: 'profile',
+        loadChildren: () => import('../features/profile/profile-module').then(m => m.ProfileModule)
+      },
+      {
+        path: 'settings',
+        loadChildren: () => import('../features/settings/settings-module').then(m => m.SettingsModule)
       }
     ]
   }

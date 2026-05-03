@@ -7,7 +7,7 @@
     <h4>Tus notificaciones</h4>
 
     @if (hasNotifications()) {
-      <button (click)="markAllAsRead()" class="none btn b-hidden">
+      <button (click)="markAllAsRead()" class="none btn b--hidden">
         <fa-icon [icon]="faCheckDouble"></fa-icon>
         <span>Marcar todos como leído</span>
       </button>
@@ -20,7 +20,7 @@
     <button
       (click)="onFilterClick($event, 'all')"
       class="none btn"
-      [class.b-white]="activeFilter() === 'all'"
+      [class.b--white]="activeFilter() === 'all'"
     >
       <span>Todas</span>
       <span class="notification__filters-amount">
@@ -33,7 +33,7 @@
     <button
       (click)="onFilterClick($event, 'critical')"
       class="none btn"
-      [class.b-white]="activeFilter() === 'critical'"
+      [class.b--white]="activeFilter() === 'critical'"
     >
       <span>Críticas</span>
       <span class="notification__filters-amount">
@@ -46,7 +46,7 @@
     <button
       (click)="onFilterClick($event, 'warning')"
       class="none btn"
-      [class.b-white]="activeFilter() === 'warning'"
+      [class.b--white]="activeFilter() === 'warning'"
     >
       <span>Alertas</span>
       <span class="notification__filters-amount">
@@ -59,7 +59,7 @@
     <button
       (click)="onFilterClick($event, 'movements')"
       class="none btn"
-      [class.b-white]="activeFilter() === 'movements'"
+      [class.b--white]="activeFilter() === 'movements'"
     >
       <span>Movimientos</span>
       <span class="notification__filters-amount">
@@ -73,7 +73,7 @@
     <button
       (click)="onFilterClick($event, 'confirmed')"
       class="none btn"
-      [class.b-white]="activeFilter() === 'confirmed'"
+      [class.b--white]="activeFilter() === 'confirmed'"
     >
       <span>Confirmadas</span>
       <span class="notification__filters-amount">
@@ -87,7 +87,7 @@
     <button
       (click)="onFilterClick($event, 'system')"
       class="none btn"
-      [class.b-white]="activeFilter() === 'system'"
+      [class.b--white]="activeFilter() === 'system'"
     >
       <span>Sistema</span>
       <span class="notification__filters-amount">

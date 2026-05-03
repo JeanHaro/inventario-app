@@ -12,9 +12,12 @@ import { NotificationDropdown } from './layout/header/components/notification-dr
 
 import { Footer } from './layout/footer/footer';
 import { Sidebar } from './layout/sidebar/sidebar';
+// -> Componente Hijo del Sidebar
+import { ProfileMenu } from './layout/sidebar/components/profile-menu/profile-menu';
 
 // Rutas
 import { DashboardRoutes } from './dashboard.routes';
+
 
 @NgModule({
   declarations: [
@@ -24,8 +27,12 @@ import { DashboardRoutes } from './dashboard.routes';
     Sidebar,
 
     // Componentes hijos
-    NotificationDropdown
+    NotificationDropdown,
+    ProfileMenu,
   ],
-  imports: [CommonModule, FontAwesomeModule, RouterModule.forChild(DashboardRoutes)],
+  imports: [
+    CommonModule,
+    FontAwesomeModule,
+    RouterModule.forChild(DashboardRoutes)],
 })
 export class DashboardModule {}

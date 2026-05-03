@@ -14,12 +14,17 @@
   transition: 0.5s ease;
   cursor: pointer;
 
-  &.b-hidden {
+  &.b--hidden {
     background-color: transparent;
     padding: 0;
   }
 
-  &.b-white {
+  &.b--white {
     background-color: var(--color-blanco-1);
+  }
+
+  &.b--danger-hover:hover {
+      background-color: var(--notif-critical-base);
+      color: #FFFFFF;
   }
 }

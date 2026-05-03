@@ -3,13 +3,12 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
+import { Profile } from './features/profile/profile';
+import { Settings } from './features/settings/settings';
 
 @NgModule({
-  declarations: [App],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+  declarations: [App, Profile, Settings],
+  imports: [BrowserModule, AppRoutingModule],
   providers: [provideBrowserGlobalErrorListeners()],
   bootstrap: [App],
 })

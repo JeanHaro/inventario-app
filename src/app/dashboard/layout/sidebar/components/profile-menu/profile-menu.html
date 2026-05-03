@@ -1,0 +1,47 @@
+<!-- ================================
+  MENU
+================================ -->
+<div class="menu">
+  <!-- Ver perfil -->
+  <a
+    routerLink="profile"
+    routerLinkActive="active"
+    class="menu__item"
+  >
+    <div class="menu__item-icon">
+      <fa-icon [icon]="faAdressCard"></fa-icon>
+    </div>
+
+    <span class="menu__item-text">
+      Mi perfil
+    </span>
+  </a>
+
+  <!-- Configuración -->
+  <a
+    routerLink="settings"
+    routerLinkActive="active"
+    class="menu__item"
+  >
+    <div class="menu__item-icon">
+      <fa-icon [icon]="faGear"></fa-icon>
+    </div>
+
+    <span class="menu__item-text">
+      Configuración
+    </span>
+  </a>
+
+  <hr class="menu__divider">
+
+  <!-- Cerrar sesión -->
+  <button class="menu__item none btn b--danger-hover" aria-label="Cerrar sesión">
+    <div class="menu__item-icon">
+      <fa-icon [icon]="faPowerOff"></fa-icon>
+    </div>
+
+    <span class="menu__item-text">
+      Cerrar sesión
+    </span>
+  </button>
+</div>
