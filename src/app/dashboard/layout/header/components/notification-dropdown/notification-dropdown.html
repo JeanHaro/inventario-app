@@ -24,7 +24,7 @@
     >
       <span>Todas</span>
       <span class="notification__filters-amount">
-        @if ( countByTypeAndUnread().all < 99 ) { {{ countByTypeAndUnread().all }} }
+        @if ( countByTypeAndUnread().all <= 99 ) { {{ countByTypeAndUnread().all }} }
         @else { 99+ }
       </span>
     </button>
@@ -37,7 +37,7 @@
     >
       <span>Críticas</span>
       <span class="notification__filters-amount">
-        @if ( countByTypeAndUnread().critical < 99 ) { {{ countByTypeAndUnread().critical }} }
+        @if ( countByTypeAndUnread().critical <= 99 ) { {{ countByTypeAndUnread().critical }} }
         @else { 99+ }
       </span>
     </button>
@@ -50,7 +50,7 @@
     >
       <span>Alertas</span>
       <span class="notification__filters-amount">
-        @if ( countByTypeAndUnread().warning < 99 ) { {{ countByTypeAndUnread().warning }} }
+        @if ( countByTypeAndUnread().warning <= 99 ) { {{ countByTypeAndUnread().warning }} }
         @else { 99+ }
       </span>
     </button>
@@ -63,7 +63,7 @@
     >
       <span>Movimientos</span>
       <span class="notification__filters-amount">
-        @if ( countByTypeAndUnread().movements < 99 ) {
+        @if ( countByTypeAndUnread().movements <= 99 ) {
           {{ countByTypeAndUnread().movements }}
         } @else { 99+ }
       </span>
@@ -77,7 +77,7 @@
     >
       <span>Confirmadas</span>
       <span class="notification__filters-amount">
-        @if ( countByTypeAndUnread().confirmed < 99 ) {
+        @if ( countByTypeAndUnread().confirmed <= 99 ) {
           {{ countByTypeAndUnread().confirmed }}
         } @else { 99+ }
       </span>
@@ -91,7 +91,7 @@
     >
       <span>Sistema</span>
       <span class="notification__filters-amount">
-        @if ( countByTypeAndUnread().system < 99 ) { {{ countByTypeAndUnread().system }} }
+        @if ( countByTypeAndUnread().system <= 99 ) { {{ countByTypeAndUnread().system }} }
         @else { 99+ }
       </span>
     </button>

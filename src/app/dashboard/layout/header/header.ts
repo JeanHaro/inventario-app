@@ -1,4 +1,4 @@
-import { Component, input, output, signal } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 
 import {
   IconDefinition,
@@ -11,6 +11,9 @@ import {
 import {
 } from '@fortawesome/free-regular-svg-icons';
 
+// Servicios
+import { NotificationService } from './services/notification';
+
 @Component({
   selector: 'app-header',
   standalone: false,
@@ -18,6 +21,9 @@ import {
   styleUrl: './header.scss',
 })
 export class Header {
+  // Inyecciones
+  private readonly notificationService = inject(NotificationService);
+
   // Iconoss
   readonly faMagnifyingGlass: IconDefinition = faMagnifyingGlass;
   readonly faSun: IconDefinition = faSun;
@@ -32,6 +38,9 @@ export class Header {
   showSearch = signal<boolean>(false);
   showNotification = signal<boolean>(false);
   isDarkMode = signal<boolean>(false);
+
+  // Exponemos el servicio al template (solo lectura)
+  readonly unreadNotificationCount = this.notificationService.unreadCount;
 
   // Métodos
   openSidebar (e: Event): void {
