@@ -8,10 +8,10 @@
     <li>Agotados: {{ totalAgotados }}</li>
   </ul>
 
-  <app-products-filtros
+  <app-products-filters
     [productos]="productos"
     (categoriaChange)="categoriaSeleccionada.set($event)"
-  ></app-products-filtros>
+  ></app-products-filters>
 
   <button (click)="toggleFormulario()">➕ Agregar Producto</button>
 

@@ -1,4 +1,3 @@
-
 import { Component, input, output, signal } from '@angular/core';
 
 import {
@@ -31,6 +30,7 @@ export class Header {
 
   // Propiedades
   showSearch = signal<boolean>(false);
+  showNotification = signal<boolean>(false);
   isDarkMode = signal<boolean>(false);
 
   // Métodos
@@ -39,12 +39,22 @@ export class Header {
   }
 
   openSearch () {
-    (window.innerWidth < 768)
-      ? this.showSearch.set(!this.showSearch())
-      : this.showSearch.set(this.showSearch());
+    if (window.innerWidth < 768) {
+      this.showSearch.set(!this.showSearch());
+
+      this.showNotification.set(false);
+    }
+
+    this.showSearch.set(this.showSearch());
   }
 
   toggleDarkMode() {
     this.isDarkMode.set(!this.isDarkMode());
+  }
+
+  openNotifications() {
+    this.showNotification.set(!this.showNotification())
+
+    if (window.innerWidth < 768) this.showSearch.set(false)
   }
 }

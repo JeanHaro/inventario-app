@@ -1,0 +1,145 @@
+<!-- ================================
+  NOTIFICACIONES
+================================ -->
+<div class="notification">
+  <!-- CABECERA -->
+  <header class="notification__header">
+    <h4>Tus notificaciones</h4>
+
+    @if (hasNotifications()) {
+      <button (click)="markAllAsRead()" class="none btn b-hidden">
+        <fa-icon [icon]="faCheckDouble"></fa-icon>
+        <span>Marcar todos como leído</span>
+      </button>
+    }
+  </header>
+
+  <!-- FILTROS -->
+  <div class="notification__filters" #filtersRef>
+    <!-- Botón "Todas" -->
+    <button
+      (click)="onFilterClick($event, 'all')"
+      class="none btn"
+      [class.b-white]="activeFilter() === 'all'"
+    >
+      <span>Todas</span>
+      <span class="notification__filters-amount">
+        @if ( countByTypeAndUnread().all < 99 ) { {{ countByTypeAndUnread().all }} }
+        @else { 99+ }
+      </span>
+    </button>
+
+    <!-- Botón "Críticas" -->
+    <button
+      (click)="onFilterClick($event, 'critical')"
+      class="none btn"
+      [class.b-white]="activeFilter() === 'critical'"
+    >
+      <span>Críticas</span>
+      <span class="notification__filters-amount">
+        @if ( countByTypeAndUnread().critical < 99 ) { {{ countByTypeAndUnread().critical }} }
+        @else { 99+ }
+      </span>
+    </button>
+
+    <!-- Botón "Alertas" -->
+    <button
+      (click)="onFilterClick($event, 'warning')"
+      class="none btn"
+      [class.b-white]="activeFilter() === 'warning'"
+    >
+      <span>Alertas</span>
+      <span class="notification__filters-amount">
+        @if ( countByTypeAndUnread().warning < 99 ) { {{ countByTypeAndUnread().warning }} }
+        @else { 99+ }
+      </span>
+    </button>
+
+    <!-- Botón "Movimientos" -->
+    <button
+      (click)="onFilterClick($event, 'movements')"
+      class="none btn"
+      [class.b-white]="activeFilter() === 'movements'"
+    >
+      <span>Movimientos</span>
+      <span class="notification__filters-amount">
+        @if ( countByTypeAndUnread().movements < 99 ) {
+          {{ countByTypeAndUnread().movements }}
+        } @else { 99+ }
+      </span>
+    </button>
+
+    <!-- Botón "Confirmadas" -->
+    <button
+      (click)="onFilterClick($event, 'confirmed')"
+      class="none btn"
+      [class.b-white]="activeFilter() === 'confirmed'"
+    >
+      <span>Confirmadas</span>
+      <span class="notification__filters-amount">
+        @if ( countByTypeAndUnread().confirmed < 99 ) {
+          {{ countByTypeAndUnread().confirmed }}
+        } @else { 99+ }
+      </span>
+    </button>
+
+    <!-- Botón "Sistema" -->
+    <button
+      (click)="onFilterClick($event, 'system')"
+      class="none btn"
+      [class.b-white]="activeFilter() === 'system'"
+    >
+      <span>Sistema</span>
+      <span class="notification__filters-amount">
+        @if ( countByTypeAndUnread().system < 99 ) { {{ countByTypeAndUnread().system }} }
+        @else { 99+ }
+      </span>
+    </button>
+  </div>
+
+  <!-- LISTA DE NOTIFICACIONES -->
+  <div class="notification__list">
+    @for ( notif of filteredNotifications(); track notif.id ) {
+      <div
+        class="notification__item"
+        [class]="'notification__item notification__item--' + notif.type"
+        [class.notification__item--unread]="!notif.isRead"
+        (click)="onNotificationClick(notif)"
+      >
+        <div class="notification__item-icon">
+          <!-- Ícono según tipo -->
+          @switch ( notif.type ) {
+            @case ('critical') { <fa-icon [icon]="faTriangleExclamation"></fa-icon> }
+            @case ('warning')  { <fa-icon [icon]="faClock"></fa-icon> }
+            @case ('movements'){ <fa-icon [icon]="faLeftRight"></fa-icon> }
+            @case ('confirmed'){ <fa-icon [icon]="faCheck"></fa-icon> }
+            @case ('system')   { <fa-icon [icon]="faShield"></fa-icon> }
+          }
+        </div>
+
+        <div class="notification__item-body">
+          <div class="notification__item-information">
+            <h5 class="notification__item-title">{{ notif.title }}</h5>
+            <span class="notification__item-description">{{ notif.description }}</span>
+          </div>
+
+          <div class="notification__item-badge">
+            @for (badge of notif.badges; track badge) {
+              <span class="notification__badge notification__badge--{{ notif.type }}">
+                {{ badge }}
+              </span>
+            }
+          </div>
+
+          <div class="notification__item-time">
+            <span>{{ notif.timestamp | date:'mediumDate' }} - {{ notif.timestamp | date:'shortTime' }}</span>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (filteredNotifications().length === 0) {
+      <p class="notification__empty">No hay notificaciones en esta categoría</p>
+    }
+  </div>
+</div>

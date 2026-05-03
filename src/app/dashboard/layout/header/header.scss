@@ -224,4 +224,36 @@
       }
     }
   }
+
+  // ================================
+  // Notification Drowdown
+  // ================================
+  app-notification-dropdown {
+    position: absolute;
+    top: calc(100% + 1rem);
+    right: 1rem;
+
+    max-width: 90%;
+    width: 100%;
+
+    opacity: 0;
+    pointer-events: none;
+
+    transition: opacity 0.15s ease;
+
+    &.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    @media (min-width: 480px) {
+      max-width: 35rem;
+    }
+
+    @media (min-width: 768px) {
+      max-width: 40rem;
+    }
+  }
 }
+
+

@@ -70,7 +70,7 @@
       </button>
 
       <!-- NOTIFICACIONES -->
-      <button class="header__tools-btn none btn">
+      <button (click)="openNotifications()" class="header__tools-btn none btn">
         <fa-icon
           [icon]="faBell"
           class="header__tools-icon"
@@ -78,5 +78,6 @@
       </button>
     </div>
 
+    <app-notification-dropdown [class.active]="showNotification()" />
   </div>
 </header>

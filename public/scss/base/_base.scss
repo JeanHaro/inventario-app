@@ -1,6 +1,9 @@
 html {
-    box-sizing: border-box;
-    font-size: 62.5%;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  font-size: 62.5%;
+  min-width: 28rem;
 }
 
 *, *::after, *::before {
