@@ -5,7 +5,7 @@ import { InventarioService } from '../products/services/inventario';
 import { ReportService } from './services/report';
 
 // Modelos
-import { Categoria, Producto } from '../products/models/products.model';
+import { CATEGORIAS_LIST, Producto } from '../products/models/products.model';
 import { InventoryReport, InventoryStats } from './models/report.model';
 
 @Component({
@@ -22,7 +22,7 @@ export class Reports implements OnInit {
   allProducts: Producto[] = [];
   categorias: string[] = [
     'Todas',
-    ...Object.values(Categoria)
+    ...CATEGORIAS_LIST
   ];
 
   categoriaSeleccionada = signal<string>('Todas');

@@ -25,7 +25,7 @@ export class ReportService {
     return products.reduce( (total, product) => {
         // Suma el stock total de todas las variantes del producto
         const stockTotal = product.variantes.reduce(
-          (stock, variante) => stock + variante[2],
+          (stock, variante) => stock + variante.stock,
           0
         );
 
@@ -75,14 +75,15 @@ export class ReportService {
   // Genera el objeto InventoryStats completo llamando a los métodos anteriores
   generateStats ( products: Producto[] ): InventoryStats {
     return {
-      totalProducts: products.length,
-      totalAvailable: this.countByState(products, EstadoProducto.Disponible),
-      totalOutOfStock: this.countByState(products, EstadoProducto.Agotado),
-      totalDiscontinued: this.countByState(products, EstadoProducto.Descontinuado),
-      mostExpensive: this.getMostExpensive(products),
-      cheapest: this.getCheapest(products),
-      totalValue: this.getTotalValue(products),
-      averagePrice: this.getAveragePrice(products)
+      totalProductos: products.length,
+      totalDisponibles: this.countByState(products, 'disponible'),
+      totalAgotados: this.countByState(products, 'agotado'),
+      totalDescontinuados: this.countByState(products, 'descontinuado'),
+      masCaros: this.getMostExpensive(products),
+      masBarato: this.getCheapest(products),
+      valorTotalInventario: this.getTotalValue(products),
+      precioPromedio: this.getAveragePrice(products),
+      productosPorCategoria: { 'electronica': 1 }
     }
   }
 
@@ -92,7 +93,7 @@ export class ReportService {
   private reports: InventoryReport[] = [];
 
   // Guardar un nuevo reporte
-  saveReport ( title: string, stats: InventoryStats, ...filters: string[] ): void {
+  saveReport ( titulo: string, stats: InventoryStats, ...filters: string[] ): void {
     const nextId =
       this.reports.length === 0
         ? 1
@@ -100,10 +101,10 @@ export class ReportService {
 
     const newReport: InventoryReport = {
       id: nextId,
-      title,
-      generatedAt: new Date().toLocaleDateString(),
+      titulo,
+      generadoEn: new Date().toLocaleDateString(),
       stats,
-      activeFilters: filters
+      filtrosActivos: filters
     };
 
     this.reports.push(newReport);

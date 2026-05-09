@@ -15,7 +15,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     title: 'Stock agotado - Arroz integral',
     description: '0 unidades. Ventas bloqueadas automáticamente desde hace 5 minutos.',
     badges: ['Críticas', 'Sin stock', 'Auditoría'],
-    timestamp: new Date(),
+    timestamp: new Date().toISOString(),
     isRead: false,
     action: { type: 'navigate', route: ['products', 'arroz-integral'] },
   },
@@ -25,7 +25,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     title: 'Stock bajo - Aceite de oliva 500ml',
     description: '12 unidades. Punto de reorden: 25. Se recomienda emitir OC.',
     badges: ['Alertas', 'Stock bajo', 'Vence pronto'],
-    timestamp: new Date(),
+    timestamp: new Date().toISOString(),
     isRead: false,
     action: { type: 'navigate', route: ['products', 'aceite-oliva-500ml'] },
   },
@@ -35,7 +35,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     title: 'Recepción confirmada - Proveedor Makro',
     description: '200 unidades de Atún en lata ingresadas. Pendiente validación supervisor.',
     badges: ['Movimientos', 'Entrada', 'Transferencia'],
-    timestamp: new Date(),
+    timestamp: new Date().toISOString(),
     isRead: false,
     action: { type: 'none' },
   },
@@ -45,7 +45,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     title: 'Orden de compra aprobada — OC-2024-089',
     description: '500 unidades. Entrega estimada: 3 días hábiles. Aprobado por gerencia.',
     badges: ['Confirmadas', 'Aprobada'],
-    timestamp: new Date(Date.now() - 3600000), // hace 1 hora
+    timestamp: new Date(Date.now() - 3600000).toISOString(), // hace 1 hora
     isRead: true,
     action: { type: 'none' },
   },
@@ -55,7 +55,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     title: 'Reporte mensual generado',
     description: 'Inventario Marzo 2025 procesado. 1,248 productos analizados.',
     badges: ['Sistema', 'Reporte'],
-    timestamp: new Date(Date.now() - 86400000), // hace 1 día
+    timestamp: new Date(Date.now() - 86400000).toISOString(), // hace 1 día
     isRead: true,
     action: { type: 'none' },
   },
@@ -65,7 +65,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     title: 'Stock agotado - Zapatillas Nike',
     description: '0 unidades. Ventas bloqueadas automáticamente desde hace 1 día. Es momento de llenar el inventario para este producto con urgencia. 0 unidades. Esto es una prueba solamente para ver como se ve la notificación cuando tiene una descripción extensa.',
     badges: ['Críticas', 'Sin Stock', 'Auditoría'],
-    timestamp: new Date(Date.now() - 86400000), // hace 1 día
+    timestamp: new Date(Date.now() - 86400000).toISOString(), // hace 1 día
     isRead: false,
     action: { type: 'none' },
   },

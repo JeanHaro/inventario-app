@@ -18,53 +18,106 @@ export class InventarioService {
       id: 1,
       nombre: 'iPhone 15',
       precio: 3500,
-      categoria: Categoria.Electronica,
-      estado: EstadoProducto.Disponible,
-      disponible: true,
+      categoria: 'electronica',
+      estado: 'disponible',
       variantes: [
-        ['N/A', 'Negro', 10],
-        ['N/A', 'Blanco', 5]
+        {
+          id: 1,
+          nombre: 'N/A',
+          color: 'Negro',
+          stock: 10,
+          estado: 'disponible',
+        },
+        {
+          id: 2,
+          nombre: 'N/A',
+          color: 'Blanco',
+          stock: 5,
+          estado: 'disponible',
+        }
       ],
-      descripcion: 'Smartphone Apple última generación'
+      descripcion: 'Smartphone Apple última generación',
+      creadoEn: new Date().toISOString(),
+      actualizadoEn: new Date().toISOString()
     },
     {
       id: 2,
       nombre: 'Pollo a la Brasa',
       precio: 50,
-      categoria: Categoria.Alimentos,
-      estado: EstadoProducto.Descontinuado,
-      disponible: false,
+      categoria: 'alimentos',
+      estado: 'descontinuado',
       variantes: [
-        ['1/4 pollo', 'N/A', 16],
-        ['1/2 pollo', 'N/A', 8]
+        {
+          id: 1,
+          nombre: '1/4 de pollo',
+          color: 'N/A',
+          stock: 16,
+          estado: 'descontinuada'
+        },
+        {
+          id: 2,
+          nombre: '1/2 de pollo',
+          color: 'N/A',
+          stock: 8,
+          estado: 'descontinuada'
+        }
+
       ],
-      descripcion: 'Pollo a la brasa al mejor precio'
+      descripcion: 'Pollo a la brasa al mejor precio',
+      creadoEn: new Date().toISOString(),
+      actualizadoEn: new Date().toISOString()
     },
     {
       id: 3,
       nombre: 'Polera a rayas',
       precio: 45,
-      categoria: Categoria.Ropa,
-      estado: EstadoProducto.Agotado,
-      disponible: false,
+      categoria: 'ropa',
+      estado: 'agotado',
       variantes: [
-        ['M', 'Rojo', 0],
-        ['L', 'Verde', 0]
+        {
+          id: 1,
+          talla: 'M',
+          color: 'Rojo',
+          stock: 0,
+          estado: 'sin_stock'
+        },
+        {
+          id: 2,
+          talla: 'L',
+          color: 'Verde',
+          stock: 0,
+          estado: 'sin_stock'
+        }
       ],
-      descripcion: 'Hecha a la medida y con puro algodón'
+      descripcion: 'Hecha a la medida y con puro algodón',
+      creadoEn: new Date().toISOString(),
+      actualizadoEn: new Date().toISOString()
     },
     {
       id: 4,
       nombre: 'Espejo para baño',
       precio: 10,
-      categoria: Categoria.Hogar,
-      estado: EstadoProducto.Disponible,
-      disponible: true,
+      categoria: 'hogar',
+      estado: 'disponible',
       variantes: [
-        ['Grande', 'Negra', 15],
-        ['Mediana', 'Blanca', 20]
+        {
+          id: 1,
+          nombre: 'Grande',
+          color: 'Negra',
+          stock: 15,
+          estado: 'disponible'
+        },
+        {
+          id: 2,
+          nombre: 'Mediana',
+          color: 'Blanca',
+          stock: 20,
+          estado: 'disponible'
+        }
       ],
-      descripcion: 'Espejo resistente al agua para baño'
+      descripcion: 'Espejo resistente al agua para baño',
+      creadoEn: new Date().toISOString(),
+      actualizadoEn: new Date().toISOString()
     }
   ];
 
@@ -95,6 +148,5 @@ export class InventarioService {
     if (!producto) throw new Error(`Producto con ID ${id} no encontrado`);
 
     producto.estado = estado;
-    producto.disponible = (estado === EstadoProducto.Disponible);
   }
 }

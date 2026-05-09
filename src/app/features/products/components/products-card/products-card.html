@@ -9,7 +9,7 @@
     <ul>
       @for (variante of producto().variantes; track variante) {
         <li>
-          {{ variante[0] }} / {{ variante[1] }} - Stock: {{ variante[2] }}
+          {{ variante.nombre }} / {{ variante.color }} - Stock: {{ variante.stock }}
         </li>
       }
     </ul>
@@ -18,16 +18,16 @@
   <div class="card-footer">
     <select (change)="onEstadoChange($event)">
       <option
-        [value]="EstadoProducto.Disponible"
-        [selected]="producto().estado === EstadoProducto.Disponible"
+        [value]="'disponible'"
+        [selected]="producto().estado === 'disponible'"
       >Disponible</option>
       <option
-        [value]="EstadoProducto.Agotado"
-        [selected]="producto().estado === EstadoProducto.Agotado"
+        [value]="'agotado'"
+        [selected]="producto().estado === 'agotado'"
       >Agotado</option>
       <option
-        [value]="EstadoProducto.Descontinuado"
-        [selected]="producto().estado === EstadoProducto.Descontinuado"
+        [value]="'descontinuado'"
+        [selected]="producto().estado === 'descontinuado'"
       >Descontinuado</option>
     </select>
 

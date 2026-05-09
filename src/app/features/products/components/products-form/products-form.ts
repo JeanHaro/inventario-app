@@ -2,7 +2,7 @@ import { Component, output } from '@angular/core';
 
 // Modelos
 import {
-  Categoria,
+  CATEGORIAS_LIST,
   EstadoProducto,
   Producto
 } from '../../models/products.model';
@@ -15,9 +15,9 @@ import {
 })
 export class ProductsForm {
   // Propiedades
-  categorias: string[] = Object.values(Categoria);
+  categorias: string[] = Object.values(CATEGORIAS_LIST);
   nuevoProducto: Partial<Producto> = {
-    categoria: Categoria.Electronica,
+    categoria: 'electronica',
   };
 
   productoCreado = output<Producto>();
@@ -35,10 +35,11 @@ export class ProductsForm {
       nombre: this.nuevoProducto.nombre!,
       precio: this.nuevoProducto.precio!,
       categoria: this.nuevoProducto.categoria!,
-      estado: EstadoProducto.Disponible,
-      disponible: true,
+      estado: 'disponible',
       variantes: [],
-      descripcion: this.nuevoProducto.descripcion ?? ''
+      descripcion: this.nuevoProducto.descripcion ?? '',
+      creadoEn: new Date().toISOString(),
+      actualizadoEn: new Date().toISOString()
     };
 
     this.productoCreado.emit(producto);
@@ -46,7 +47,7 @@ export class ProductsForm {
 
   cancelarForm(): void {
     this.nuevoProducto = {
-      categoria: Categoria.Electronica,
+      categoria: 'electronica',
     };
 
     this.cancelar.emit();

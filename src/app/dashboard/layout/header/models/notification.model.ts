@@ -25,7 +25,7 @@ export interface Notification {
   title: string;
   description: string;
   badges: string[];
-  timestamp: Date;
+  timestamp: string;
   isRead: boolean;
   action: NotificationAction;
 }

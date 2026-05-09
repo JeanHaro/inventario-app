@@ -38,22 +38,22 @@ export class Products implements OnInit {
   }
 
   get totalDisponibles(): number {
-    return this.productos.filter(p => p.disponible).length;
+    return this.productos.filter(p => p.estado === 'disponible').length;
   }
 
   get totalAgotados(): number {
-    return this.productos.filter(p => p.estado === EstadoProducto.Agotado).length;
+    return this.productos.filter(p => p.estado === 'agotado').length;
   }
 
   // Métodos
   onEstadoChange ( id: number, event: Event ): void {
     const select = event.target as HTMLSelectElement;
-    const estado = +select.value as EstadoProducto;
+    const estado = select.value as EstadoProducto;
 
     this.cambiarEstado(id, estado);
   }
 
-  cambiarEstado ( id: number, estado: EstadoProducto): void {
+  cambiarEstado ( id: number, estado: EstadoProducto ): void {
     this.inventarioService.cambiarEstado(id, estado);
   }
 

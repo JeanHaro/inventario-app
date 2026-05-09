@@ -76,10 +76,15 @@
           class="header__tools-icon"
         ></fa-icon>
 
-        <span class="header__tools-notification">
-          @if ( unreadNotificationCount() <= 9 ) { {{ unreadNotificationCount() }} }
-          @else { 9+ }
-      </span>
+        @if ( unreadNotificationCount() > 0 ) {
+          <span class="header__tools-notification">
+            @if ( unreadNotificationCount() <= 9 ) {
+              {{ unreadNotificationCount() }}
+            } @else {
+              9+
+            }
+        </span>
+        }
       </button>
     </div>
 

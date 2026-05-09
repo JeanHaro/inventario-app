@@ -18,11 +18,11 @@
         @for (report of reports(); track report.id) {
           <tr>
             <td>{{ report.id }}</td>
-            <td>{{ report.title }}</td>
-            <td>{{ report.generatedAt }}</td>
-            <td>{{ report.activeFilters.join(', ') || 'Ninguno' }}</td>
-            <td>{{ report.stats.totalProducts }}</td>
-            <td>S/. {{ report.stats.totalValue }}</td>
+            <td>{{ report.titulo }}</td>
+            <td>{{ report.generadoEn }}</td>
+            <td>{{ report.filtrosActivos.join(', ') || 'Ninguno' }}</td>
+            <td>{{ report.stats.totalProductos }}</td>
+            <td>S/. {{ report.stats.valorTotalInventario }}</td>
             <td>
               <button
                 class="reports-table__btn-delete"

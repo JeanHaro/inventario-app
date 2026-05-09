@@ -1,22 +1,23 @@
-import { Producto } from "../../products/models/products.model";
+import { Categoria, Producto } from "../../products/models/products.model";
 
 export interface InventoryStats {
-  totalProducts: number;
-  totalAvailable: number;
-  totalOutOfStock: number;
-  totalDiscontinued: number;
-  mostExpensive: Producto;
-  cheapest: Producto;
-  totalValue: number;
-  averagePrice: number;
+  totalProductos: number;
+  totalDisponibles: number;
+  totalAgotados: number;
+  totalDescontinuados: number;
+  masCaros: Producto;
+  masBarato: Producto;
+  valorTotalInventario: number;
+  precioPromedio: number;
+  productosPorCategoria: Partial<Record<Categoria, number>>;
 }
 
 export interface InventoryReport {
   id: number;
-  title: string;
-  generatedAt: string;
+  titulo: string;
+  generadoEn: string;
   stats: InventoryStats;
-  activeFilters: string[];
+  filtrosActivos: string[];
 }
 
 export type StatsFn = ( products: Producto[] ) => number;

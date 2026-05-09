@@ -1,7 +1,7 @@
 import { Component, input,  output } from '@angular/core';
 
 // Modelos
-import { Categoria, Producto } from '../../models/products.model';
+import { Categoria, CATEGORIAS_LIST, Producto } from '../../models/products.model';
 
 @Component({
   selector: 'app-products-filters',
@@ -11,7 +11,9 @@ import { Categoria, Producto } from '../../models/products.model';
 })
 export class ProductsFilters {
   // Propiedades
-  categorias: string[] = Object.values(Categoria);
+  categorias: string[] = [
+    ...CATEGORIAS_LIST
+  ]
 
   productos = input<Producto[]>([]);
   categoriaChange = output<string>();

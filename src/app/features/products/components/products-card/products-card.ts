@@ -18,15 +18,15 @@ export class ProductsCard {
   estadoChange = output<{ id: number, evento: Event }>();
   eliminar = output<number>();
 
-  // Exponemos el enum al template, ya que Angular no puede acceder a enums directamente
-    EstadoProducto = EstadoProducto;
-
   // Getter para clases dinámicas basadas en el estado del producto
   get estadoClass(): string {
     const clases: Record<EstadoProducto, string> = {
-      [EstadoProducto.Disponible]    : 'card--disponible',
-      [EstadoProducto.Agotado]       : 'card--agotado',
-      [EstadoProducto.Descontinuado] : 'card--descontinuado'
+      ['disponible']    : 'card--disponible',
+      ['agotado']       : 'card--agotado',
+      ['reservado']       : 'card--agotado',
+      ['proximamente']       : 'card--agotado',
+      ['descontinuado'] : 'card--descontinuado',
+      ['pausado'] : 'card--descontinuado',
     };
     return clases[this.producto().estado];
   }
@@ -34,9 +34,12 @@ export class ProductsCard {
   // Helper para el badge del estado
   obtenerEtiquetaEstado ( estado: EstadoProducto ): string {
     const etiquetas: Record<EstadoProducto, string> = {
-      [EstadoProducto.Disponible] : 'Disponible',
-      [EstadoProducto.Agotado] : 'Agotado',
-      [EstadoProducto.Descontinuado] : 'Descontinuado'
+      ['disponible'] : 'Disponible',
+      ['agotado'] : 'Agotado',
+      ['reservado'] : 'Reservado',
+      ['proximamente'] : 'Proximamente',
+      ['descontinuado'] : 'Descontinuado',
+      ['pausado']: 'Pausado'
     };
 
     return etiquetas[estado];

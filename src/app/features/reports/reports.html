@@ -23,37 +23,37 @@
   <div class="reports__stats-grid">
     <app-stats-card
       label="Total Productos"
-      [value]="stats().totalProducts"
+      [value]="stats().totalProductos"
       icon="📦"
       color="blue"
     />
     <app-stats-card
       label="Disponibles"
-      [value]="stats().totalAvailable"
+      [value]="stats().totalDisponibles"
       icon="✅"
       color="green"
     />
     <app-stats-card
       label="Agotados"
-      [value]="stats().totalOutOfStock"
+      [value]="stats().totalAgotados"
       icon="⚠️"
       color="orange"
     />
     <app-stats-card
       label="Descontinuados"
-      [value]="stats().totalDiscontinued"
+      [value]="stats().totalDescontinuados"
       icon="🚫"
       color="gray"
     />
     <app-stats-card
       label="Valor Total"
-      [value]="'S/. ' + stats().totalValue"
+      [value]="'S/. ' + stats().valorTotalInventario"
       icon="💰"
       color="blue"
     />
     <app-stats-card
       label="Precio Promedio"
-      [value]="'S/. ' + stats().averagePrice"
+      [value]="'S/. ' + stats().precioPromedio"
       icon="📈"
       color="green"
     />
@@ -64,13 +64,13 @@
     <div class="reports__highlights">
       <div class="reports__highlight">
         <span>🏆 Más caro:</span>
-        <strong>{{ stats().mostExpensive.nombre }}</strong>
-        <span>S/. {{ stats().mostExpensive.precio }}</span>
+        <strong>{{ stats().masCaros.nombre }}</strong>
+        <span>S/. {{ stats().masCaros.precio }}</span>
       </div>
       <div class="reports__highlight">
         <span>💸 Más barato:</span>
-        <strong>{{ stats().cheapest.nombre }}</strong>
-        <span>S/. {{ stats().cheapest.precio }}</span>
+        <strong>{{ stats().masBarato.nombre }}</strong>
+        <span>S/. {{ stats().masBarato.precio }}</span>
       </div>
     </div>
   }
