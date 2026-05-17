@@ -6,6 +6,15 @@
   border-radius: 0.6rem;
 
   font-family: var(--fuente-secundario);
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   color: var(--color-primario);
+
+  @media (min-width: 768px) {
+    font-size: 1.6rem;
+  }
+}
+
+.i--terciary {
+  background-color: var(--color-terciario-hover);
+  color: var(--color-blanco-1);
 }

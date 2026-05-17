@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 // Componente Padre
 import { Products } from './products';
@@ -23,6 +24,7 @@ import { productsRoutes } from './products.routes';
   imports: [
     CommonModule,
     FormsModule,
+    FontAwesomeModule,
     RouterModule.forChild(productsRoutes)
   ],
 })

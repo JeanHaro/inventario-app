@@ -1,40 +1,451 @@
-<div class="dashboard">
-  <h1>📦 Dashboard de Inventario</h1>
+<!-- ================================
+  PRODUCTOS
+================================ -->
+<div class="products">
+  <div class="products__container">
 
-  <!-- Estadísticas con getters -->
-  <ul>
-    <li>Total de productos: {{ productos.length }}</li>
-    <li>Disponibles: {{ totalDisponibles }}</li>
-    <li>Agotados: {{ totalAgotados }}</li>
-  </ul>
+    <!-- ================================
+      FILTROS
+    ================================ -->
+    <div class="products__filters">
 
-  <app-products-filters
-    [productos]="productos"
-    (categoriaChange)="categoriaSeleccionada.set($event)"
-  ></app-products-filters>
+      <!-- BTN: Todos -->
+      <button
+        style="--i: 7;"
+        [class.b--white]="true"
+        class="products__filters-btn btn none"
+      >
+        <fa-icon [icon]="faTableCellsLarge"></fa-icon>
+        <span>Todos</span>
+        <span class="products__filters-amount">
+          5
+        </span>
+      </button>
 
-  <button (click)="toggleFormulario()">➕ Agregar Producto</button>
+      <!-- BTN: Disponibles -->
+      <button
+        style="--i: 6;"
+        class="products__filters-btn btn none"
+      >
+        <fa-icon [icon]="faCheckCircle"></fa-icon>
+        <span>Disponibles</span>
+        <span class="products__filters-amount">
+          5
+        </span>
+      </button>
 
-  <!-- Formulario -->
-  @if (mostrarFormulario) {
-    <app-products-form
-      (productoCreado)="onProductoCreado($event)"
-      (cancelar)="toggleFormulario()"
-    ></app-products-form>
-  }
+      <!-- BTN: Agotados -->
+      <button
+        style="--i: 5;"
+        class="products__filters-btn btn none"
+      >
+        <fa-icon [icon]="faCircleXmark"></fa-icon>
+        <span>Agotados</span>
+        <span class="products__filters-amount">
+          5
+        </span>
+      </button>
 
-  <!-- Tabla FUERA del @for -->
-  @if (productosFiltrados.length === 0) {
-    <p>No hay productos en esta categoría.</p>
-  } @else {
-    <div class="cards-grid">
-      @for (producto of productosFiltrados; track producto.id) {
-        <app-products-card
-          [producto]="producto"
-          (estadoChange)="onEstadoChange($event.id, $event.evento)"
-          (eliminar)="eliminarProducto($event)"
-        ></app-products-card>
-      }
+      <!-- BTN: Reservados -->
+      <button
+        style="--i: 4;"
+        class="products__filters-btn btn none"
+      >
+        <fa-icon [icon]="faBookmark"></fa-icon>
+        <span>Reservados</span>
+        <span class="products__filters-amount">
+          5
+        </span>
+      </button>
+
+      <!-- BTN: Proximamente -->
+      <button
+        style="--i: 3;"
+        class="products__filters-btn btn none"
+      >
+        <fa-icon [icon]="faCalendarDays"></fa-icon>
+        <span>Proximamente</span>
+        <span class="products__filters-amount">
+          5
+        </span>
+      </button>
+
+      <!-- BTN: Descontinuados -->
+      <button
+        style="--i: 2;"
+        class="products__filters-btn btn none"
+      >
+        <fa-icon [icon]="faBan"></fa-icon>
+        <span>Descontinuados</span>
+        <span class="products__filters-amount">
+          5
+        </span>
+      </button>
+
+      <!-- BTN: Pausados -->
+      <button
+        style="--i: 1;"
+        class="products__filters-btn btn none"
+      >
+        <fa-icon [icon]="faCirclePause"></fa-icon>
+        <span>Pausados</span>
+        <span class="products__filters-amount">
+          5
+        </span>
+      </button>
+
     </div>
-  }
+    <!-- END: FILTROS -->
+
+    <!-- ================================
+      CONTENIDO
+    ================================ -->
+    <div class="products__content">
+
+      <!-- ================================
+        HERRAMIENTAS
+      ================================ -->
+      <div class="products__tools">
+
+        <!-- BUSCAR -->
+        <div class="products__tools-input">
+          <input
+            class="none input"
+            type="text"
+            id="search-category"
+            placeholder="Buscar por categoría o por etiquetas"
+          >
+        </div>
+
+        <!-- AGREGAR PRODUCTO -->
+        <button class="products__tools-btn none btn b--primary">
+          <fa-icon [icon]="faPlus"></fa-icon>
+          <span>Agregar producto</span>
+        </button>
+
+      </div>
+      <!-- END: HERRAMIENTAS -->
+
+      <!-- ================================
+        TABLA
+      ================================ -->
+      <div class="products__table">
+
+        <!-- ================================
+          CABECERA DE LA TABLA
+        ================================ -->
+        <div class="products__table-head">
+
+          <!-- TH: Checkbox -->
+          <div class="products__th products__check">
+            <input type="checkbox" id="check_products">
+
+            <label for="check_products">
+              <fa-icon [icon]="faCheck"></fa-icon>
+            </label>
+          </div>
+
+          <!-- TH: Nombre -->
+          <div class="products__th products__name">
+            <span>Nombre</span>
+            <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+          </div>
+
+          <!-- TH: Marca / Modelo -->
+          <div class="products__th products__brand-model">
+            <span>Marca / Modelo</span>
+            <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+          </div>
+
+          <!-- TH: Precio base -->
+          <div class="products__th products__price">
+            <span>Precio base</span>
+            <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+          </div>
+
+          <!-- TH: Descuento -->
+          <div class="products__th products__discount">
+            <span>Descuento</span>
+            <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+          </div>
+
+          <!-- TH: Categoría -->
+          <div class="products__th products__category">
+            <span>Categoría</span>
+            <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+          </div>
+
+          <!-- TH: Estado -->
+          <div class="products__th products__state">
+            <span>Estado</span>
+            <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+          </div>
+
+          <!-- TH: Variantes -->
+          <div class="products__th products__variants">
+            <span># Variantes</span>
+            <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+          </div>
+
+          <!-- TH: Acciones -->
+          <div class="products__th products__action">
+            <span>Acciones</span>
+          </div>
+
+        </div>
+        <!-- END: TABLE CABECERA -->
+
+        <!-- ================================
+          CUERPO DE LA TABLA
+        ================================ -->
+        <div class="products__table-body">
+
+          <!-- ================================
+            PRODUCTO ( Con variantes )
+          ================================ -->
+          <div class="products__body-main">
+
+            <!-- FILA DE PRODUCTO -->
+            <div class="products__body-content">
+
+              <!-- TD: Checkbox -->
+              <div class="products__td products__check">
+                <input type="checkbox" id="check_product-1">
+
+                <label for="check_product-1">
+                  <fa-icon [icon]="faCheck"></fa-icon>
+                </label>
+              </div>
+
+              <!-- TD: Nombre -->
+              <div class="products__td products__name">
+                <span>iPhone 15</span>
+              </div>
+
+              <!-- TD: Marca / Modelo -->
+              <div class="products__td products__brand-model">
+                <span>Apple / iPhone 15</span>
+              </div>
+
+              <!-- TD: Precio base -->
+              <div class="products__td products__price">
+                <span>S/. 3000</span>
+              </div>
+
+              <!-- TD: Descuento -->
+              <div class="products__td products__discount">
+                <span>0%</span>
+              </div>
+
+              <!-- TD: Categoría -->
+              <div class="products__td products__category">
+                <span class="badge badge--tecnologia">tecnología</span>
+              </div>
+
+              <!-- TD: Estado -->
+              <div class="products__td products__state">
+                <span class="badge badge--disponible">disponible</span>
+              </div>
+
+              <!-- TD: Variantes -->
+              <div class="products__td products__variants">
+                <span>3</span>
+              </div>
+
+              <!-- TD: Acciones -->
+              <div class="products__td products__action">
+
+                <!-- Editar -->
+                <button class="products__action-btn products__action-btn--edit btn b--hidden none">
+                  <fa-icon [icon]="faPenToSquare"></fa-icon>
+                  <span class="sr-only">Editar</span>
+                </button>
+
+                <!-- Nueva variante -->
+                <button class="products__action-btn products__action-btn--add btn b--hidden none">
+                  <fa-icon [icon]="faLayerGroup"></fa-icon>
+                  <span class="sr-only">Agregar nueva variante</span>
+                </button>
+
+                <!-- Mostrar variantes -->
+                <button class="products__action-btn products__action-btn--dropdown btn b--hidden none">
+                  <fa-icon [icon]="faChevronDown"></fa-icon>
+                  <span class="sr-only">Mostrar / Ocultar las variantes</span>
+                </button>
+
+                <!-- Mas opciones -->
+                <button class="products__action-btn products__action-btn--kebab btn b--hidden none">
+                  <fa-icon [icon]="faEllipsisVertical"></fa-icon>
+                  <span class="sr-only">Mas opciones</span>
+                </button>
+
+              </div>
+
+            </div>
+            <!-- END: FILA DE PRODUCTO -->
+
+            <!-- VARIANTES ( active = colapsado/oculto ) -->
+            <div class="products__body-variants">
+
+              <!-- VARIANTE -->
+              <div class="products__variants-content">
+                <!-- TD: Imagen -->
+                <div class="products__td products__img">
+                  <img src="./img/iphone15.png" alt="Imagen de iphone15">
+                </div>
+
+                <!-- TD: Nombre y Sku -->
+                <div class="products__td products__information">
+                  <span class="products__information-name">iPhone 15 PRO 128G</span>
+                  <span class="products__information-sku">XIA14-NEG-128</span>
+                </div>
+
+                <!-- TD: Estado -->
+                <div class="products__td products__state">
+                  <span>Estado</span>
+                  <span class="badge badge--descontinuado">descontinuada</span>
+                </div>
+
+                <!-- TD: Stock -->
+                <div class="products__td products__stock">
+                  <span>Stock</span>
+                  <span>1000</span>
+                </div>
+
+                <!-- TD: Precio -->
+                <div class="products__td products__price">
+                  <span>Precio</span>
+                  <span>S/. 350000</span>
+                </div>
+
+                <!-- TD: Acciones -->
+                <div class="products__td products__action">
+
+                  <!-- Editar -->
+                  <button class="products__action-btn products__action-btn--edit btn b--hidden none">
+                    <fa-icon [icon]="faPenToSquare"></fa-icon>
+                    <span class="sr-only">Editar</span>
+                  </button>
+
+                  <!-- Actualizar Stock -->
+                  <button class="products__action-btn products__action-btn--stock btn b--hidden none">
+                    <fa-icon [icon]="faBoxesStacked"></fa-icon>
+                    <span class="sr-only">Actualizar stock</span>
+                  </button>
+
+                  <!-- Mas opciones -->
+                  <button class="products__action-btn products__action-btn--kebab btn b--hidden none">
+                    <fa-icon [icon]="faEllipsisVertical"></fa-icon>
+                    <span class="sr-only">Más opciones</span>
+                  </button>
+
+                </div>
+              </div>
+              <!-- END: VARIANTE -->
+
+            </div>
+            <!-- END: VARIANTES -->
+
+          </div>
+          <!-- END: PRODUCTO -->
+
+        </div>
+        <!-- END: CUPERO DE LA TABLA -->
+
+      </div>
+      <!-- END: TABLA -->
+
+    </div>
+    <!-- END: CONTENIDO -->
+
+    <!-- ================================
+      KEBAB MENU: Producto
+    ================================ -->
+    <div class="products__kebab products__kebab-main hidden">
+
+      <!-- BTN: Ver detalles -->
+      <button class="products__btn products__btn--see btn b--terciary none">
+        <fa-icon [icon]="faEye"></fa-icon>
+        <span>Ver detalles</span>
+      </button>
+
+      <!-- BTN: Archivar -->
+      <button class="products__btn products__btn--store btn b--terciary none">
+        <fa-icon [icon]="faBoxArchive"></fa-icon>
+        <span>Archivar</span>
+      </button>
+
+      <!-- BTN: Cerrar -->
+      <button class="products__btn products__btn--close btn b--danger none">
+        <fa-icon [icon]="faXmark"></fa-icon>
+        <span class="sr-only">Cerrar opciones</span>
+      </button>
+
+    </div>
+    <!-- END: KEBAB MENU: Producto -->
+
+    <!-- ================================
+      KEBAB MENU: Variante
+    ================================ -->
+    <div class="products__kebab products__kebab-variant hidden">
+
+      <!-- BTN: Ver detalles -->
+      <button class="products__btn products__btn--see btn b--terciary none">
+        <fa-icon [icon]="faEye"></fa-icon>
+        <span>Ver detalles</span>
+      </button>
+
+      <!-- BTN: Historial -->
+      <button class="products__btn products__btn--record btn b--terciary none">
+        <fa-icon [icon]="faClockRotateLeft"></fa-icon>
+        <span>Historial</span>
+      </button>
+
+      <!-- BTN: Imprimir  -->
+      <button class="products__btn products__btn--print btn b--terciary none">
+        <fa-icon [icon]="faBarcode"></fa-icon>
+        <span>Imprimir etiqueta</span>
+      </button>
+
+      <!-- BTN: Archivar -->
+      <button class="products__btn products__btn--store btn b--terciary none">
+        <fa-icon [icon]="faBoxArchive"></fa-icon>
+        <span>Archivar</span>
+      </button>
+
+      <!-- BTN: Cerrar -->
+      <button class="products__btn products__btn--close btn b--danger none">
+        <fa-icon [icon]="faXmark"></fa-icon>
+        <span class="sr-only">Cerrar opciones</span>
+      </button>
+
+    </div>
+    <!-- END: KEBAB MENU: Variante -->
+
+    <!-- ================================
+      STOCK: Actualizar
+    ================================ -->
+    <div class="products__stock-update hidden">
+
+      <!-- INPUT -->
+      <div class="products__stock-update-input">
+        <input class="input none i--terciary" type="number" name="stock_product" id="stock_product" min="0" placeholder="0">
+      </div>
+
+      <!-- BTN: Guardar -->
+      <button class="products__btn btn b--terciary none">
+        <fa-icon [icon]="faFloppyDisk"></fa-icon>
+        <span>Guardar</span>
+      </button>
+
+      <!-- BTN: Cerrar -->
+      <button class="products__btn products__btn--close btn b--danger none">
+        <fa-icon [icon]="faXmark"></fa-icon>
+        <span class="sr-only">Cerrar opciones</span>
+      </button>
+
+    </div>
+
+  </div>
 </div>
+<!-- END: PRODUCTOS -->

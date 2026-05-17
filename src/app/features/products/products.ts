@@ -1,5 +1,35 @@
 import { Component, OnInit, signal } from '@angular/core';
 
+// Font Awesome
+import {
+  IconDefinition,
+  faTableCellsLarge,
+  faBan,
+  faMagnifyingGlass,
+  faPlus,
+  faCheck,
+  faArrowUpShortWide,
+  faPenToSquare,
+  faLayerGroup,
+  faChevronDown,
+  faEllipsisVertical,
+  faBoxArchive,
+  faBoxesStacked,
+  faClockRotateLeft,
+  faBarcode,
+  faXmark,
+  faFloppyDisk,
+} from '@fortawesome/free-solid-svg-icons';
+
+import {
+  faCheckCircle,
+  faCircleXmark,
+  faBookmark,
+  faCalendarDays,
+  faCirclePause,
+  faEye
+} from '@fortawesome/free-regular-svg-icons';
+
 // Modelos
 import {
   EstadoProducto,
@@ -16,6 +46,30 @@ import { InventarioService } from './services/inventario';
   styleUrl: './products.scss',
 })
 export class Products implements OnInit {
+  // Iconos
+  readonly faTableCellsLarge: IconDefinition = faTableCellsLarge;
+  readonly faCheckCircle: IconDefinition = faCheckCircle;
+  readonly faCircleXmark: IconDefinition = faCircleXmark;
+  readonly faBookmark: IconDefinition = faBookmark;
+  readonly faCalendarDays: IconDefinition = faCalendarDays;
+  readonly faBan: IconDefinition = faBan;
+  readonly faCirclePause: IconDefinition = faCirclePause;
+  readonly faPlus: IconDefinition = faPlus;
+  readonly faMagnifyingGlass: IconDefinition = faMagnifyingGlass;
+  readonly faCheck: IconDefinition = faCheck;
+  readonly faArrowUpShortWide: IconDefinition = faArrowUpShortWide;
+  readonly faChevronDown: IconDefinition = faChevronDown;
+  readonly faPenToSquare: IconDefinition = faPenToSquare;
+  readonly faLayerGroup: IconDefinition = faLayerGroup;
+  readonly faEllipsisVertical: IconDefinition = faEllipsisVertical;
+  readonly faEye: IconDefinition = faEye;
+  readonly faBoxArchive:IconDefinition = faBoxArchive;
+  readonly faBoxesStacked: IconDefinition = faBoxesStacked;
+  readonly faClockRotateLeft: IconDefinition = faClockRotateLeft;
+  readonly faBarcode: IconDefinition = faBarcode;
+  readonly faXmark: IconDefinition = faXmark;
+  readonly faFloppyDisk: IconDefinition = faFloppyDisk;
+
   // Propiedades
   productos: Producto[] = [];
   categoriaSeleccionada= signal<string>('Todas');

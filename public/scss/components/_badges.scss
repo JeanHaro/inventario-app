@@ -1,0 +1,176 @@
+// ================================================================
+// BADGES
+// ================================================================
+.badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 0.5rem 1rem;
+  border-radius: 1.2rem;
+
+  background-color: #F0F0F0;
+  text-transform: capitalize;
+  font-size: 1.4rem;
+  font-weight: 600;
+
+  // --------------------------------
+  // CATEGORÍAS
+  // --------------------------------
+  &--electronica  {
+    background-color: var(--badge-electronica-bg);
+    color: var(--badge-electronica-color);
+  }
+
+  &--tecnologia   {
+    background-color: var(--badge-tecnologia-bg);
+    color: var(--badge-tecnologia-color);
+  }
+
+  &--ropa {
+    background-color: var(--badge-ropa-bg);
+    color: var(--badge-ropa-color);
+  }
+
+  &--calzado {
+    background-color: var(--badge-calzado-bg);
+    color: var(--badge-calzado-color);
+  }
+
+  &--alimentos {
+    background-color: var(--badge-alimentos-bg);
+    color: var(--badge-alimentos-color);
+  }
+
+  &--bebidas {
+    background-color: var(--badge-bebidas-bg);
+    color: var(--badge-bebidas-color);
+  }
+
+  &--hogar {
+    background-color: var(--badge-hogar-bg);
+    color: var(--badge-hogar-color);
+  }
+
+  &--muebles {
+    background-color: var(--badge-muebles-bg);
+    color: var(--badge-muebles-color);
+  }
+
+  &--deportes {
+    background-color: var(--badge-deportes-bg);
+    color: var(--badge-deportes-color);
+  }
+
+  &--belleza {
+    background-color: var(--badge-belleza-bg);
+    color: var(--badge-belleza-color);
+  }
+
+  &--juguetes {
+    background-color: var(--badge-juguetes-bg);
+    color: var(--badge-juguetes-color);
+  }
+
+  &--libros {
+    background-color: var(--badge-libros-bg);
+    color: var(--badge-libros-color);
+  }
+
+  &--vehiculos {
+    background-color: var(--badge-vehiculos-bg);
+    color: var(--badge-vehiculos-color);
+  }
+
+  &--herramientas {
+    background-color: var(--badge-herramientas-bg);
+    color: var(--badge-herramientas-color);
+  }
+
+  &--otros {
+    background-color: var(--badge-otros-bg);
+    color: var(--badge-otros-color);
+  }
+
+  // --------------------------------
+  // ESTADOS
+  // --------------------------------
+  &--disponible,
+  &--agotado,
+  &--sin-stock,
+  &--reservado,
+  &--proximamente,
+  &--descontinuado,
+  &--pausado {
+    position: relative;
+    padding-left: 2rem;
+
+    &::before {
+      content: "";
+
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+
+      margin-left: -1rem;
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+    }
+  }
+
+  &--disponible {
+    background-color: var(--notif-confirmed-soft);
+    color: var(--notif-confirmed-base);
+
+    &::before {
+      background-color: var(--notif-confirmed-before);
+    }
+  }
+
+  &--agotado,
+  &--sin-stock {
+    background-color: var(--notif-critical-soft);
+    color: var(--notif-critical-base);
+
+    &::before {
+      background-color: var(--notif-critical-base);
+    }
+  }
+
+  &--reservado {
+    background-color: var(--notif-system-soft);
+    color: var(--notif-system-base);
+
+    &::before {
+      background-color: var(--notif-system-before);
+    }
+  }
+
+  &--proximamente {
+    background-color: var(--notif-movements-soft);
+    color: var(--notif-movements-base);
+
+    &::before {
+      background-color: var(--notif-movements-before);
+    }
+  }
+
+  &--descontinuado {
+    border: 1px solid var(--badge-descontinuado-border);
+    background-color: var(--badge-descontinuado-bg);
+    color: var(--badge-descontinuado-color);
+
+    &::before {
+      background-color: var(--badge-descontinuado-before);
+    }
+  }
+
+  &--pausado {
+    background-color: var(--notif-warning-soft);
+    color: var(--notif-warning-base);
+
+    &::before {
+      background-color: var(--notif-warning-before);
+    }
+  }
+}

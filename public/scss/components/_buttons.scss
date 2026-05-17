@@ -23,8 +23,35 @@
     background-color: var(--color-blanco-1);
   }
 
+  &.b--primary {
+    background-color: var(--color-primario);
+    color: var(--color-blanco-1);
+
+    &:hover {
+      background-color: var(--color-primario-light);
+    }
+  }
+
+  &.b--terciary {
+    background-color: var(--color-terciario);
+    color: var(--color-blanco-1);
+
+    &:hover {
+      background-color: var(--color-terciario-hover);
+    }
+  }
+
+  &.b--danger {
+    background-color: var(--notif-critical-base);
+    color: var(--color-blanco-1);
+
+    &:hover {
+      background-color: var(--notif-critical-dark);
+    }
+  }
+
   &.b--danger-hover:hover {
-      background-color: var(--notif-critical-base);
-      color: var(--color-blanco-1);
+    background-color: var(--notif-critical-base);
+    color: var(--color-blanco-1);
   }
 }
