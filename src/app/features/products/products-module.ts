@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 // Componente Padre
@@ -14,17 +15,24 @@ import { ProductsCard } from './components/products-card/products-card';
 // Rutas
 import { productsRoutes } from './products.routes';
 
+// Modulos
+import { SharedModule } from '../../shared/shared-module';
+
+
 @NgModule({
   declarations: [
     Products,
     ProductsFilters,
     ProductsForm,
-    ProductsCard
+    ProductsCard,
   ],
   imports: [
     CommonModule,
     FormsModule,
     FontAwesomeModule,
+    SharedModule,
+
+    // Rutas
     RouterModule.forChild(productsRoutes)
   ],
 })

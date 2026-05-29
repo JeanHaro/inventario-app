@@ -32,7 +32,7 @@ export const  ESTADOS_VARIANTE =[
   'disponible',
   'sin_stock',
   'reservado',
-  'descontinuada',
+  'descontinuado',
 ] as const;
 
 // Extraemos el tipo (autocompletado y validación)

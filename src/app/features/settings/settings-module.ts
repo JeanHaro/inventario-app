@@ -5,8 +5,13 @@ import { RouterModule } from '@angular/router';
 // Rutas
 import { settingsRoutes } from './settings.routes';
 
+// Componentes
+import { Settings } from './settings';
+
 @NgModule({
-  declarations: [],
+  declarations: [
+    Settings
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(settingsRoutes)

@@ -5,8 +5,13 @@ import { RouterModule } from '@angular/router';
 // Rutas
 import { homeRoutes } from './home.routes';
 
+// Componentes
+import { Home } from './home';
+
 @NgModule({
-  declarations: [],
+  declarations: [
+    Home
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(homeRoutes)

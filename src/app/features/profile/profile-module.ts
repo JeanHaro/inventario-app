@@ -5,8 +5,13 @@ import { RouterModule } from '@angular/router';
 // Rutas
 import { profileRoutes } from './profile.routes';
 
+// Componentes
+import { Profile } from './profile';
+
 @NgModule({
-  declarations: [],
+  declarations: [
+    Profile
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(profileRoutes)

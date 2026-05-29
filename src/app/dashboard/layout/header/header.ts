@@ -8,9 +8,6 @@ import {
   faBell
 } from '@fortawesome/free-solid-svg-icons';
 
-import {
-} from '@fortawesome/free-regular-svg-icons';
-
 // Servicios
 import { NotificationService } from './services/notification';
 
@@ -53,8 +50,6 @@ export class Header {
 
       this.showNotification.set(false);
     }
-
-    this.showSearch.set(this.showSearch());
   }
 
   toggleDarkMode() {

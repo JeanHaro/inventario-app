@@ -1,15 +1,22 @@
-import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { NgModule, LOCALE_ID, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+
+import { registerLocaleData } from '@angular/common';
+import localePe from '@angular/common/locales/es-PE';
+registerLocaleData(localePe);
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
-import { Profile } from './features/profile/profile';
-import { Settings } from './features/settings/settings';
-
 @NgModule({
-  declarations: [App, Profile, Settings],
+  declarations: [App],
   imports: [BrowserModule, AppRoutingModule],
-  providers: [provideBrowserGlobalErrorListeners()],
+  providers: [
+    provideBrowserGlobalErrorListeners(),
+    {
+      provide: LOCALE_ID,
+      useValue: 'es-PE',
+    },
+  ],
   bootstrap: [App],
 })
 export class AppModule {}

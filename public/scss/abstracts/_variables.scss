@@ -29,7 +29,7 @@
   --color-accent-hover: #0235B5;
   --color-accent-soft: #DBEAFE;
 
-  // Notificaciones
+  // NOTIFICACIONES
   --notif-critical-base: #E24B4A;
   --notif-critical-dark:  #C43A39;
   --notif-critical-soft:  #FEE2E2;
@@ -50,28 +50,29 @@
   --notif-system-soft:    #F3E8FF;
   --notif-system-before:    #9333EA;
 
-// ================================================================
-// BADGES — CATEGORÍAS
-// ================================================================
---badge-electronica-bg:     #DBEAFE;  --badge-electronica-color:     #1E40AF;
---badge-tecnologia-bg:      #EDE9FE;  --badge-tecnologia-color:      #5B21B6;
---badge-ropa-bg:            #FCE7F3;  --badge-ropa-color:            #9D174D;
---badge-calzado-bg:         #FEE2E2;  --badge-calzado-color:         #991B1B;
---badge-alimentos-bg:       #DCFCE7;  --badge-alimentos-color:       #166534;
---badge-bebidas-bg:         #CFFAFE;  --badge-bebidas-color:         #155E75;
---badge-hogar-bg:           #FFEDD5;  --badge-hogar-color:           #9A3412;
---badge-muebles-bg:         #FDE68A;  --badge-muebles-color:         #78350F;
---badge-deportes-bg:        #CCFBF1;  --badge-deportes-color:        #115E59;
---badge-belleza-bg:         #FAE8FF;  --badge-belleza-color:         #86198F;
---badge-juguetes-bg:        #FEF9C3;  --badge-juguetes-color:        #854D0E;
---badge-libros-bg:          #FDF6E3;  --badge-libros-color:          #5C4033;
---badge-vehiculos-bg:       #E0F2FE;  --badge-vehiculos-color:       #075985;
---badge-herramientas-bg:    #ECFCCB;  --badge-herramientas-color:    #4D7C0F;
---badge-otros-bg:           #F8FAFC;  --badge-otros-color:           #475569;
+  // BADGES — CATEGORÍAS
+  --badge-electronica-bg:     #DBEAFE;  --badge-electronica-color:     #1E40AF;
+  --badge-tecnologia-bg:      #EDE9FE;  --badge-tecnologia-color:      #5B21B6;
+  --badge-ropa-bg:            #FCE7F3;  --badge-ropa-color:            #9D174D;
+  --badge-calzado-bg:         #FEE2E2;  --badge-calzado-color:         #991B1B;
+  --badge-alimentos-bg:       #DCFCE7;  --badge-alimentos-color:       #166534;
+  --badge-bebidas-bg:         #CFFAFE;  --badge-bebidas-color:         #155E75;
+  --badge-hogar-bg:           #FFEDD5;  --badge-hogar-color:           #9A3412;
+  --badge-muebles-bg:         #FDE68A;  --badge-muebles-color:         #78350F;
+  --badge-deportes-bg:        #CCFBF1;  --badge-deportes-color:        #115E59;
+  --badge-belleza-bg:         #FAE8FF;  --badge-belleza-color:         #86198F;
+  --badge-juguetes-bg:        #FEF9C3;  --badge-juguetes-color:        #854D0E;
+  --badge-libros-bg:          #FDF6E3;  --badge-libros-color:          #5C4033;
+  --badge-vehiculos-bg:       #E0F2FE;  --badge-vehiculos-color:       #075985;
+  --badge-herramientas-bg:    #ECFCCB;  --badge-herramientas-color:    #4D7C0F;
+  --badge-otros-bg:           #F8FAFC;  --badge-otros-color:           #475569;
 
-// BADGES — ESTADO
---badge-descontinuado-bg:   #F1F5F9;
---badge-descontinuado-color:#475569;
---badge-descontinuado-before:  #64748B;
---badge-descontinuado-border:#E2E8F0;;
+  // BADGES — ESTADO
+  --badge-descontinuado-bg:   #F1F5F9;
+  --badge-descontinuado-color:#475569;
+  --badge-descontinuado-before:  #64748B;
+  --badge-descontinuado-border:#E2E8F0;
+
+  // COLLAPSED
+  --collapsed-height: 200rem; // MODIFICAR SI HAY ALGUN PRODUCTO CON MUCHAS VARIANTES QUE PASA EL LIMITE DEL ALTO
 }

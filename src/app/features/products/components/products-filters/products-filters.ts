@@ -11,7 +11,7 @@ import { Categoria, CATEGORIAS_LIST, Producto } from '../../models/products.mode
 })
 export class ProductsFilters {
   // Propiedades
-  categorias: string[] = [
+  categorias: Categoria[] = [
     ...CATEGORIAS_LIST
   ]
 

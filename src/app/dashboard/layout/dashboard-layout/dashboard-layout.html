@@ -1,22 +1,23 @@
 <!-- HEADER -->
 <app-header
-  (sidebarActive)="toggleSidebar($event)"
-  [showSidebar]="showSidebar"
+  (sidebarActive)="toggleSidebar()"
+  [showSidebar]="showSidebar()"
 ></app-header>
 
 <!-- CUERPO -->
-<div class="layout-body" [class.active]="showSidebar">
+<div class="layout-body" [class.active]="showSidebar()">
   <!-- SIDEBAR -->
   <app-sidebar
-    [class.active]="showSidebar"
-    [showSidebar]="showSidebar"
+    [class.active]="showSidebar()"
+    [showSidebar]="showSidebar()"
   ></app-sidebar>
 
   <!-- MAIN (Contenido) -->
   <main
+    #mainContent
     class="main-content"
-    [class.active]="showSidebar"
-    (click)="toggleSidebar($event)"
+    [class.active]="showSidebar()"
+    (click)="onOverlayClick($event)"
   >
     <router-outlet></router-outlet>
     <app-footer></app-footer>

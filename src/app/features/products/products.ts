@@ -1,4 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal
+} from '@angular/core';
 
 // Font Awesome
 import {
@@ -19,6 +25,7 @@ import {
   faBarcode,
   faXmark,
   faFloppyDisk,
+  faMinus
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -39,6 +46,14 @@ import {
 // Servicios
 import { InventarioService } from './services/inventario';
 
+type VariantePanel = {
+  tipo: 'kebab' | 'stock',
+  id: number,
+  productoId: number;
+};
+
+type StateCheckbox = 'vacio' | 'todos' | 'parcial' | 'ninguno';
+
 @Component({
   selector: 'app-products',
   standalone: false,
@@ -46,7 +61,10 @@ import { InventarioService } from './services/inventario';
   styleUrl: './products.scss',
 })
 export class Products implements OnInit {
-  // Iconos
+  // Inyecciones
+  private inventarioService = inject(InventarioService);
+
+  // TODO: Iconos
   readonly faTableCellsLarge: IconDefinition = faTableCellsLarge;
   readonly faCheckCircle: IconDefinition = faCheckCircle;
   readonly faCircleXmark: IconDefinition = faCircleXmark;
@@ -69,60 +87,161 @@ export class Products implements OnInit {
   readonly faBarcode: IconDefinition = faBarcode;
   readonly faXmark: IconDefinition = faXmark;
   readonly faFloppyDisk: IconDefinition = faFloppyDisk;
+  readonly faMinus: IconDefinition = faMinus;
 
-  // Propiedades
-  productos: Producto[] = [];
-  categoriaSeleccionada= signal<string>('Todas');
+  // TODO: Propiedades
+  productos = signal<Producto[]>([]);
+  productoExpandido = signal<number | null>(null);
+  variantePanel = signal<VariantePanel | null>(null);
+  productosSeleccionados = signal<Set<number>>(new Set());
+  estadoSeleccionado = signal<EstadoProducto | 'Todas'>('Todas');
 
-  mostrarFormulario: boolean = false;
-
-  constructor (
-    private inventarioService: InventarioService
-  ) {}
+  constructor () {}
 
   ngOnInit(): void {
-    this.productos = this.inventarioService.obtenerProductos();
+    this.inventarioService.obtenerProductos().subscribe({
+      next: ( resp ) => {
+        this.productos.set(resp);
+      },
+    });
   }
 
-  // Getters - productos filtrados según categoría seleccionada
-  get productosFiltrados(): Producto[] {
-    if (this.categoriaSeleccionada() === 'Todas') return this.productos;
+  // TODO: COMPUTED
+  // Contar la cantidad de productos por estado
+  readonly conteosPorEstado = computed(() => {
+    return this.productos().reduce(
+      ( accumulator , producto ) => {
+        accumulator[producto.estado] = ( accumulator[producto.estado] ?? 0 ) + 1;
 
-    return this.productos.filter( p => p.categoria === this.categoriaSeleccionada() );
+        return accumulator;
+      },
+      {} as Partial<Record<EstadoProducto, number>>
+    )
+  });
+
+  // Filtrar los productos por estado
+  readonly productosPorEstado = computed<Producto[]>(() => {
+    if ( this.estadoSeleccionado() === 'Todas' ) return this.productos();
+
+    return this.productos().filter(
+      producto => producto.estado === this.estadoSeleccionado()
+    );
+  });
+
+  // Obtener la cantidad de todos los productos seleccionados
+  readonly totalSeleccionados = computed<number>(() => {
+    return this.productosSeleccionados().size;
+  })
+
+  // Obtedner los productos seleccionados para archivar
+  readonly productosParaArchivar = computed<Producto[]>(() => {
+    return this.productos().filter(
+      producto => this.productosSeleccionados().has(producto.id)
+    );
+  });
+
+  // Condicion del estado del checkbox
+  readonly checkboxEstado = computed<StateCheckbox>(() => {
+    const total = this.totalSeleccionados();
+    const visibles = this.productosPorEstado().length;
+
+    if ( visibles === 0 ) return 'vacio';
+    if (total === visibles) return 'todos';
+    if (total > 0) return 'parcial';
+
+    return 'ninguno';
+  });
+
+  // TODO: MÉTODOS
+  // Mostrar variantes
+  toggleVariantes ( id: number ): void {
+    const producto = this.productos()
+                        .filter( producto => producto.id === id)
+                        .find( p => p.variantes.length > 0);
+
+    if ( !producto ) {
+      return;
+    }
+
+    this.variantePanel.set(null);
+
+    const actual = this.productoExpandido();
+
+    this.productoExpandido.set( actual === id ? null : id );
   }
 
-  get totalDisponibles(): number {
-    return this.productos.filter(p => p.estado === 'disponible').length;
+  // Mostrar Kebar por variante
+  toggleKebabVariante ( id: number, productoId: number ): void {
+    this.limpiarSeleccion();
+
+    const actual = this.variantePanel();
+    const yaAbierto = actual?.tipo === 'kebab' && actual?.id === id;
+
+    this.variantePanel.set( yaAbierto ? null : { tipo: 'kebab', id, productoId } );
   }
 
-  get totalAgotados(): number {
-    return this.productos.filter(p => p.estado === 'agotado').length;
+  // Mostrar el kebab del stock
+  abrirStockVariante ( id: number, productoId: number ): void {
+    this.limpiarSeleccion();
+
+    const actual = this.variantePanel();
+    const yaAbierto = actual?.tipo === 'stock' && actual?.id === id;
+
+    this.variantePanel.set(yaAbierto ? null :{ tipo: 'stock', id, productoId });
   }
 
-  // Métodos
-  onEstadoChange ( id: number, event: Event ): void {
-    const select = event.target as HTMLSelectElement;
-    const estado = select.value as EstadoProducto;
+  // Mostrar Kebab por producto
+  toggleKebabProducto ( id: number ): void {
+    this.variantePanel.set(null);
 
-    this.cambiarEstado(id, estado);
+    // Si ese producto ya es el único seleccionado
+    if ( this.totalSeleccionados() === 1 && this.estaSeleccionado(id) ) {
+      return this.limpiarSeleccion();
+    }
+
+    // Liimpiar y seleccionar solo ese producto
+    this.productosSeleccionados.set(new Set([id]));
   }
 
-  cambiarEstado ( id: number, estado: EstadoProducto ): void {
-    this.inventarioService.cambiarEstado(id, estado);
+  // Añadir o sacar productos de la selección
+  toggleSeleccion ( id: number ): void {
+    this.variantePanel.set(null);
+
+    const seleccionados = new Set(this.productosSeleccionados());
+
+    seleccionados.has(id) ? seleccionados.delete(id) : seleccionados.add(id);
+
+    this.productosSeleccionados.set(seleccionados);
   }
 
-  eliminarProducto ( id: number ): void {
-    this.inventarioService.eliminarProducto(id);
+  // Identificar si el producto esta seleccionado
+  estaSeleccionado ( id: number ): boolean {
+    return this.productosSeleccionados().has(id);
   }
 
-  // TODO: Formulario
-  toggleFormulario(): void {
-    this.mostrarFormulario = !this.mostrarFormulario;
+  // Seleccionar todas
+  seleccionarTodas(): void {
+    this.variantePanel.set(null);
+
+    const seleccionados = new Set(this.productosSeleccionados());
+
+    if ( this.totalSeleccionados() === this.productosPorEstado().length ) {
+      return this.limpiarSeleccion();
+    }
+
+    this.productosPorEstado().forEach( product => seleccionados.add(product.id) );
+    return this.productosSeleccionados.set(seleccionados);
   }
 
-  // Recibe el producto del hijo y llama al servicio
-  onProductoCreado ( producto: Producto ): void {
-    this.inventarioService.agregarProducto(producto);
-    this.toggleFormulario();
+  // Limpiar selecciones
+  limpiarSeleccion(): void {
+    this.productosSeleccionados.set(new Set());
+  }
+
+  // Cambiar el valor del estado seleccionado
+  estadoPorProducto ( estado: EstadoProducto | 'Todas' ): void {
+    this.limpiarSeleccion();
+
+    this.estadoSeleccionado.set(estado);
   }
 }

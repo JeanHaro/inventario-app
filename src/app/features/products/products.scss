@@ -64,9 +64,12 @@
       margin-left: -0.5rem;
 
       font-size: 1.4rem;
-      font-weight: bold;
+      font-weight: 600;
 
       z-index: var(--i);
+
+      backface-visibility: hidden;
+      will-change: transform;
 
       @media (min-width: 1024px) {
         font-size: 1.6rem;
@@ -80,8 +83,6 @@
       &:not(.b--white) {
         background-color: var(--color-blanco-8);
         color: var(--color-blanco-6);
-
-        font-weight: normal;
       }
 
       // Tab activa
@@ -289,6 +290,14 @@
         transform: scale(0.8);
       }
 
+      #check_products:indeterminate ~ label {
+        color: var(--color-primario);
+
+        fa-icon {
+          font-size: 1rem;
+        }
+      }
+
       // Pensar en reutilizarlo, ya que es lo mismo que el de TH
       label {
         display: flex;
@@ -322,8 +331,33 @@
   // CUERPO DE LA TABLA — PRODUCTO ( Con variantes )
   // ================================================================
   &__body-main {
+    position: relative;
+
     width: fit-content;
     min-width: 100%;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0.1rem;
+
+      transform: translateY(-50%);
+
+      width: 0.5rem;
+      height: 0%;
+      border-radius: 5rem;
+      background-color: var(--color-primario);
+
+      transition: 0.5s ease;
+    }
+
+
+    &.active {
+      &::after {
+        height: 90%;
+      }
+    }
 
     // Fila par con fondo alternado
     &:nth-child(2n) {
@@ -407,9 +441,22 @@
 
         fa-icon {
           font-size: 1.4rem;
+
+          transform: rotate(0deg);
+
+          transition: 0.5s ease-out;
         }
 
-        &:hover {
+        &.is-collapsed {
+          background-color: var(--color-blanco-3);
+
+          > fa-icon {
+            transform: rotate(180deg);
+          }
+        }
+
+        &:hover,
+        &.active {
           background-color: var(--color-blanco-3);
         }
       }
@@ -425,18 +472,27 @@
     justify-content: flex-start;
     gap: 1rem;
 
-    height: fit-content;
+    overflow: hidden;
+
+    // MODIFICAR SI HAY ALGUN PRODUCTO CON MUCHAS VARIANTES QUE PASA EL LIMITE DEL ALTO
+    max-height: var(--collapsed-height);
+
     padding: 1.5rem;
     margin-bottom: 1.5rem;
 
+    transition: max-height 0.45s ease,
+                opacity 0.3s ease,
+                margin-bottom 0.45s ease;
+
     // Estado colapsado ( variantes ocultas )
-    &.active {
+    &.is-collapsed {
+      max-height: 0;
       opacity: 0;
+
       user-select: none;
 
-      height: 0;
       margin-bottom: 0;
-      padding: 0;
+      padding: 0 1.5rem;
     }
   }
 
@@ -556,6 +612,7 @@
             font-size: 1.4rem;
           }
 
+          &.active,
           &:hover {
             background-color: var(--color-blanco-3);
           }
@@ -573,18 +630,35 @@
     bottom: 0;
     left: 50%;
 
-    transform: translateX(-50%);
+    transform: translateX(-50%) scale(0.75) translateY(1rem);
 
     display: flex;
     align-items: center;
     gap: 1.5rem;
 
+    opacity: 0;
     padding: 1.5rem;
     background-color: var(--color-primario);
     border-radius: 1rem;
     box-shadow: 0 2px 5px 4px rgba( 0, 0, 0, 0.5);
 
     z-index: 10;
+
+    pointer-events: none;
+    transition: opacity 0.25s ease,
+                transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    &.active {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(-50%) scale(1) translateY(0);
+    }
+
+    > span {
+      font-size: 1.4rem;
+      white-space: nowrap;
+      color: var(--color-blanco-3);
+    }
   }
 
   &__btn {

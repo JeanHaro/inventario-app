@@ -1,4 +1,9 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  signal,
+  viewChild
+} from '@angular/core';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -7,15 +12,18 @@ import { Component } from '@angular/core';
   styleUrl: './dashboard-layout.scss',
 })
 export class DashboardLayout {
-  showSidebar: boolean = false;
+  readonly mainContent = viewChild.required<ElementRef<HTMLElement>>('mainContent');
+
+  showSidebar = signal<boolean>(false);
+
+  toggleSidebar(): void {
+    this.showSidebar.set(!this.showSidebar());
+  }
 
   // Métodos
-  toggleSidebar (e: Event): void {
-    const { name } = e.target as HTMLButtonElement;
-    const mainElement = document.querySelector('main.main-content.active');
-
-    if (name === 'sidebar-active' || mainElement === e.target) {
-      this.showSidebar = !this.showSidebar;
+  onOverlayClick ( e: Event ): void {
+    if ( this.showSidebar() && e.target === this.mainContent().nativeElement ) {
+      this.showSidebar.set(false);
     }
   }
 }

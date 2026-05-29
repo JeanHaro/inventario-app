@@ -96,7 +96,7 @@
   // --------------------------------
   &--disponible,
   &--agotado,
-  &--sin-stock,
+  &--sin_stock,
   &--reservado,
   &--proximamente,
   &--descontinuado,
@@ -128,7 +128,7 @@
   }
 
   &--agotado,
-  &--sin-stock {
+  &--sin_stock {
     background-color: var(--notif-critical-soft);
     color: var(--notif-critical-base);
 

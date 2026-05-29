@@ -40,7 +40,7 @@ export class Reports implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.allProducts = this.inventarioService.obtenerProductos();
+    // this.allProducts = this.inventarioService.obtenerProductos();
 
     this.savedReports.set(this.reportService.getReports());
   }
