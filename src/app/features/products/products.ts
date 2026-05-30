@@ -14,10 +14,11 @@ import { forkJoin, map, of } from 'rxjs';
 import {
   IconDefinition,
   faBoxArchive,
+  faBoxOpen,
   faXmark,
   faClockRotateLeft,
   faBarcode,
-  faFloppyDisk
+  faFloppyDisk,
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -27,6 +28,7 @@ import {
 // Modelos
 import {
   EstadoProducto,
+  EstadoVariante,
   Producto,
   Variante,
   VariantePanel,
@@ -50,6 +52,7 @@ export class Products implements OnInit {
   // TODO: ICONOS
   readonly faEye: IconDefinition = faEye;
   readonly faBoxArchive: IconDefinition = faBoxArchive;
+  readonly faBoxOpen: IconDefinition = faBoxOpen;
   readonly faXmark: IconDefinition = faXmark;
   readonly faClockRotateLeft: IconDefinition = faClockRotateLeft;
   readonly faBarcode: IconDefinition = faBarcode;
@@ -104,6 +107,11 @@ export class Products implements OnInit {
     );
   });
 
+  // Indica si la variante actual está archivada
+  readonly varianteEstaArchivada = computed<boolean>( () =>
+    this.variante()?.estado === 'descontinuado'
+  )
+
   // TODO: rxResource
   // Buscar producto
   productResource = rxResource({
@@ -136,7 +144,31 @@ export class Products implements OnInit {
     }
   });
 
-  // TODO: MÉTODOS
+  // TODO: MÉTODOS PRIVADOS
+  // Decide que estado aplicar según el estado actual
+  private resolverEstadoArchivar(): EstadoVariante {
+    const variante = this.variante();
+
+    // Si ya está archivada -> Desarchivar según su stock
+    if ( variante?.estado === 'descontinuado' ) {
+      return variante.stock === 0 ? 'sin_stock' : 'disponible';
+    }
+
+    // Si no está archivada -> archivar
+    return 'descontinuado';
+  }
+
+  // Sincroniza la respuesta de la API con el signal local (producto)
+  private sincronizarRespuesta ( resp: Producto ): void {
+    this.productos.update( productos =>
+      productos.map( producto => producto.id === resp.id ? resp : producto )
+    );
+
+    this.variante.set(null);
+    this.variantePanel.set(null);
+  }
+
+  // TODO: MÉTODOS PÚBLICOS
   // Seleccionar todas
   seleccionarTodas(): void {
     const seleccionados = new Set( this.productosSeleccionados() );
@@ -207,15 +239,25 @@ export class Products implements OnInit {
       variantId.toString(),
       { stock: Number(value) }
     ).subscribe({
-      next: ( resp ) => {
-        // Actualizar el producto del signal local
-        this.productos.update( productos =>
-          productos.map( p => p.id === resp.id ? resp : p )
-        );
+      next: ( resp ) => this.sincronizarRespuesta(resp)
+    })
+  }
 
-        this.variante.set(null); // Borramos la variante del signal
-        this.variantePanel.set(null); // Cerramos el panel de stock
-      }
+  // Archivar / Desarchivar la variante
+  toggleArchivarVariante() {
+    if ( !this.variantePanel() ) return;
+    if ( !this.variante() ) return;
+
+    const productId = this.variantePanel()!.productoId;
+    const variantId = this.variante()!.id;
+    const nuevoEstado = this.resolverEstadoArchivar();
+
+    this.inventarioService.actualizarVariante(
+      productId.toString(),
+      variantId.toString(),
+      { estado: nuevoEstado }
+    ).subscribe({
+      next: ( resp ) => this.sincronizarRespuesta(resp),
     })
   }
 }

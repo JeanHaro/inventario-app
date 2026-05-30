@@ -120,9 +120,17 @@
       </button>
 
       <!-- Archivar -->
-      <button class="products__btn products__btn--store btn b--terciary none">
-        <fa-icon [icon]="faBoxArchive"></fa-icon>
-        <span>Archivar</span>
+      <button
+        (click)="toggleArchivarVariante()"
+        class="products__btn products__btn--store btn b--terciary none"
+      >
+        @if ( varianteEstaArchivada() ) {
+          <fa-icon [icon]="faBoxOpen"></fa-icon>
+          <span>Desarchivar</span>
+        } @else {
+          <fa-icon [icon]="faBoxArchive"></fa-icon>
+          <span>Archivar</span>
+        }
       </button>
 
       <!-- Cerrar -->
@@ -158,7 +166,10 @@
       </div>
 
       <!-- Guardar -->
-      <button (click)="actualizarStock(stockValue.value)" class="products__btn btn b--terciary none">
+      <button
+        (click)="actualizarStock(stockValue.value)"
+        class="products__btn btn b--terciary none"
+      >
         <fa-icon [icon]="faFloppyDisk"></fa-icon>
         <span>Guardar</span>
       </button>
