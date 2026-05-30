@@ -1,0 +1,288 @@
+<!-- ================================
+  TABLA
+================================ -->
+<div class="products__table">
+
+  <!-- ================================
+    CABECERA DE LA TABLA
+  ================================ -->
+  <div class="products__table-head">
+
+    <!-- TH: Checkbox global -->
+    <div class="products__th products__check">
+      <input
+        type="checkbox"
+        id="check_products"
+        [checked]="checkboxEstado() === 'todos'"
+        [indeterminate]="checkboxEstado() === 'parcial'"
+        (click)="seleccionarTodas()"
+      >
+      <label for="check_products">
+        @if ( checkboxEstado() === 'parcial' ) {
+          <fa-icon [icon]="faMinus"></fa-icon>
+        } @else if ( checkboxEstado() === 'todos' ) {
+          <fa-icon [icon]="faCheck"></fa-icon>
+        }
+      </label>
+    </div>
+
+    <!-- TH: Nombre -->
+    <div class="products__th products__name">
+      <span>Nombre</span>
+      <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+    </div>
+
+    <!-- TH: Marca / Modelo -->
+    <div class="products__th products__brand-model">
+      <span>Marca / Modelo</span>
+      <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+    </div>
+
+    <!-- TH: Precio base -->
+    <div class="products__th products__price">
+      <span>Precio base</span>
+      <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+    </div>
+
+    <!-- TH: Descuento -->
+    <div class="products__th products__discount">
+      <span>Descuento</span>
+      <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+    </div>
+
+    <!-- TH: Categoría -->
+    <div class="products__th products__category">
+      <span>Categoría</span>
+      <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+    </div>
+
+    <!-- TH: Estado -->
+    <div class="products__th products__state">
+      <span>Estado</span>
+      <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+    </div>
+
+    <!-- TH: Variantes -->
+    <div class="products__th products__variants">
+      <span># Variantes</span>
+      <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+    </div>
+
+    <!-- TH: Acciones -->
+    <div class="products__th products__action">
+      <span>Acciones</span>
+    </div>
+
+  </div>
+  <!-- END: CABECERA -->
+
+  <!-- ================================
+    CUERPO DE LA TABLA
+  ================================ -->
+  <div class="products__table-body">
+
+    @for ( producto of productos(); track producto.id ) {
+
+      <!-- PRODUCTO -->
+      <div class="products__body-main" [class.active]="estaSeleccionado(producto.id)">
+
+        <!-- FILA DEL PRODUCTO -->
+        <div class="products__body-content">
+
+          <!-- TD: Checkbox individual -->
+          <div class="products__td products__check">
+            <input
+              type="checkbox"
+              [id]="`check_product-${producto.id}`"
+              [checked]="estaSeleccionado(producto.id)"
+              (change)="toggleSeleccion(producto.id)"
+            >
+            <label [for]="`check_product-${producto.id}`">
+              <fa-icon [icon]="faCheck"></fa-icon>
+            </label>
+          </div>
+
+          <!-- TD: Nombre -->
+          <div class="products__td products__name">
+            <span>
+              @if ( producto.nombre.length > 20 ) {
+                {{ producto.nombre | slice:0:20 }}...
+              } @else {
+                {{ producto.nombre }}
+              }
+            </span>
+          </div>
+
+          <!-- TD: Marca / Modelo -->
+          <div class="products__td products__brand-model">
+            <span>{{ producto.marca ?? '-' }} / {{ producto.modelo ?? '-' }}</span>
+          </div>
+
+          <!-- TD: Precio base -->
+          <div class="products__td products__price">
+            <span>{{ producto.precio | compactNumber: 'precio' }}</span>
+          </div>
+
+          <!-- TD: Descuento -->
+          <div class="products__td products__discount">
+            <span>{{ ( producto.descuento ?? 0 ) / 100 | percent: '1.0-1' }}</span>
+          </div>
+
+          <!-- TD: Categoría -->
+          <div class="products__td products__category">
+            <span [class]="`badge badge--${producto.categoria}`">
+              {{ producto.categoria }}
+            </span>
+          </div>
+
+          <!-- TD: Estado -->
+          <div class="products__td products__state">
+            <span [class]="`badge badge--${producto.estado}`">
+              {{ producto.estado }}
+            </span>
+          </div>
+
+          <!-- TD: Cantidad de variantes -->
+          <div class="products__td products__variants">
+            <span>{{ producto.variantes.length }}</span>
+          </div>
+
+          <!-- TD: Acciones -->
+          <div class="products__td products__action">
+
+            <!-- Editar producto -->
+            <button class="products__action-btn products__action-btn--edit btn b--hidden none">
+              <fa-icon [icon]="faPenToSquare"></fa-icon>
+              <span class="sr-only">Editar</span>
+            </button>
+
+            <!-- Agregar variante -->
+            <button class="products__action-btn products__action-btn--add btn b--hidden none">
+              <fa-icon [icon]="faLayerGroup"></fa-icon>
+              <span class="sr-only">Agregar nueva variante</span>
+            </button>
+
+            <!-- Mostrar / ocultar variantes -->
+            <button
+              [class.is-collapsed]="productoExpandido() === producto.id"
+              (click)="toggleVariantes(producto.id)"
+              class="products__action-btn products__action-btn--dropdown btn b--hidden none"
+            >
+              <fa-icon class="icon-dropdown" [icon]="faChevronDown"></fa-icon>
+              <span class="sr-only">Mostrar / Ocultar variantes</span>
+            </button>
+
+            <!-- Más opciones del producto -->
+            <button
+              [class.active]="estaSeleccionado(producto.id)"
+              (click)="toggleKebabProducto(producto.id)"
+              class="products__action-btn products__action-btn--kebab btn b--hidden none"
+            >
+              <fa-icon [icon]="faEllipsisVertical"></fa-icon>
+              <span class="sr-only">Más opciones</span>
+            </button>
+
+          </div>
+
+        </div>
+        <!-- END: FILA DEL PRODUCTO -->
+
+        <!-- VARIANTES ( is-collapsed = ocultas ) -->
+        <div
+          [class.is-collapsed]="productoExpandido() !== producto.id"
+          class="products__body-variants"
+        >
+
+          @for ( variante of producto.variantes; track variante.id ) {
+
+            <!-- VARIANTE -->
+            <div class="products__variants-content">
+
+              <!-- TD: Imagen -->
+              <div class="products__td products__img">
+                @if ( variante.imagen?.length ) {
+                  <img [src]="variante.imagen" [alt]="variante.nombre ?? 'Imagen de variante'">
+                } @else {
+                  <img src="./img/iphone15.png" alt="Imagen por defecto">
+                }
+              </div>
+
+              <!-- TD: Nombre y SKU -->
+              <div class="products__td products__information">
+                <span class="products__information-name">
+                  {{ variante.nombre ?? 'Nombre por defecto' }}
+                </span>
+                <span class="products__information-sku">
+                  {{ variante.sku ?? 'sin-sku' }}
+                </span>
+              </div>
+
+              <!-- TD: Estado -->
+              <div class="products__td products__state">
+                <span>Estado</span>
+                <span [class]="`badge badge--${variante.estado}`">
+                  {{ variante.estado }}
+                </span>
+              </div>
+
+              <!-- TD: Stock -->
+              <div class="products__td products__stock">
+                <span>Stock</span>
+                <span>{{ variante.stock | compactNumber: 'stock' }}</span>
+              </div>
+
+              <!-- TD: Precio adicional -->
+              <div class="products__td products__price">
+                <span>Precio</span>
+                <span>{{ variante.precioAdicional ?? 0 | compactNumber: 'precio' }}</span>
+              </div>
+
+              <!-- TD: Acciones de variante -->
+              <div class="products__td products__action">
+
+                <!-- Editar variante -->
+                <button class="products__action-btn products__action-btn--edit btn b--hidden none">
+                  <fa-icon [icon]="faPenToSquare"></fa-icon>
+                  <span class="sr-only">Editar variante</span>
+                </button>
+
+                <!-- Actualizar stock -->
+                <button
+                  [class.active]="variantePanel()?.tipo === 'stock' && variantePanel()?.id === variante.id"
+                  (click)="abrirStockVariante(variante.id, producto.id)"
+                  class="products__action-btn products__action-btn--stock btn b--hidden none"
+                >
+                  <fa-icon [icon]="faBoxesStacked"></fa-icon>
+                  <span class="sr-only">Actualizar stock</span>
+                </button>
+
+                <!-- Más opciones de variante -->
+                <button
+                  [class.active]="variantePanel()?.tipo === 'kebab' && variantePanel()?.id === variante.id"
+                  (click)="toggleKebabVariante(variante.id, producto.id)"
+                  class="products__action-btn products__action-btn--kebab btn b--hidden none"
+                >
+                  <fa-icon [icon]="faEllipsisVertical"></fa-icon>
+                  <span class="sr-only">Más opciones de variante</span>
+                </button>
+
+              </div>
+
+            </div>
+            <!-- END: VARIANTE -->
+
+          }
+
+        </div>
+        <!-- END: VARIANTES -->
+
+      </div>
+      <!-- END: PRODUCTO -->
+
+    }
+
+  </div>
+  <!-- END: CUERPO -->
+
+</div>
+<!-- END: TABLA -->

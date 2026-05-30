@@ -7,25 +7,19 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 // Componente Padre
 import { Products } from './products';
-// Componentes Hijos
+// Componentes hijos
 import { ProductsFilters } from './components/products-filters/products-filters';
-import { ProductsForm } from './components/products-form/products-form';
-import { ProductsCard } from './components/products-card/products-card';
+import { ProductsTools } from './components/products-tools/products-tools';
 
 // Rutas
 import { productsRoutes } from './products.routes';
 
 // Modulos
 import { SharedModule } from '../../shared/shared-module';
-
+import { ProductsTable } from './components/products-table/products-table';
 
 @NgModule({
-  declarations: [
-    Products,
-    ProductsFilters,
-    ProductsForm,
-    ProductsCard,
-  ],
+  declarations: [Products, ProductsFilters, ProductsTools, ProductsTable],
   imports: [
     CommonModule,
     FormsModule,
@@ -33,7 +27,7 @@ import { SharedModule } from '../../shared/shared-module';
     SharedModule,
 
     // Rutas
-    RouterModule.forChild(productsRoutes)
+    RouterModule.forChild(productsRoutes),
   ],
 })
 export class ProductsModule {}

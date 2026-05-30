@@ -1,0 +1,415 @@
+// ================================
+// TABLAS
+// ================================
+.products__table {
+  position: relative;
+
+  margin: 0 1rem;
+
+  overflow-x: scroll;
+
+  // Scrollbar oculto pero funcional
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    display: none;
+  }
+
+  // Ocultar checkboxes
+  input[type="checkbox"] {
+    display: none;
+    visibility: hidden;
+  }
+
+  // ================================
+  // CABECERA DE LA TABLA
+  // ================================
+  &-head {
+    position: sticky;
+    top: 0;
+
+    display: inline-flex;
+
+    width: fit-content;
+    min-width: 100%;
+    background-color: var(--color-blanco-8);
+    padding: 0 0.5rem;
+    border-radius: 0.5rem;
+
+    z-index: 1;
+  }
+
+  // ================================
+  // CUERPO DE LA TABLA
+  // ================================
+  &-body {
+    background-color: var(--color-blanco-1);
+
+    height: calc(100vh - 40.5rem);
+    border-radius: 0.5rem;
+  }
+}
+
+// CABECERA DE LA TABLA - TH ( Celdas de cabecera )
+.products__th {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+
+  user-select: none;
+  min-width: 20rem;
+  width: 100%;
+  padding: 1.6rem 0;
+
+  cursor: pointer;
+
+  fa-icon {
+    font-size: 1.4rem;
+  }
+
+  // TH: Columna checkbox
+  &.products__check {
+    padding: 0 1rem;
+    min-width: 4rem;
+    max-width: 4rem;
+
+    #check_products:checked ~ label {
+      background-color: var(--color-primario);
+      border: 2px solid var(--color-primario);
+      box-shadow: 0px 0px 1px 3px rgba(0, 29, 61, 0.4);
+      color: var(--color-blanco-1);
+
+      transform: scale(0.8);
+    }
+
+    #check_products:indeterminate ~ label {
+      color: var(--color-primario);
+
+      fa-icon {
+        font-size: 1rem;
+      }
+    }
+
+    // Pensar en reutilizarlo, ya que es lo mismo que el de TH
+    label {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      cursor: pointer;
+
+      border: 1px solid var(--color-blanco-4);
+      box-shadow: 0px 0px 1px 2px rgba(180, 180, 180, 0.3);
+      background-color: var(--color-blanco-1);
+      width: 2rem;
+      height: 2rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+
+      font-size: 1.1rem;
+      color: transparent;
+
+      transition: 0.5s ease;
+    }
+  }
+
+  // TH: Columna acciones
+  &.products__action {
+    cursor: unset;
+  }
+}
+
+// ================================================================
+// CUERPO DE LA TABLA — PRODUCTO ( Con variantes )
+// ================================================================
+.products__body-main {
+  position: relative;
+
+  width: fit-content;
+  min-width: 100%;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0.1rem;
+
+    transform: translateY(-50%);
+
+    width: 0.5rem;
+    height: 0%;
+    border-radius: 5rem;
+    background-color: var(--color-primario);
+
+    transition: 0.5s ease;
+  }
+
+
+  &.active {
+    &::after {
+      height: 90%;
+    }
+  }
+
+  // Fila par con fondo alternado
+  &:nth-child(2n) {
+    background-color: var(--color-blanco-2);
+
+    .products__variants-content {
+      box-shadow: 0 2px 4px 2px rgba(180, 180, 180, 0.3);
+    }
+  }
+}
+
+// CUERPO DE LA TABLA - FILA DE PRODUCTO
+.products__body-content {
+  display: flex;
+
+  width: fit-content;
+  min-width: 100%;
+  padding: 0 0.5rem;
+  border-radius: 0.5rem;
+}
+
+// CUERPO DE LA TABLA — TD ( celda de datos )
+.products__td {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+
+  min-width: 20rem;
+  width: 100%;
+  padding: 1.6rem 0;
+
+  // TD: Columna checkbox
+  &.products__check {
+    padding: 0 1rem;
+    min-width: 4rem;
+    max-width: 4rem;
+
+    input[type="checkbox"]:checked ~ label {
+      background-color: var(--color-primario);
+      border: 2px solid var(--color-primario);
+      box-shadow: 0px 0px 1px 3px rgba(0, 29, 61, 0.4);
+      color: var(--color-blanco-1);
+
+      transform: scale(0.8);
+    }
+
+    // Pensar en reutilizarlo, ya que es lo mismo que el de TH
+    label {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      cursor: pointer;
+
+      border: 1px solid var(--color-blanco-4);
+      box-shadow: 0px 0px 1px 2px rgba(180, 180, 180, 0.3);
+      background-color: var(--color-blanco-1);
+      width: 2rem;
+      height: 2rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+
+      font-size: 1.1rem;
+      color: transparent;
+
+      transition: 0.5s ease;
+    }
+  }
+
+  // TD: Columna acciones
+  &.products__action {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    .btn {
+      position: relative;
+
+      padding: 0.5rem;
+
+      fa-icon {
+        font-size: 1.4rem;
+
+        transform: rotate(0deg);
+
+        transition: 0.5s ease-out;
+      }
+
+      &.is-collapsed {
+        background-color: var(--color-blanco-3);
+
+        > fa-icon {
+          transform: rotate(180deg);
+        }
+      }
+
+      &:hover,
+      &.active {
+        background-color: var(--color-blanco-3);
+      }
+    }
+  }
+}
+
+// ================================================================
+// CUERPO DE LA TABLA - VARIANTES ( active = colapsado/oculto )
+// ================================================================
+.products__body-variants {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 1rem;
+
+  overflow: hidden;
+
+  // MODIFICAR SI HAY ALGUN PRODUCTO CON MUCHAS VARIANTES QUE PASA EL LIMITE DEL ALTO
+  max-height: var(--collapsed-height);
+
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+
+  transition: max-height 0.45s ease,
+              opacity 0.3s ease,
+              margin-bottom 0.45s ease;
+
+  // Estado colapsado ( variantes ocultas )
+  &.is-collapsed {
+    max-height: 0;
+    opacity: 0;
+
+    user-select: none;
+
+    margin-bottom: 0;
+    padding: 0 1.5rem;
+  }
+}
+
+// CUERPO DE LA TABLA — VARIANTE
+.products__variants-content {
+  display: flex;
+  align-items: center;
+
+  gap: 2rem;
+
+  flex-basis: calc(50% - 1rem);
+
+  width: fit-content;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px 2px rgba(232, 234, 246, 0.6);
+
+  // TD dentro de las variantes
+  .products__td {
+    flex-direction: column;
+    align-items: normal;
+
+    min-width: auto;
+    padding: 0;
+
+    // Label de campo (primera línea)
+    span:first-child {
+      font-size: 1.3rem;
+      color: var(--color-negro-3);
+
+      &:not(.products__information-name) {
+        height: 1.5rem;
+      }
+    }
+
+    // Valor de campo (segunda línea)
+    span:nth-child(2) {
+      justify-self: center;
+
+      font-size: 1.5rem;
+
+      &:not(.badge) {
+        padding: 0.3rem 0;
+      }
+    }
+
+    // TD: Imagen de variante
+    &.products__img {
+      min-width: 10rem;
+      max-width: 10rem;
+      width: 100%;
+    }
+
+    // TD: Estado
+    &.products__state {
+      max-width: 12rem;
+    }
+
+    // TD: Información (nombre + SKU)
+    &.products__information {
+      min-width: 20rem;
+
+      @media (min-width: 1024px) {
+        min-width: 22rem;
+      }
+    }
+
+    // Nombre de la variante
+    span.products__information-name {
+      font-size: 1.4rem;
+      color: var(--color-primario);
+    }
+
+    // SKU de la variante
+    span.products__information-sku {
+      font-size: 1.2rem;
+      color: var(--color-negro-3);
+    }
+
+    // Badge dentro de variante
+    span.badge {
+      font-size: 1.2rem;
+      width: fit-content;
+    }
+
+    // TD: Stock
+    &.products__stock {
+      max-width: 5rem;
+    }
+
+    // TD: Precio
+    &.products__price {
+      max-width: 20rem;
+      margin-right: 2rem;
+
+      @media (min-width: 768px) {
+        max-width: 15rem;
+      }
+    }
+
+    // TD: Acciones de variante
+    &.products__action {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+
+      max-width: 12rem;
+
+      .btn {
+        position: relative;
+
+        padding: 0.5rem;
+        background-color: transparent;
+
+        fa-icon {
+          font-size: 1.4rem;
+        }
+
+        &.active,
+        &:hover {
+          background-color: var(--color-blanco-3);
+        }
+      }
+    }
+  }
+}
