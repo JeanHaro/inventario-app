@@ -20,7 +20,7 @@
     <div class="products__content">
 
       <!-- HERRAMIENTAS -->
-      <app-products-tools />
+      <app-products-tools (busqueda)="querySearch.set($event)"/>
 
       <!-- TABLA -->
       <app-products-table

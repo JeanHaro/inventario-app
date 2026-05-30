@@ -19,6 +19,10 @@
     @media (min-width: 768px) {
       max-width: 35rem;
     }
+
+    @media (min-width: 900px) {
+      max-width: 38rem;
+    }
   }
 
   input[type="text"] {

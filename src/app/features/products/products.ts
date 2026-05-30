@@ -5,6 +5,10 @@ import {
   OnInit,
   signal
 } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+
+// Rxjs
+import { forkJoin, map, of } from 'rxjs';
 
 // Font Awesome
 import {
@@ -54,6 +58,7 @@ export class Products implements OnInit {
   productosSeleccionados = signal<Set<number>>(new Set());
   estadoSeleccionado = signal<EstadoProducto | 'Todas'>('Todas');
   variantePanel  = signal<VariantePanel | null>(null);
+  querySearch = signal<string>('');
 
   ngOnInit(): void {
     this.inventarioService.obtenerProductos().subscribe({
@@ -66,6 +71,17 @@ export class Products implements OnInit {
   // TODO: COMPUTED
   // Filtrar los productos por estado
   readonly productosPorEstado = computed<Producto[]>(() => {
+    const query = this.querySearch();
+
+    // Si hay busqueda activa, usar el resource
+    if ( query ) {
+      const resultados = this.productResource.value() ?? [];
+
+      // Con esto retornamos solo los productos de cada estado
+      if ( this.estadoSeleccionado() === 'Todas' ) return resultados;
+      return resultados.filter( p => p.estado === this.estadoSeleccionado() );
+    }
+
     if ( this.estadoSeleccionado() === 'Todas' ) return this.productos();
 
     return this.productos().filter(
@@ -83,6 +99,38 @@ export class Products implements OnInit {
     return this.productos().filter(
       producto => this.productosSeleccionados().has(producto.id)
     );
+  });
+
+  // TODO: rxResource
+  // Buscar producto
+  productResource = rxResource({
+    params: () => ({ query: this.querySearch() }),
+    stream: ({ params }) => {
+      // of - permite regresar un observable basado en lo que nosotros mandamos a invocar
+      if ( !params.query ) return of([]);
+
+      // Lo que hace forkJoin es que lanza las dos peticiones al mismo tiempo y cuando las dos responden te da los dos arrays juntos
+      return forkJoin([
+        this.inventarioService.obtenerPorMarca(params.query),
+        this.inventarioService.obtenerPorEtiqueta(params.query),
+        this.inventarioService.buscarPorNombre(params.query),
+        this.inventarioService.buscarPorCategoria(params.query),
+      ]).pipe(
+        map( ([ porMarca, porEtiqueta, porNombre, porCategoria ]) => {
+          // Unimos ambos resultados
+          const todos = [
+            ...porMarca,
+            ...porEtiqueta,
+            ...porNombre,
+            ...porCategoria
+          ];
+          // Eliminamos productos duplicados por id, si un producto aparece en ambas búsquedas, esto lo hacemos con el new Map
+          const unicos = new Map(todos.map( p => [ p.id, p ] ));
+
+          return Array.from( unicos.values() );
+        })
+      );
+    }
   });
 
   // TODO: MÉTODOS

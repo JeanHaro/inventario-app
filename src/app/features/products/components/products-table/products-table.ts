@@ -29,7 +29,7 @@ type StateCheckbox = 'vacio' | 'todos' | 'parcial' | 'ninguno';
 })
 export class ProductsTable {
 
-  // TODO: Iconos
+  // TODO: ICONOS
   readonly faMinus: IconDefinition = faMinus;
   readonly faCheck: IconDefinition = faCheck;
   readonly faArrowUpShortWide: IconDefinition = faArrowUpShortWide;
@@ -39,7 +39,7 @@ export class ProductsTable {
   readonly faEllipsisVertical: IconDefinition = faEllipsisVertical;
   readonly faBoxesStacked: IconDefinition = faBoxesStacked;
 
-  // TODO: Propiedades
+  // TODO: PROPIEDADES
   // Signals internos de la tabla
   productoExpandido = signal<number | null>(null);
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, output } from '@angular/core';
 
 // Font Awesome
 import {
@@ -16,4 +16,13 @@ import {
 export class ProductsTools {
   // Iconos
   readonly faPlus: IconDefinition = faPlus;
+
+  // TODO: PROPIEDADES
+  // output
+  readonly busqueda = output<string>();
+
+  // TODO: MÉTODOS
+  searchProduct ( value: string ) {
+    this.busqueda.emit(value);
+  }
 }

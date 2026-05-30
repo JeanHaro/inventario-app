@@ -28,7 +28,7 @@ import {
   styleUrl: './products-filters.scss',
 })
 export class ProductsFilters {
-  // Iconos
+  // TODO: ICONOS
   readonly faTableCellsLarge: IconDefinition = faTableCellsLarge;
   readonly faCheckCircle: IconDefinition = faCheckCircle;
   readonly faCircleXmark: IconDefinition = faCircleXmark;
