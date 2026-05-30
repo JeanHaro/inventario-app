@@ -40,12 +40,21 @@ export type Categoria = ( typeof CATEGORIAS_LIST )[number];
 export type EstadoProducto = ( typeof ESTADOS_PRODUCTO )[number];
 export type EstadoVariante = ( typeof ESTADOS_VARIANTE )[number];
 
-// Pop-ups de Producto
+// ==================================================
+
+// Para los pop-ups de kebab de variante y el stock
 export type VariantePanel = {
   tipo: 'kebab' | 'stock';
   id: number;
   productoId: number;
 };
+
+export interface VarianteRef {
+  productoId: number;
+  varianteId: number;
+}
+
+// ==================================================
 
 // Interface para las variantes
 export interface Variante {

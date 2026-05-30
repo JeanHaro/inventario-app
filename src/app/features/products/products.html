@@ -31,6 +31,7 @@
         (seleccionToggled)="toggleSeleccion($event)"
         (todasToggled)="seleccionarTodas()"
         (kebabProducto)="toggleKebabProducto($event)"
+        (kebabVariante)="obtenerVariante($event)"
         (seleccionLimpiada)="limpiarSeleccion()"
       />
 
@@ -151,11 +152,13 @@
           id="stock_product"
           min="0"
           placeholder="0"
+          [value]="variante()?.stock ?? 0"
+          #stockValue
         >
       </div>
 
       <!-- Guardar -->
-      <button class="products__btn btn b--terciary none">
+      <button (click)="actualizarStock(stockValue.value)" class="products__btn btn b--terciary none">
         <fa-icon [icon]="faFloppyDisk"></fa-icon>
         <span>Guardar</span>
       </button>

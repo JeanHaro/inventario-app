@@ -28,7 +28,9 @@ import {
 import {
   EstadoProducto,
   Producto,
-  VariantePanel
+  Variante,
+  VariantePanel,
+  VarianteRef
 } from './models/products.model';
 
 // Servicios
@@ -45,7 +47,7 @@ export class Products implements OnInit {
   // Inyecciones
   private inventarioService = inject(InventarioService);
 
-  // TODO: Iconos
+  // TODO: ICONOS
   readonly faEye: IconDefinition = faEye;
   readonly faBoxArchive: IconDefinition = faBoxArchive;
   readonly faXmark: IconDefinition = faXmark;
@@ -53,8 +55,9 @@ export class Products implements OnInit {
   readonly faBarcode: IconDefinition = faBarcode;
   readonly faFloppyDisk: IconDefinition = faFloppyDisk;
 
-  // TODO: Propiedades
+  // TODO: PROPIEDADES
   productos = signal<Producto[]>([]);
+  variante = signal<Variante | null>(null);
   productosSeleccionados = signal<Set<number>>(new Set());
   estadoSeleccionado = signal<EstadoProducto | 'Todas'>('Todas');
   variantePanel  = signal<VariantePanel | null>(null);
@@ -181,5 +184,38 @@ export class Products implements OnInit {
     this.limpiarSeleccion();
 
     this.estadoSeleccionado.set(estado);
+  }
+
+  // Obtener variante
+  obtenerVariante ( ref: VarianteRef ): void {
+    const producto = this.productos().find( p => p.id === ref.productoId );
+    const variante = producto?.variantes.find( v => v.id === ref.varianteId ) ?? null;
+
+    this.variante.set(variante);
+  }
+
+  // Actualizar stock
+  actualizarStock ( value: string ): void {
+    if ( !this.variantePanel() ) return;
+    if ( !this.variante() ) return;
+
+    const productId = this.variantePanel()!.productoId;
+    const variantId = this.variante()!.id;
+
+    this.inventarioService.actualizarVariante(
+      productId.toString(),
+      variantId.toString(),
+      { stock: Number(value) }
+    ).subscribe({
+      next: ( resp ) => {
+        // Actualizar el producto del signal local
+        this.productos.update( productos =>
+          productos.map( p => p.id === resp.id ? resp : p )
+        );
+
+        this.variante.set(null); // Borramos la variante del signal
+        this.variantePanel.set(null); // Cerramos el panel de stock
+      }
+    })
   }
 }

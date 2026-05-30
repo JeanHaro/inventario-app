@@ -16,7 +16,8 @@ import {
 // Modelos
 import {
   Producto,
-  type VariantePanel
+  type VariantePanel,
+  VarianteRef
 } from '../../models/products.model';
 
 type StateCheckbox = 'vacio' | 'todos' | 'parcial' | 'ninguno';
@@ -55,6 +56,7 @@ export class ProductsTable {
   readonly seleccionToggled = output<number>();
   readonly todasToggled = output<void>();
   readonly kebabProducto = output<number>();
+  readonly kebabVariante = output<VarianteRef>();
   readonly seleccionLimpiada = output<void>();
 
   // TODO: COMPUTED
@@ -113,8 +115,9 @@ export class ProductsTable {
   // Mostrar Kebab por variante
   toggleKebabVariante ( id: number, productoId: number ): void {
     this.seleccionLimpiada.emit();
+    this.kebabVariante.emit({ productoId, varianteId: id });
 
-    const actual    = this.variantePanel();
+    const actual = this.variantePanel();
     const yaAbierto = actual?.tipo === 'kebab' && actual?.id === id;
 
     this.variantePanel.set( yaAbierto ? null : { tipo: 'kebab', id, productoId } );
@@ -123,8 +126,9 @@ export class ProductsTable {
   // Mostrar el panel de stock de variante
   abrirStockVariante ( id: number, productoId: number ): void {
     this.seleccionLimpiada.emit();
+    this.kebabVariante.emit({ productoId, varianteId: id });
 
-    const actual    = this.variantePanel();
+    const actual = this.variantePanel();
     const yaAbierto = actual?.tipo === 'stock' && actual?.id === id;
 
     this.variantePanel.set( yaAbierto ? null : { tipo: 'stock', id, productoId } );
