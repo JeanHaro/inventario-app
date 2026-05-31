@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, signal, ViewChild, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Font Awesome
@@ -28,7 +28,7 @@ import { Notification, NotificationFilter } from '../../models/notification.mode
 
 export class NotificationDropdown {
   // ViewChild
-  @ViewChild('filtersRef') filtersRef!: ElementRef<HTMLElement>; // Contenedor de filtros
+  readonly filtersRef = viewChild<ElementRef<HTMLElement>>('filtersRef'); // Contenedor de filtros
 
   // Inyecciones
   private readonly notificationService = inject(NotificationService);
@@ -69,7 +69,7 @@ export class NotificationDropdown {
     this.notificationService.setFilter(filter);
 
     // 2. Centrar el botón clickeado en el scroll (Solo el contenedor de los filtros)
-    const container = this.filtersRef.nativeElement;
+    const container = this.filtersRef()!.nativeElement;
     const btn = event.currentTarget as HTMLElement;
     // Posición del botón relativa al contenedor
     const btnLeft = btn.offsetLeft;

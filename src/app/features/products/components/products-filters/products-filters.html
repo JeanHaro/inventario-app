@@ -1,11 +1,11 @@
 <!-- ================================
   FILTROS
 ================================ -->
-<div class="products__filters">
+<div class="products__filters" #productFiltersRef>
   <!-- BTN: Todos -->
   <button
     style="--i: 7;"
-    (click)="seleccionarEstado('Todas')"
+    (click)="seleccionarEstado($event, 'Todas')"
     [class.b--white]="estadoActivo() === 'Todas'"
     class="products__filters-btn btn none"
   >
@@ -23,7 +23,7 @@
   <!-- BTN: Disponibles -->
   <button
     style="--i: 6;"
-    (click)="seleccionarEstado('disponible')"
+    (click)="seleccionarEstado($event, 'disponible')"
     [class.b--white]="estadoActivo() === 'disponible'"
     class="products__filters-btn btn none"
   >
@@ -41,7 +41,7 @@
   <!-- BTN: Agotados -->
   <button
     style="--i: 5;"
-    (click)="seleccionarEstado('agotado')"
+    (click)="seleccionarEstado($event, 'agotado')"
     [class.b--white]="estadoActivo() === 'agotado'"
     class="products__filters-btn btn none"
   >
@@ -59,7 +59,7 @@
   <!-- BTN: Reservados -->
   <button
     style="--i: 4;"
-    (click)="seleccionarEstado('reservado')"
+    (click)="seleccionarEstado($event, 'reservado')"
     [class.b--white]="estadoActivo() === 'reservado'"
     class="products__filters-btn btn none"
   >
@@ -77,7 +77,7 @@
   <!-- BTN: Proximamente -->
   <button
     style="--i: 3;"
-    (click)="seleccionarEstado('proximamente')"
+    (click)="seleccionarEstado($event, 'proximamente')"
     [class.b--white]="estadoActivo() === 'proximamente'"
     class="products__filters-btn btn none"
   >
@@ -95,7 +95,7 @@
   <!-- BTN: Descontinuados -->
   <button
     style="--i: 2;"
-    (click)="seleccionarEstado('descontinuado')"
+    (click)="seleccionarEstado($event, 'descontinuado')"
     [class.b--white]="estadoActivo() === 'descontinuado'"
     class="products__filters-btn btn none"
   >
@@ -113,7 +113,7 @@
   <!-- BTN: Pausados -->
   <button
     style="--i: 1;"
-    (click)="seleccionarEstado('pausado')"
+    (click)="seleccionarEstado($event, 'pausado')"
     [class.b--white]="estadoActivo() === 'pausado'"
     class="products__filters-btn btn none"
   >

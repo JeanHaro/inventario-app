@@ -1,4 +1,4 @@
-import { Component, computed, input, output, signal } from '@angular/core';
+import { Component, computed, ElementRef, input, output, signal, viewChild } from '@angular/core';
 
 // Font Awesome
 import {
@@ -28,6 +28,9 @@ import {
   styleUrl: './products-filters.scss',
 })
 export class ProductsFilters {
+  // TODO: viewChild
+  readonly productFiltersContent = viewChild<ElementRef<HTMLElement>>('productFiltersRef');
+
   // TODO: ICONOS
   readonly faTableCellsLarge: IconDefinition = faTableCellsLarge;
   readonly faCheckCircle: IconDefinition = faCheckCircle;
@@ -59,7 +62,23 @@ export class ProductsFilters {
 
   // TODO: MÉTODOS
   // Cambiar el valor del estado seleccionado
-  seleccionarEstado ( estado: EstadoProducto | 'Todas' ): void {
+  seleccionarEstado ( event: MouseEvent, estado: EstadoProducto | 'Todas' ): void {
+    // Emitimos el cambio de estado
     this.estadoCambiado.emit(estado);
+
+    // 2. Centrar el botón clickeado en el scroll (Solo el contenedor de los filtros)
+    const container = this.productFiltersContent()!.nativeElement;
+    const btn = event.currentTarget as HTMLElement;
+    // Posición del botón relativa al contenedor
+    const btnLeft = btn.offsetLeft;
+    const btnWidth = btn.offsetWidth;
+    const containerWidth = container.offsetWidth;
+    // Para centrar
+    const scrollTarget = btnLeft - ( containerWidth / 2 ) + ( btnWidth / 2 );
+
+    container.scrollTo({
+      left: scrollTarget,
+      behavior: 'smooth'
+    })
   }
 }
