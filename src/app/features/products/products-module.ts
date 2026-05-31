@@ -17,9 +17,22 @@ import { productsRoutes } from './products.routes';
 // Modulos
 import { SharedModule } from '../../shared/shared-module';
 import { ProductsTable } from './components/products-table/products-table';
+import { ProductDetail } from './modals/product-detail/product-detail';
+import { ProductForm } from './modals/product-form/product-form';
+import { VariantDetail } from './modals/variant-detail/variant-detail';
+import { VariantForm } from './modals/variant-form/variant-form';
 
 @NgModule({
-  declarations: [Products, ProductsFilters, ProductsTools, ProductsTable],
+  declarations: [
+    Products,
+    ProductsFilters,
+    ProductsTools,
+    ProductsTable,
+    ProductDetail,
+    ProductForm,
+    VariantDetail,
+    VariantForm,
+  ],
   imports: [
     CommonModule,
     FormsModule,
