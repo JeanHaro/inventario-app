@@ -10,12 +10,18 @@ import {
   faChevronDown,
   faEllipsisVertical,
   faBoxesStacked,
-  faMinus
+  faMinus,
+  faSort,
+  faSortUp,
+  faSortDown,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Modelos
 import {
   Producto,
+  SortDirection,
+  SortField,
+  SortState,
   type VariantePanel,
   VarianteRef
 } from '../../models/products.model';
@@ -33,16 +39,21 @@ export class ProductsTable {
   // TODO: ICONOS
   readonly faMinus: IconDefinition = faMinus;
   readonly faCheck: IconDefinition = faCheck;
-  readonly faArrowUpShortWide: IconDefinition = faArrowUpShortWide;
   readonly faPenToSquare: IconDefinition = faPenToSquare;
   readonly faLayerGroup: IconDefinition = faLayerGroup;
   readonly faChevronDown: IconDefinition = faChevronDown;
   readonly faEllipsisVertical: IconDefinition = faEllipsisVertical;
   readonly faBoxesStacked: IconDefinition = faBoxesStacked;
+  readonly faSort:   IconDefinition = faSort;
+  readonly faSortUp: IconDefinition = faSortUp;
+  readonly faSortDown: IconDefinition = faSortDown;
+
+  readonly faArrowUpShortWide: IconDefinition = faArrowUpShortWide;
 
   // TODO: PROPIEDADES
   // Signals internos de la tabla
   productoExpandido = signal<number | null>(null);
+  sortState = signal<SortState>({ field: null, direction: 'none' });
 
   // Models
   // Estos models, sirve si quieres que el valor fluya en ambas direcciones sin lógica adicional (sin logica adicional significa que en el padre no debe estar en un método ejecutando otros valores, solo un valor específico)
@@ -75,6 +86,41 @@ export class ProductsTable {
     if ( total > 0 )          return 'parcial';
     return 'ninguno';
   });
+
+  // Productos ordenados según el estado del sort
+  readonly productosOrdenados = computed<Producto[]>( () => {
+    const lista = [...this.productos()]; // Para no mutar el signal de producto
+    const { field, direction } = this.sortState();
+
+    // Sin ordenamiento activo devolvemos como vienen
+    if ( !field || direction === 'none' ) return lista;
+
+    return lista.sort( (a, b) => {
+      let valA: string | number;
+      let valB: string | number;
+
+      // Variantes se ordena por cantidad
+      if ( field === 'variantes' ) {
+        valA = a.variantes.length;
+        valB = b.variantes.length;
+      } else {
+        // Campos opcionales como marca y descuento pueden ser undefined
+        valA = ( a[field] as string | number ) ?? '';
+        valB = ( b[field] as string | number ) ?? '';
+      }
+
+      // Si son numéricos
+      if ( typeof valA === 'number' && typeof valB === 'number' ) {
+        // Si la dirección es asc entonces valA - valB, sino valB - valA
+        return direction === 'asc' ? valA - valB : valB - valA;
+      }
+
+      // Si son strings
+      // localeCompare es para ordenar coorrectamente en español, compara ambos string en español
+      const cmp = String(valA).localeCompare(String(valB), 'es');
+      return direction === 'asc' ? cmp : -cmp;
+    })
+  })
 
   // TODO: MÉTODOS
   // Identificar si el producto esta seleccionado
@@ -133,4 +179,41 @@ export class ProductsTable {
 
     this.variantePanel.set( yaAbierto ? null : { tipo: 'stock', id, productoId } );
   }
+
+  // Ciclar entre los 3 estados de ordenamiento: none -> asc -> desc -> none
+  cambiarOrden ( field: SortField ): void {
+    const actual = this.sortState();
+
+    // Si es una columna distinta, lo empezamos en asc
+    if ( actual.field !== field ) {
+      this.sortState.set({ field, direction: 'asc' });
+      return;
+    }
+
+    // Si es la misma columna, cambiamos al siguiente estado del ciclo
+    const ciclo: Record<SortDirection, SortDirection> = {
+      none: 'asc',
+      asc: 'desc',
+      desc: 'none'
+    }
+
+    // Acción para pasar al siguiente ciclo
+    const siguienteDir = ciclo[actual.direction];
+
+
+    this.sortState.set({
+      field: siguienteDir === 'none' ? null : field, // Si es none entonces regresamos null, para que los productos se ordenen como estaban por defecto
+      direction: siguienteDir
+    })
+  }
+
+  // Obtener el icono correcto según el campo y la dirección
+  iconOrden ( field: SortField ): IconDefinition {
+    const { field: campoActual, direction } = this.sortState();
+
+    if ( campoActual !== field || direction === 'none' ) return this.faSort;
+    return direction === 'asc' ? this.faSortUp : this.faSortDown;
+  }
+
 }
+

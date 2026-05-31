@@ -27,45 +27,100 @@
     </div>
 
     <!-- TH: Nombre -->
-    <div class="products__th products__name">
-      <span>Nombre</span>
-      <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+    <div
+      class="products__th products__name"
+      [class.is-sorted]="sortState().field === 'nombre'"
+    >
+      <button
+        (click)="cambiarOrden('nombre')"
+        class="products__sort-btn none btn b--hidden"
+      >
+        <span>Nombre</span>
+        <fa-icon [icon]="iconOrden('nombre')"></fa-icon>
+      </button>
     </div>
 
     <!-- TH: Marca / Modelo -->
-    <div class="products__th products__brand-model">
-      <span>Marca / Modelo</span>
-      <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+    <div
+      class="products__th products__brand-model"
+      [class.is-sorted]="sortState().field === 'marca'"
+    >
+      <button
+        (click)="cambiarOrden('marca')"
+        class="products__sort-btn none btn b--hidden"
+      >
+        <span>Marca / Modelo</span>
+        <fa-icon [icon]="iconOrden('marca')"></fa-icon>
+      </button>
     </div>
 
     <!-- TH: Precio base -->
-    <div class="products__th products__price">
-      <span>Precio base</span>
-      <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+    <div
+      class="products__th products__price"
+      [class.is-sorted]="sortState().field === 'precio'"
+    >
+      <button
+        (click)="cambiarOrden('precio')"
+        class="products__sort-btn none btn b--hidden"
+      >
+        <span>Precio base</span>
+        <fa-icon [icon]="iconOrden('precio')"></fa-icon>
+      </button>
     </div>
 
     <!-- TH: Descuento -->
-    <div class="products__th products__discount">
-      <span>Descuento</span>
-      <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+    <div
+      class="products__th products__discount"
+      [class.is-sorted]="sortState().field === 'descuento'"
+    >
+      <button
+        (click)="cambiarOrden('descuento')"
+        class="products__sort-btn none btn b--hidden">
+        <span>Descuento</span>
+        <fa-icon [icon]="iconOrden('descuento')"></fa-icon>
+      </button>
     </div>
 
     <!-- TH: Categoría -->
-    <div class="products__th products__category">
-      <span>Categoría</span>
-      <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+    <div
+      class="products__th products__category"
+      [class.is-sorted]="sortState().field === 'categoria'"
+    >
+      <button
+        (click)="cambiarOrden('categoria')"
+        class="products__sort-btn none btn b--hidden"
+      >
+        <span>Categoría</span>
+        <fa-icon [icon]="iconOrden('categoria')"></fa-icon>
+      </button>
     </div>
 
     <!-- TH: Estado -->
-    <div class="products__th products__state">
-      <span>Estado</span>
-      <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+    <div
+      class="products__th products__state"
+      [class.is-sorted]="sortState().field === 'estado'"
+    >
+      <button
+        (click)="cambiarOrden('estado')"
+        class="products__sort-btn none btn b--hidden"
+      >
+        <span>Estado</span>
+        <fa-icon [icon]="iconOrden('estado')"></fa-icon>
+      </button>
     </div>
 
     <!-- TH: Variantes -->
-    <div class="products__th products__variants">
-      <span># Variantes</span>
-      <fa-icon [icon]="faArrowUpShortWide"></fa-icon>
+    <div
+      class="products__th products__variants"
+      [class.is-sorted]="sortState().field === 'variantes'"
+    >
+      <button
+        (click)="cambiarOrden('variantes')"
+        class="products__sort-btn none btn b--hidden"
+      >
+        <span># Variantes</span>
+        <fa-icon [icon]="iconOrden('variantes')"></fa-icon>
+      </button>
     </div>
 
     <!-- TH: Acciones -->
@@ -81,7 +136,7 @@
   ================================ -->
   <div class="products__table-body">
 
-    @for ( producto of productos(); track producto.id ) {
+    @for ( producto of productosOrdenados(); track producto.id ) {
 
       <!-- PRODUCTO -->
       <div class="products__body-main" [class.active]="estaSeleccionado(producto.id)">

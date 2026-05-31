@@ -61,11 +61,19 @@
   min-width: 20rem;
   width: 100%;
   padding: 1.6rem 0;
+  font-size: 1.6rem;
 
   cursor: pointer;
 
   fa-icon {
     font-size: 1.4rem;
+  }
+
+  > button {
+    display: flex;
+    gap: 0.8rem;
+
+    font-size: 1.6rem;
   }
 
   // TH: Columna checkbox

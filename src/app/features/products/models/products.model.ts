@@ -1,3 +1,6 @@
+// =============================================
+// TODO: TIPOS PARA LOS ESTADOS Y CATEGORIAS
+
 // LISTA DE CATEGORIAS
 export const CATEGORIAS_LIST = [
   'electronica',
@@ -41,6 +44,7 @@ export type EstadoProducto = ( typeof ESTADOS_PRODUCTO )[number];
 export type EstadoVariante = ( typeof ESTADOS_VARIANTE )[number];
 
 // ==================================================
+// TODO: PARA LOS KEBAB DE VARIANTE
 
 // Para los pop-ups de kebab de variante y el stock
 export type VariantePanel = {
@@ -55,6 +59,7 @@ export interface VarianteRef {
 }
 
 // ==================================================
+// TODO: INTERFACES
 
 // Interface para las variantes
 export interface Variante {
@@ -88,3 +93,25 @@ export interface Producto {
   actualizadoEn: string;
 }
 
+// ==================================================
+// TODO: ORDENAMIENTOS
+
+// CAMPOS DE LA TABLA para el ordenamiento
+export const FIELD_LIST = [
+  'nombre',
+  'marca',
+  'precio',
+  'descuento',
+  'categoria',
+  'estado',
+  'variantes'
+] as const;
+
+
+export type SortDirection = 'asc' | 'desc' | 'none';
+export type SortField = ( typeof FIELD_LIST )[number];
+
+export interface SortState {
+  field: SortField | null;
+  direction: SortDirection;
+}
