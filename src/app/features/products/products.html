@@ -52,9 +52,12 @@
       </button>
 
       <!-- Archivar -->
-      <button class="products__btn products__btn--store btn b--terciary none">
-        <fa-icon [icon]="faBoxArchive"></fa-icon>
-        <span>Archivar</span>
+      <button
+        (click)="archivarODesarchivarProductos()"
+        class="products__btn products__btn--store btn b--terciary none"
+      >
+        <fa-icon [icon]="todosArchivados() ? faBoxOpen : faBoxArchive"></fa-icon>
+        <span>{{ todosArchivados() ? 'Desarchivar' : 'Archivar' }}</span>
       </button>
 
       <!-- Cerrar -->
@@ -78,9 +81,12 @@
       <span>{{ totalSeleccionados() }} seleccionados</span>
 
       <!-- Archivar -->
-      <button class="products__btn products__btn--store btn b--terciary none">
-        <fa-icon [icon]="faBoxArchive"></fa-icon>
-        <span>Archivar</span>
+      <button
+        (click)="archivarODesarchivarProductos()"
+        class="products__btn products__btn--store btn b--terciary none"
+      >
+        <fa-icon [icon]="todosArchivados() ? faBoxOpen : faBoxArchive"></fa-icon>
+        <span>{{ todosArchivados() ? 'Desarchivar' : 'Archivar' }}</span>
       </button>
 
       <!-- Cerrar -->
@@ -121,7 +127,7 @@
 
       <!-- Archivar -->
       <button
-        (click)="toggleArchivarVariante()"
+        (click)="archivarODesarchivarVariante()"
         class="products__btn products__btn--store btn b--terciary none"
       >
         @if ( varianteEstaArchivada() ) {

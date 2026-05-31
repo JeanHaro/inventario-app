@@ -107,6 +107,14 @@ export class Products implements OnInit {
     );
   });
 
+  // Para cambiar el nombre del botón archivar a desarchivar si todos los productos seleccionados están descontinuados
+  readonly todosArchivados = computed<boolean>( () => {
+    const seleccionados = this.productosParaArchivar();
+    if ( seleccionados.length === 0 ) return false;
+
+    return seleccionados.every( p => p.estado === 'descontinuado' ); // Verifica que todos los productos están en estado descontinuado, gracias al every
+  })
+
   // Indica si la variante actual está archivada
   readonly varianteEstaArchivada = computed<boolean>( () =>
     this.variante()?.estado === 'descontinuado'
@@ -145,7 +153,7 @@ export class Products implements OnInit {
   });
 
   // TODO: MÉTODOS PRIVADOS
-  // Decide que estado aplicar según el estado actual
+  // Decide que estado aplicar según el estado actual de la variante
   private resolverEstadoArchivar(): EstadoVariante {
     const variante = this.variante();
 
@@ -156,6 +164,13 @@ export class Products implements OnInit {
 
     // Si no está archivada -> archivar
     return 'descontinuado';
+  }
+
+  // Decide que estado aplicar según el estado actual de los productos (Solo cuando está desarchivado)
+  private resolverEstadoDesarchivarProducto ( producto: Producto ): EstadoProducto {
+    const tieneStock = producto.variantes.some( v => v.stock > 0 );
+
+    return tieneStock ? 'disponible' : 'agotado';
   }
 
   // Sincroniza la respuesta de la API con el signal local (producto)
@@ -244,7 +259,7 @@ export class Products implements OnInit {
   }
 
   // Archivar / Desarchivar la variante
-  toggleArchivarVariante() {
+  archivarODesarchivarVariante() {
     if ( !this.variantePanel() ) return;
     if ( !this.variante() ) return;
 
@@ -258,6 +273,39 @@ export class Products implements OnInit {
       { estado: nuevoEstado }
     ).subscribe({
       next: ( resp ) => this.sincronizarRespuesta(resp),
+    })
+  }
+
+  // Archivar / Desarchivar productos seleccionados
+  archivarODesarchivarProductos(): void {
+    const productos = this.productosParaArchivar();
+    if ( productos.length === 0 ) return;
+
+    // Cada producto puede tener un estado distinto al desarchivar
+    const peticiones = productos.map(
+      producto => {
+        const nuevoEstado = this.todosArchivados()
+                              ? this.resolverEstadoDesarchivarProducto(producto) // cada uno según su stock
+                              : 'descontinuado'; // descontinuados todos
+
+        return this.inventarioService.actualizarProducto(
+          producto.id.toString(),
+          { estado: nuevoEstado }
+        )
+      }
+    );
+
+    // Lanzamos todas las peticiones al mismo tiempo
+    forkJoin(peticiones).subscribe({
+      next: ( resp ) => {
+        resp.forEach( resp => {
+          this.productos.update( productos =>
+            productos.map( producto => producto.id === resp.id ? resp : producto )
+          );
+        });
+
+        this.limpiarSeleccion(); // Cierra kebabs
+      }
     })
   }
 }
