@@ -35,6 +35,8 @@ import { Producto } from '../../models/products.model';
 export class ProductDetail {
   // TODO: ViewChild
   readonly optionsMenuRef = viewChild<ElementRef<HTMLElement>>('optionsMenuRef');
+  readonly filterOptionsRef = viewChild<ElementRef<HTMLElement>>('filterOptionsRef');
+  readonly orderOptionsRef = viewChild<ElementRef<HTMLElement>>('orderOptionsRef');
 
   // TODO: ICONOS
   readonly faArrowRightFromBracket: IconDefinition = faArrowRightFromBracket;
@@ -54,18 +56,38 @@ export class ProductDetail {
 
   // TODO: SIGNALS
   showOptionsMenu = signal<boolean>(false);
-
+  showFilterOptions = signal<boolean>(false);
+  showOrderOptions = signal<boolean>(false);
 
   // TODO: HostListener
   // Escucha cualquier click en el documento
   @HostListener('document:click', ['$event'])
   onDocumentClick ( event: Event ): void {
-    if ( !this.showOptionsMenu() ) return; // si esta cerrado ejecuta el return vacio
+    // Verificación independiente del menu de opciones
+    if ( this.showOptionsMenu() ) {
+      const menuOptions = this.optionsMenuRef()?.nativeElement;
+      // Si existe el menu y el click fue fuera de este, entonces cerramos el menu
+      if ( menuOptions && !menuOptions.contains(event.target as Node) ) {
+        this.showOptionsMenu.set(false);
+      }
+    }
 
-    const menu = this.optionsMenuRef()?.nativeElement;
-    // Si existe el menu y el click fue fuera de este, entonces cerramos el menu
-    if ( menu && !menu.contains(event.target as Node) ) {
-      this.showOptionsMenu.set(false);
+    // Verificación independiente del filtro
+    if ( this.showFilterOptions() ) {
+      const filterOptions = this.filterOptionsRef()?.nativeElement;
+      // Si existe el filter y el click fue fuera de este, entonces cerramos el menu
+      if ( filterOptions && !filterOptions.contains(event.target as Node) ) {
+        this.showFilterOptions.set(false);
+      }
+    }
+
+    // Verificación independiente del orden
+    if ( this.showOrderOptions() ) {
+      const orderOptions = this.orderOptionsRef()?.nativeElement;
+      // Si existe el order y el click fue fuera de este, entonces cerramos el menu
+      if ( orderOptions && !orderOptions.contains(event.target as Node) ) {
+        this.showOrderOptions.set(false);
+      }
     }
   }
 
@@ -74,6 +96,26 @@ export class ProductDetail {
   toggleOptionsMenu ( event: Event ): void {
     event.stopPropagation(); // Evita que cuando demos click al button lo cuente como si estuviera clickeando en el documento de afuera
 
+    this.showFilterOptions.set(false);
+    this.showOrderOptions.set(false);
     this.showOptionsMenu.set(!this.showOptionsMenu());
+  }
+
+  // Abrir y cerrar las opciones del filtro
+  toggleOptionsFilter ( event: Event ): void {
+    event.stopPropagation();
+
+    this.showOptionsMenu.set(false);
+    this.showOrderOptions.set(false);
+    this.showFilterOptions.set(!this.showFilterOptions());
+  }
+
+  // Abrir y cerrar las opciones del orden
+  toggleOptionsOrder ( event: Event ): void {
+    event.stopPropagation();
+
+    this.showOptionsMenu.set(false);
+    this.showFilterOptions.set(false);
+    this.showOrderOptions.set(!this.showOrderOptions());
   }
 }
