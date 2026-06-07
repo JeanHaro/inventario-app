@@ -11,11 +11,11 @@ import { Products } from './products';
 import { ProductsFilters } from './components/products-filters/products-filters';
 import { ProductsTools } from './components/products-tools/products-tools';
 import { ProductsTable } from './components/products-table/products-table';
-// Modals
-import { ProductDetail } from './modals/product-detail/product-detail';
-import { ProductForm } from './modals/product-form/product-form';
-import { VariantDetail } from './modals/variant-detail/variant-detail';
-import { VariantForm } from './modals/variant-form/variant-form';
+// Drawers
+import { ProductDetail } from './drawers/product-detail/product-detail';
+import { ProductForm } from './drawers/product-form/product-form';
+import { VariantDetail } from './drawers/variant-detail/variant-detail';
+import { VariantForm } from './drawers/variant-form/variant-form';
 
 // Rutas
 import { productsRoutes } from './products.routes';
@@ -32,7 +32,7 @@ import { SharedModule } from '../../shared/shared-module';
     ProductsTools,
     ProductsTable,
 
-    // Modals
+    // Drawers
     ProductDetail,
     ProductForm,
     VariantDetail,

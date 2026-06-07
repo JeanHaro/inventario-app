@@ -199,23 +199,24 @@
 <!-- END: PRODUCTOS -->
 
 <!-- ================================
-  MODALS - OVERLAY
+  DRAWER - OVERLAY
 ================================ -->
 <div
   (click)="cerrarDetalleProducto()"
-  class="modals__overlay"
+  class="drawers__overlay"
   [class.active]="productoSeleccionado() !== null"
 ></div>
 
 <!-- ================================
-  MODAL: PRODUCT DETAIL
+  DRAWER: PRODUCT DETAIL
 ================================ -->
 <div
-  [class.active]="productoSeleccionado() !== null" class="modals modals--product-detail"
+  [class.active]="productoSeleccionado() !== null" class="drawers drawers--product-detail"
 >
   @if ( productoSeleccionado() !== null ) {
     <app-product-detail
       [producto]="productoSeleccionado()!"
+      (cerrarModal)="cerrarDetalleProducto()"
     />
   }
 </div>

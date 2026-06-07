@@ -315,9 +315,12 @@ export class Products implements OnInit {
 
   // Abrir modal Detalle producto
   abrirDetalleProducto ( id: number ): void {
-    const producto = this.productos().find( producto => producto.id === id );
-    if ( !producto ) return;
+    const producto = this.productos().find(
+      producto => producto.id === id
+    );
+    if ( !producto ) return; // Si no encuentra producto
 
+    this.limpiarSeleccion();
     this.productoSeleccionado.set(producto);
   }
 
