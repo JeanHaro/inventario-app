@@ -140,3 +140,41 @@
     }
   }
 }
+
+// ================================
+// MODALS
+// ================================ -->
+.modals {
+  position: fixed;
+  top: 7rem;
+  bottom: 0;
+  right: 0;
+
+  // transform: translate(70rem, 0rem);
+  overflow: hidden;
+  overflow-y: scroll;
+
+  background-color: var(--color-blanco-1);
+  min-width: 28rem;
+  max-width: 50rem;
+  width: 100%;
+  border-top: 0.1rem solid var(--color-blanco-3);
+  box-shadow: -15px 0px 15px 3px rgba(0,0,0,0.1);
+
+  z-index: 8;
+
+  // Scrollbar oculto pero funcional
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    display: none;
+  }
+
+  &.active {
+    transform: translate(0rem, 0rem);
+  }
+
+  @media (min-width: 1024px) {
+    max-width: 70rem;
+  }
+}

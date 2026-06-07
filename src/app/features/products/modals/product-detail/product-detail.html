@@ -1,1 +1,400 @@
-<p>product-detail works!</p>
+<!-- ================================
+  DETALLE DEL PRODUCTO
+================================ -->
+<div class="product-detail">
+
+  <!-- ================================
+    BARRA SUPERIOR
+  ================================ -->
+  <div class="product-detail__top">
+
+    <!-- Cerrar -->
+    <button class="product-detail__close none btn b--hidden">
+      <fa-icon [icon]="faArrowRightFromBracket"></fa-icon>
+      <span>Cerrar</span>
+    </button>
+
+    <!-- Herramientas: Editar y más opciones -->
+    <div class="product-detail__tools">
+
+      <!-- Editar -->
+      <button class="product-detail__edit none btn b--hidden">
+        <fa-icon [icon]="faPenToSquare"></fa-icon>
+        <span class="sr-only">Editar</span>
+      </button>
+
+      <!-- Más opciones -->
+      <button class="product-detail__options none btn b--hidden">
+        <fa-icon [icon]="faEllipsis"></fa-icon>
+        <span class="sr-only">Más opciones</span>
+      </button>
+
+    </div>
+    <!-- END: Herramientas -->
+
+    <!-- Menú de opciones -->
+    <div class="product-detail__options-menu hidden">
+
+      <!-- Descargar CSV -->
+      <button class="none btn b--white-primary">
+        <fa-icon [icon]="faFileArrowDown"></fa-icon>
+        <span>Descargar CSV</span>
+      </button>
+
+      <!-- Archivar -->
+      <button class="none btn b--white-primary">
+        <fa-icon [icon]="faBoxArchive"></fa-icon>
+        <span>Archivar</span>
+      </button>
+
+    </div>
+    <!-- END: Menú de opciones -->
+
+  </div>
+  <!-- END: BARRA SUPERIOR -->
+
+  <!-- ================================
+    CONTENIDO DEL PRODUCTO
+  ================================ -->
+  <div class="product-detail__content">
+    <!-- Nombre del producto -->
+    <h2>Xiaomi 14</h2>
+
+    <!-- Campos principales -->
+    <div class="product-detail__fields">
+      <!-- Estado -->
+      <div class="product-detail__state">
+        <div class="product-detail__state-label">
+          <span>Estado</span>
+        </div>
+
+        <div class="product-detail__state-value">
+          <span [class]="`badge badge--disponible`">
+            Disponible
+          </span>
+        </div>
+      </div>
+
+      <!-- Categoría -->
+      <div class="product-detail__category">
+        <div class="product-detail__category-label">
+          <span>Categoría</span>
+        </div>
+
+        <div class="product-detail__category-value">
+          <span [class]="`badge badge--tecnologia`">
+            Tecnología
+          </span>
+        </div>
+      </div>
+
+      <!-- Marca -->
+      <div class="product-detail__brand">
+        <div class="product-detail__brand-label">
+          <span>Marca</span>
+        </div>
+
+        <span>Xiaomi</span>
+      </div>
+
+      <!-- Modelo -->
+      <div class="product-detail__model">
+        <div class="product-detail__model-label">
+          <span>Modelo</span>
+        </div>
+
+        <span>14</span>
+      </div>
+
+      <!-- Precio -->
+      <div class="product-detail__price">
+        <div class="product-detail__price-label">
+          <span>Precio</span>
+        </div>
+
+        <span>{{ 9000 | compactNumber: 'precio' }}</span>
+      </div>
+
+      <!-- Descuento -->
+      <div class="product-detail__discount">
+        <div class="product-detail__discount-label">
+          <span>Descuento</span>
+        </div>
+
+        <span>{{ ( 10 ) / 100 | percent: '1.0-1' }}</span>
+      </div>
+    </div>
+
+    <!-- Etiqueta -->
+    <div class="product-detail__tags">
+      <div class="product-detail__tags-label">
+        <span>Etiquetas</span>
+      </div>
+
+      <div class="product-detail__tags-value">
+        <span [class]="`badge badge--tecnologia`">
+          Tecnología
+        </span>
+        <span [class]="`badge badge--tecnologia`">
+          2+
+        </span>
+      </div>
+    </div>
+
+    <!-- Fechas -->
+    <div class="product-detail__dates">
+
+      <!-- Creado el -->
+      <div class="product-detail__start">
+        <div class="product-detail__start-label">
+          <span>Creado el</span>
+        </div>
+
+        <span>05 de Marzo de 2026</span>
+      </div>
+
+      <!-- Actualizado el -->
+      <div class="product-detail__update">
+        <div class="product-detail__update-label">
+          <span>Actualizado el</span>
+        </div>
+
+        <span>05 de Marzo de 2026</span>
+      </div>
+
+    </div>
+    <!-- END: Fechas -->
+
+    <!-- Descripción -->
+    <div class="product-detail__description">
+      <div class="product-detail__description-label">
+        <span>Descripción</span>
+      </div>
+
+      <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga modi praesentium dolorem, magnam laborum veniam temporibus ducimus porro! Dignissimos, vero!</span>
+    </div>
+
+    <!-- ================================
+      TABS: Variantes / Imágenes
+    ================================ -->
+    <div class="product-detail__tabs">
+      <button class="product-detail__tabs-btn none active" >
+        Variantes
+      </button>
+
+      <button class="product-detail__tabs-btn none" >
+        Imagenes
+      </button>
+    </div>
+
+    <!-- ================================
+      VISTA ACTIVA (Variantes o Imágenes)
+    ================================ -->
+    <div class="product-detail__tab-panel">
+
+      <!-- ================================
+        VISTA: Variantes
+      ================================ -->
+      <div class="product-detail__panel product-detail__panel--variants">
+
+        <!-- Herramientas de variantes: filtro y orden -->
+        <div class="product-detail__variants-toolbar">
+
+          <!-- Filtrar por estado -->
+          <div class="product-detail__filter">
+            <div class="product-detail__filter-title">
+              <fa-icon [icon]="faFilter"></fa-icon>
+              <span>Filtrar por:</span>
+            </div>
+
+            <div class="select">
+              <!-- Valor seleccionado -->
+              <div class="select__value">
+                <span>{{ 'Descontinuado' }}</span>
+                <fa-icon [icon]="faAngleDown"></fa-icon>
+              </div>
+
+              <!-- Opciones -->
+              <div class="select__options">
+                <button
+                  name="todos"
+                  class="select__option none btn b--hidden"
+                >
+                  <span class="badge">Todos</span>
+                </button>
+
+                <button
+                  name="disponible"
+                  class="select__option none btn b--hidden"
+                >
+                  <span class="badge badge--disponible">Disponible</span>
+                </button>
+
+                <button
+                  name="sin_stock"
+                  class="select__option none btn b--hidden"
+                >
+                  <span class="badge badge--sin_stock">Sin stock</span>
+                </button>
+
+                <button
+                  name="reservado"
+                  class="select__option none btn b--hidden"
+                >
+                  <span class="badge badge--reservado">Reservado</span>
+                </button>
+
+                <button
+                  name="descontinuado"
+                  class="select__option none btn b--hidden"
+                >
+                  <span class="badge badge--descontinuado">Descontinuado</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- END: Filtrar por estado -->
+
+          <!-- Ordenar por -->
+          <div class="product-detail__order">
+            <div class="product-detail__order-title">
+              <fa-icon [icon]="faArrowDownShortWide"></fa-icon>
+              <span>Ordenar por</span>
+            </div>
+
+            <div class="select">
+              <!-- Valor seleccionado -->
+              <div class="select__value">
+                <span>{{ 'Defecto' }}</span>
+                <fa-icon [icon]="faAngleDown"></fa-icon>
+              </div>
+
+              <!-- Opciones -->
+              <div class="select__options">
+                <button
+                  name="defecto"
+                  class="select__option none btn b--hidden"
+                >
+                  <span>Defecto</span>
+                </button>
+
+                <button
+                  name="nombre"
+                  class="select__option none btn b--hidden"
+                >
+                  <span>Nombre</span>
+                </button>
+
+                <button
+                  name="stock"
+                  class="select__option none btn b--hidden"
+                >
+                  <span>Stock</span>
+                </button>
+
+                <button
+                  name="precio"
+                  class="select__option none btn b--hidden"
+                >
+                  <span>Precio</span>
+                </button>
+
+                <button
+                  name="estado"
+                  class="select__option none btn b--hidden"
+                >
+                  <span>Estado</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- END: Ordenar por -->
+
+        </div>
+        <!-- END: Herramientas de variantes -->
+
+        <!-- Lista de variantes -->
+        <div class="product-detail__variants">
+          <div class="product-detail__variant">
+
+            <!-- Imagen -->
+            <div class="product-detail__variant-img">
+              <img src="./img/iphone15.png" alt="Imagen por defecto">
+            </div>
+
+            <!-- Nombre y SKU -->
+            <div class="product-detail__variant-information">
+              <span class="product-detail__variant-name">
+                Xiaomi
+              </span>
+              <span class="product-detail__variant-sku">
+                Sku
+              </span>
+            </div>
+
+            <!-- Estado -->
+            <div class="product-detail__variant-state">
+              <span>Estado</span>
+              <span [class]="`badge badge--disponible`">
+                Disponible
+              </span>
+            </div>
+
+            <!-- Stock -->
+            <div class="product-detail__variant-stock">
+              <span>Stock</span>
+              <span>{{ 10000 | compactNumber: 'stock' }}</span>
+            </div>
+
+            <!-- Precio adicional -->
+            <div class="product-detail__variant-price">
+              <span>Precio</span>
+              <span>{{ 90000 | compactNumber: 'precio' }}</span>
+            </div>
+
+            <!-- Acciones de variante -->
+            <div class="product-detail__variant-action">
+
+              <!-- Editar variante -->
+              <button class="product-detail__action-btn product-detail__action-btn--edit btn b--hidden none">
+                <fa-icon [icon]="faPenToSquare"></fa-icon>
+                <span class="sr-only">Editar variante</span>
+              </button>
+
+              <!-- Ver variante -->
+              <button
+                class="product-detail__action-btn product-detail__action-btn--see btn b--hidden none"
+              >
+                <fa-icon [icon]="faEye"></fa-icon>
+                <span class="sr-only">Ver variante</span>
+              </button>
+
+            </div>
+            <!-- END: Acciones de variante -->
+
+          </div>
+        </div>
+        <!-- END: Lista de variantes -->
+
+      </div>
+      <!-- END: VISTA: Variantes -->
+
+      <!-- ================================
+        VISTA: Imágenes
+      ================================ -->
+      <div class="product-detail__panel product-detail__panel--images hidden">
+        <div class="product-detail__image">
+          <img src="./img/profile.jpg" alt="Imagen">
+        </div>
+
+      </div>
+      <!-- END: VISTA: Imágenes -->
+
+    </div>
+    <!-- END: VISTA ACTIVA -->
+
+  </div>
+  <!-- END: CONTENIDO DEL PRODUCTO -->
+
+</div>
+<!-- END: DETALLE DEL PRODUCTO -->

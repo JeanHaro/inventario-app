@@ -265,7 +265,7 @@
               <!-- TD: Nombre y SKU -->
               <div class="products__td products__information">
                 <span class="products__information-name">
-                  {{ variante.nombre ?? 'Nombre por defecto' }}
+                  {{ producto.nombre }} {{ variante.nombre ?? '' }}
                 </span>
                 <span class="products__information-sku">
                   {{ variante.sku ?? 'sin-sku' }}

@@ -32,6 +32,16 @@
     }
   }
 
+  &.b--white-primary {
+    background-color: var(--color-blanco-1);
+    color: var(--color-primario);
+
+    &:hover {
+      background-color: var(--color-primario);
+      color: var(--color-blanco-1);
+    }
+  }
+
   &.b--terciary {
     background-color: var(--color-terciario);
     color: var(--color-blanco-1);
