@@ -379,10 +379,12 @@
   &__variant {
     display: flex;
     align-items: center;
+    justify-content: center;
 
     gap: 2rem;
 
-    width: fit-content;
+    min-width: fit-content;
+    width: 100%;
     padding: 0.5rem;
     padding-right: 2.5rem;
     border-radius: 0.5rem;
@@ -443,6 +445,11 @@
 
     &-name {
       color: var(--color-primario);
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 14rem;
     }
 
     &-sku {

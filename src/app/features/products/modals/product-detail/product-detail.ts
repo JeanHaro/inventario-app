@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 // Font Awesome
 import {
@@ -14,6 +14,9 @@ import {
   faEye,
   faAngleDown
 } from '@fortawesome/free-solid-svg-icons';
+
+// Interfaces
+import { Producto } from '../../models/products.model';
 
 @Component({
   selector: 'app-product-detail',
@@ -33,4 +36,6 @@ export class ProductDetail {
   readonly faArrowDownShortWide: IconDefinition = faArrowDownShortWide;
   readonly faEye: IconDefinition = faEye;
   readonly faAngleDown: IconDefinition = faAngleDown;
+
+  readonly producto = input.required<Producto>();
 }

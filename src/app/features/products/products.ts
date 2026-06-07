@@ -62,6 +62,7 @@ export class Products implements OnInit {
   productos = signal<Producto[]>([]);
   variante = signal<Variante | null>(null);
   productosSeleccionados = signal<Set<number>>(new Set());
+  productoSeleccionado = signal<Producto | null>(null);
   estadoSeleccionado = signal<EstadoProducto | 'Todas'>('Todas');
   variantePanel  = signal<VariantePanel | null>(null);
   querySearch = signal<string>('');
@@ -307,5 +308,21 @@ export class Products implements OnInit {
         this.limpiarSeleccion(); // Cierra kebabs
       }
     })
+  }
+
+  // =========================
+  // Modals
+
+  // Abrir modal Detalle producto
+  abrirDetalleProducto ( id: number ): void {
+    const producto = this.productos().find( producto => producto.id === id );
+    if ( !producto ) return;
+
+    this.productoSeleccionado.set(producto);
+  }
+
+  // Cerrar modal Detalle producto
+  cerrarDetalleProducto() {
+    this.productoSeleccionado.set(null);
   }
 }

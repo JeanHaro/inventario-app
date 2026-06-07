@@ -150,7 +150,7 @@
   bottom: 0;
   right: 0;
 
-  // transform: translate(70rem, 0rem);
+  transform: translate(70rem, 0rem);
   overflow: hidden;
   overflow-y: scroll;
 
@@ -161,7 +161,8 @@
   border-top: 0.1rem solid var(--color-blanco-3);
   box-shadow: -15px 0px 15px 3px rgba(0,0,0,0.1);
 
-  z-index: 8;
+  transition: transform 0.5s ease;
+  z-index: 9;
 
   // Scrollbar oculto pero funcional
   &::-webkit-scrollbar {
@@ -176,5 +177,20 @@
 
   @media (min-width: 1024px) {
     max-width: 70rem;
+  }
+}
+
+.modals__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  z-index: 8;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
   }
 }

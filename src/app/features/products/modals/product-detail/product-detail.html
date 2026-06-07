@@ -58,7 +58,7 @@
   ================================ -->
   <div class="product-detail__content">
     <!-- Nombre del producto -->
-    <h2>Xiaomi 14</h2>
+    <h2>{{ producto().nombre }}</h2>
 
     <!-- Campos principales -->
     <div class="product-detail__fields">
@@ -69,8 +69,8 @@
         </div>
 
         <div class="product-detail__state-value">
-          <span [class]="`badge badge--disponible`">
-            Disponible
+          <span [class]="`badge badge--${producto().estado}`">
+            {{ producto().estado }}
           </span>
         </div>
       </div>
@@ -82,8 +82,8 @@
         </div>
 
         <div class="product-detail__category-value">
-          <span [class]="`badge badge--tecnologia`">
-            Tecnología
+          <span [class]="`badge badge--${producto().categoria}`">
+            {{ producto().categoria }}
           </span>
         </div>
       </div>
@@ -94,7 +94,7 @@
           <span>Marca</span>
         </div>
 
-        <span>Xiaomi</span>
+        <span>{{ producto().marca }}</span>
       </div>
 
       <!-- Modelo -->
@@ -103,7 +103,7 @@
           <span>Modelo</span>
         </div>
 
-        <span>14</span>
+        <span>{{ producto().modelo ?? 'No tiene' }}</span>
       </div>
 
       <!-- Precio -->
@@ -112,7 +112,7 @@
           <span>Precio</span>
         </div>
 
-        <span>{{ 9000 | compactNumber: 'precio' }}</span>
+        <span>{{ producto().precio| compactNumber: 'precio' }}</span>
       </div>
 
       <!-- Descuento -->
@@ -121,7 +121,7 @@
           <span>Descuento</span>
         </div>
 
-        <span>{{ ( 10 ) / 100 | percent: '1.0-1' }}</span>
+        <span>{{ ( producto().descuento ?? 0 ) / 100 | percent: '1.0-1' }}</span>
       </div>
     </div>
 
@@ -150,7 +150,7 @@
           <span>Creado el</span>
         </div>
 
-        <span>05 de Marzo de 2026</span>
+        <span>{{ producto().creadoEn | date: 'dd/MM/yy' }}</span>
       </div>
 
       <!-- Actualizado el -->
@@ -159,7 +159,7 @@
           <span>Actualizado el</span>
         </div>
 
-        <span>05 de Marzo de 2026</span>
+        <span>{{ producto().actualizadoEn | date: 'dd/MM/yy' }}</span>
       </div>
 
     </div>
@@ -171,7 +171,7 @@
         <span>Descripción</span>
       </div>
 
-      <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga modi praesentium dolorem, magnam laborum veniam temporibus ducimus porro! Dignissimos, vero!</span>
+      <span>{{ producto().descripcion }}</span>
     </div>
 
     <!-- ================================
@@ -315,64 +315,75 @@
 
         <!-- Lista de variantes -->
         <div class="product-detail__variants">
-          <div class="product-detail__variant">
+          @for ( variante of producto().variantes; track variante.id ) {
+            <div class="product-detail__variant">
 
-            <!-- Imagen -->
-            <div class="product-detail__variant-img">
-              <img src="./img/iphone15.png" alt="Imagen por defecto">
+              <!-- Imagen -->
+              <div class="product-detail__variant-img">
+                @if ( variante.imagen?.length ) {
+                  <img
+                    [src]="variante.imagen"
+                    [alt]="variante.nombre ?? 'Imagen de variante'"
+                  >
+                } @else {
+                  <img src="./img/iphone15.png" alt="Imagen por defecto">
+                }
+              </div>
+
+              <!-- Nombre y SKU -->
+              <div class="product-detail__variant-information">
+                <span class="product-detail__variant-name">
+                  {{ producto().nombre }} {{ variante.nombre ?? '' }}
+                </span>
+                <span class="product-detail__variant-sku">
+                  {{ variante.sku ?? 'sin-sku' }}
+                </span>
+              </div>
+
+              <!-- Estado -->
+              <div class="product-detail__variant-state">
+                <span>Estado</span>
+                <span [class]="`badge badge--${variante.estado}`">
+                  {{ variante.estado }}
+                </span>
+              </div>
+
+              <!-- Stock -->
+              <div class="product-detail__variant-stock">
+                <span>Stock</span>
+                <span>{{ variante.stock | compactNumber: 'stock' }}</span>
+              </div>
+
+              <!-- Precio adicional -->
+              <div class="product-detail__variant-price">
+                <span>Precio</span>
+                <span>{{ variante.precioAdicional ?? 0 | compactNumber: 'precio' }}</span>
+              </div>
+
+              <!-- Acciones de variante -->
+              <div class="product-detail__variant-action">
+
+                <!-- Editar variante -->
+                <button class="product-detail__action-btn product-detail__action-btn--edit btn b--hidden none">
+                  <fa-icon [icon]="faPenToSquare"></fa-icon>
+                  <span class="sr-only">Editar variante</span>
+                </button>
+
+                <!-- Ver variante -->
+                <button
+                  class="product-detail__action-btn product-detail__action-btn--see btn b--hidden none"
+                >
+                  <fa-icon [icon]="faEye"></fa-icon>
+                  <span class="sr-only">Ver variante</span>
+                </button>
+
+              </div>
+              <!-- END: Acciones de variante -->
+
             </div>
-
-            <!-- Nombre y SKU -->
-            <div class="product-detail__variant-information">
-              <span class="product-detail__variant-name">
-                Xiaomi
-              </span>
-              <span class="product-detail__variant-sku">
-                Sku
-              </span>
-            </div>
-
-            <!-- Estado -->
-            <div class="product-detail__variant-state">
-              <span>Estado</span>
-              <span [class]="`badge badge--disponible`">
-                Disponible
-              </span>
-            </div>
-
-            <!-- Stock -->
-            <div class="product-detail__variant-stock">
-              <span>Stock</span>
-              <span>{{ 10000 | compactNumber: 'stock' }}</span>
-            </div>
-
-            <!-- Precio adicional -->
-            <div class="product-detail__variant-price">
-              <span>Precio</span>
-              <span>{{ 90000 | compactNumber: 'precio' }}</span>
-            </div>
-
-            <!-- Acciones de variante -->
-            <div class="product-detail__variant-action">
-
-              <!-- Editar variante -->
-              <button class="product-detail__action-btn product-detail__action-btn--edit btn b--hidden none">
-                <fa-icon [icon]="faPenToSquare"></fa-icon>
-                <span class="sr-only">Editar variante</span>
-              </button>
-
-              <!-- Ver variante -->
-              <button
-                class="product-detail__action-btn product-detail__action-btn--see btn b--hidden none"
-              >
-                <fa-icon [icon]="faEye"></fa-icon>
-                <span class="sr-only">Ver variante</span>
-              </button>
-
-            </div>
-            <!-- END: Acciones de variante -->
-
-          </div>
+          } @empty {
+            <p>No tiene variantes</p>
+          }
         </div>
         <!-- END: Lista de variantes -->
 
@@ -383,10 +394,13 @@
         VISTA: Imágenes
       ================================ -->
       <div class="product-detail__panel product-detail__panel--images hidden">
-        <div class="product-detail__image">
-          <img src="./img/profile.jpg" alt="Imagen">
-        </div>
-
+        @for ( imagen of producto().imagenes; track imagen ) {
+          <div class="product-detail__image">
+            <img [src]="imagen" alt="Imagen del producto">
+          </div>
+        } @empty {
+          <p>No hay imágenes</p>
+        }
       </div>
       <!-- END: VISTA: Imágenes -->
 
