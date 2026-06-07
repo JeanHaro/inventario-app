@@ -1,4 +1,4 @@
-import { Component, computed, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 
 // Servicios
 import { InventarioService } from '../products/services/inventario';
@@ -15,6 +15,12 @@ import { InventoryReport, InventoryStats } from './models/report.model';
   styleUrl: './reports.scss',
 })
 export class Reports implements OnInit {
+  // ==========================
+  // Inyecciones
+  // ==========================
+  private inventarioService = inject(InventarioService);
+  private reportService = inject(ReportService);
+
   // ==========================
   // Propiedades
   // ==========================
@@ -33,14 +39,10 @@ export class Reports implements OnInit {
   // ==========================
   // Ciclo de vida
   // ==========================
-
-  constructor(
-    private inventarioService: InventarioService,
-    private reportService: ReportService
-  ) {}
-
   ngOnInit(): void {
-    // this.allProducts = this.inventarioService.obtenerProductos();
+    this.inventarioService.obtenerProductos().subscribe({
+      next: ( resp ) => this.allProducts = resp
+    });
 
     this.savedReports.set(this.reportService.getReports());
   }

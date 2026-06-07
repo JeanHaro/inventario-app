@@ -43,8 +43,8 @@ export class ReportService {
   }
 
   // El producto más caro
-  getMostExpensive ( products: Producto[] ): Producto {
-    if (products.length === 0) throw new Error('No hay productos para analizar');
+  getMostExpensive ( products: Producto[] ): Producto | null {
+    if (products.length === 0) return null;
 
     return products.reduce(
       (expensive, product) =>
@@ -56,8 +56,8 @@ export class ReportService {
   }
 
   // El producto más barato
-  getCheapest ( products: Producto[] ): Producto {
-    if (products.length === 0) throw new Error('No hay productos para analizar');
+  getCheapest ( products: Producto[] ): Producto | null {
+    if (products.length === 0) return null;
 
     return products.reduce(
       (cheapest, product) =>
@@ -79,8 +79,8 @@ export class ReportService {
       totalDisponibles: this.countByState(products, 'disponible'),
       totalAgotados: this.countByState(products, 'agotado'),
       totalDescontinuados: this.countByState(products, 'descontinuado'),
-      masCaros: this.getMostExpensive(products),
-      masBarato: this.getCheapest(products),
+      masCaros: this.getMostExpensive(products)!,
+      masBarato: this.getCheapest(products)!,
       valorTotalInventario: this.getTotalValue(products),
       precioPromedio: this.getAveragePrice(products),
       productosPorCategoria: { 'electronica': 1 }

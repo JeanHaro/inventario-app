@@ -211,10 +211,13 @@
   MODAL: PRODUCT DETAIL
 ================================ -->
 <div
-  [class.active]="productoSeleccionado() !== null"
-  class="modals modals--product-detail"
+  [class.active]="productoSeleccionado() !== null" class="modals modals--product-detail"
 >
-  <app-product-detail [producto]="productoSeleccionado()!" />
+  @if ( productoSeleccionado() !== null ) {
+    <app-product-detail
+      [producto]="productoSeleccionado()!"
+    />
+  }
 </div>
 
 
