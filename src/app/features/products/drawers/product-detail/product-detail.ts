@@ -60,6 +60,8 @@ export class ProductDetail {
   showOrderOptions = signal<boolean>(false);
 
   // TODO: HostListener
+  // ====================================================== MOSTRAR OPCIONES
+
   // Escucha cualquier click en el documento
   @HostListener('document:click', ['$event'])
   onDocumentClick ( event: Event ): void {
@@ -92,6 +94,8 @@ export class ProductDetail {
   }
 
   // TODO: MÉTODOS
+  // ====================================================== MOSTRAR OPCIONES
+
   // Abrir y cerrar menu de opciones
   toggleOptionsMenu ( event: Event ): void {
     event.stopPropagation(); // Evita que cuando demos click al button lo cuente como si estuviera clickeando en el documento de afuera

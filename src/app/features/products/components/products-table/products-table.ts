@@ -71,6 +71,8 @@ export class ProductsTable {
   readonly seleccionLimpiada = output<void>();
 
   // TODO: COMPUTED
+  // =================================================== SELECCIONAR CHECKBOX
+
   // Obtener la cantidad de todos los productos seleccionados
   readonly totalSeleccionados = computed<number>(() =>
     this.productosSeleccionados().size
@@ -86,6 +88,8 @@ export class ProductsTable {
     if ( total > 0 )          return 'parcial';
     return 'ninguno';
   });
+
+  // ========================================================== ORDENAMIENTO
 
   // Productos ordenados según el estado del sort
   readonly productosOrdenados = computed<Producto[]>( () => {
@@ -123,6 +127,24 @@ export class ProductsTable {
   })
 
   // TODO: MÉTODOS
+  // ====================================================== COLAPSAR VARIANTES
+
+  // Mostrar variantes
+  toggleVariantes ( id: number ): void {
+    const producto = this.productos()
+      .filter( p => p.id === id )
+      .find( p => p.variantes.length > 0 );
+
+    if ( !producto ) return;
+
+    this.variantePanel.set(null);
+
+    const actual = this.productoExpandido();
+    this.productoExpandido.set( actual === id ? null : id );
+  }
+
+  // =================================================== SELECCIONAR CHECKBOX
+
   // Identificar si el producto esta seleccionado
   estaSeleccionado ( id: number ): boolean {
     return this.productosSeleccionados().has(id);
@@ -138,25 +160,15 @@ export class ProductsTable {
     this.seleccionToggled.emit(id);
   }
 
+  // ========================================================= PRODUCTO KEBAB
+
   // Mostrar Kebab por producto — cierra panel de variante y avisa al padre
   toggleKebabProducto ( id: number ): void {
     this.variantePanel.set(null);
     this.kebabProducto.emit(id);
   }
 
-  // Mostrar variantes
-  toggleVariantes ( id: number ): void {
-    const producto = this.productos()
-      .filter( p => p.id === id )
-      .find( p => p.variantes.length > 0 );
-
-    if ( !producto ) return;
-
-    this.variantePanel.set(null);
-
-    const actual = this.productoExpandido();
-    this.productoExpandido.set( actual === id ? null : id );
-  }
+  // ========================================================= VARIANTE KEBABS
 
   // Mostrar Kebab por variante
   toggleKebabVariante ( id: number, productoId: number ): void {
@@ -180,6 +192,8 @@ export class ProductsTable {
     this.variantePanel.set( yaAbierto ? null : { tipo: 'stock', id, productoId } );
   }
 
+  // ========================================================== ORDENAMIENTO
+
   // Ciclar entre los 3 estados de ordenamiento: none -> asc -> desc -> none
   cambiarOrden ( field: SortField ): void {
     const actual = this.sortState();
@@ -199,7 +213,6 @@ export class ProductsTable {
 
     // Acción para pasar al siguiente ciclo
     const siguienteDir = ciclo[actual.direction];
-
 
     this.sortState.set({
       field: siguienteDir === 'none' ? null : field, // Si es none entonces regresamos null, para que los productos se ordenen como estaban por defecto

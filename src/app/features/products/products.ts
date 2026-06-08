@@ -76,6 +76,8 @@ export class Products implements OnInit {
   }
 
   // TODO: COMPUTED
+  // ================================================== CAMBIAR ESTADO POR FILTRO
+
   // Filtrar los productos por estado
   readonly productosPorEstado = computed<Producto[]>(() => {
     const query = this.querySearch();
@@ -96,10 +98,14 @@ export class Products implements OnInit {
     );
   });
 
+  // =================================================== SELECCIONAR CHECKBOX
+
   // Obtener la cantidad de todos los productos seleccionados
   readonly totalSeleccionados = computed<number>(() => {
     return this.productosSeleccionados().size;
   });
+
+  // ========================================================== ARCHIVAR
 
   // Obtener los productos seleccionados para archivar
   readonly productosParaArchivar = computed<Producto[]>(() => {
@@ -120,6 +126,8 @@ export class Products implements OnInit {
   readonly varianteEstaArchivada = computed<boolean>( () =>
     this.variante()?.estado === 'descontinuado'
   )
+
+  // =======================================================================
 
   // TODO: rxResource
   // Buscar producto
@@ -169,7 +177,7 @@ export class Products implements OnInit {
 
   // Decide que estado aplicar según el estado actual de los productos (Solo cuando está desarchivado)
   private resolverEstadoDesarchivarProducto ( producto: Producto ): EstadoProducto {
-    const tieneStock = producto.variantes.some( v => v.stock > 0 );
+    const tieneStock = producto.variantes.some( v => v.stock > 0 ); // Si hay uno que tenga stock mayor a 0
 
     return tieneStock ? 'disponible' : 'agotado';
   }
@@ -185,6 +193,18 @@ export class Products implements OnInit {
   }
 
   // TODO: MÉTODOS PÚBLICOS
+  // ================================================== CAMBIAR ESTADO POR FILTRO
+
+  // Cambiar el valor del estado seleccionado
+  estadoPorProducto ( estado: EstadoProducto | 'Todas' ): void {
+    this.limpiarSeleccion();
+
+    this.estadoSeleccionado.set(estado);
+  }
+
+
+  // =================================================== SELECCIONAR CHECKBOX
+
   // Seleccionar todas
   seleccionarTodas(): void {
     const seleccionados = new Set( this.productosSeleccionados() );
@@ -202,17 +222,6 @@ export class Products implements OnInit {
     return this.productosSeleccionados().has(id);
   }
 
-  // Mostrar Kebab por producto
-  toggleKebabProducto ( id: number ): void {
-    // Si ese producto ya es el único seleccionado
-    if ( this.totalSeleccionados() === 1 && this.estaSeleccionado(id) ) {
-      return this.limpiarSeleccion();
-    }
-
-    // Limpiar y seleccionar solo ese producto
-    this.productosSeleccionados.set( new Set([id]) );
-  }
-
   // Añadir o sacar productos de la selección
   toggleSeleccion ( id: number ): void {
     const seleccionados = new Set( this.productosSeleccionados() );
@@ -227,12 +236,53 @@ export class Products implements OnInit {
     this.productosSeleccionados.set( new Set() );
   }
 
-  // Cambiar el valor del estado seleccionado
-  estadoPorProducto ( estado: EstadoProducto | 'Todas' ): void {
-    this.limpiarSeleccion();
+  // ========================================================= PRODUCTO KEBAB
 
-    this.estadoSeleccionado.set(estado);
+  // Mostrar Kebab por producto
+  toggleKebabProducto ( id: number ): void {
+    // Si ese producto ya es el único seleccionado
+    if ( this.totalSeleccionados() === 1 && this.estaSeleccionado(id) ) {
+      return this.limpiarSeleccion();
+    }
+
+    // Limpiar y seleccionar solo ese producto
+    this.productosSeleccionados.set( new Set([id]) );
   }
+
+  // Archivar / Desarchivar productos seleccionados
+  archivarODesarchivarProductos(): void {
+    const productos = this.productosParaArchivar();
+    if ( productos.length === 0 ) return;
+
+    // Cada producto puede tener un estado distinto al desarchivar
+    const peticiones = productos.map(
+      producto => {
+        const nuevoEstado = this.todosArchivados()
+                              ? this.resolverEstadoDesarchivarProducto(producto) // cada uno según su stock
+                              : 'descontinuado'; // descontinuados todos
+
+        return this.inventarioService.actualizarProducto(
+          producto.id.toString(),
+          { estado: nuevoEstado }
+        )
+      }
+    );
+
+    // Lanzamos todas las peticiones al mismo tiempo
+    forkJoin(peticiones).subscribe({
+      next: ( resp ) => {
+        resp.forEach( resp => {
+          this.productos.update( productos =>
+            productos.map( producto => producto.id === resp.id ? resp : producto )
+          );
+        });
+
+        this.limpiarSeleccion(); // Cierra kebabs
+      }
+    })
+  }
+
+  // ========================================================= VARIANTE KEBABS
 
   // Obtener variante
   obtenerVariante ( ref: VarianteRef ): void {
@@ -277,41 +327,7 @@ export class Products implements OnInit {
     })
   }
 
-  // Archivar / Desarchivar productos seleccionados
-  archivarODesarchivarProductos(): void {
-    const productos = this.productosParaArchivar();
-    if ( productos.length === 0 ) return;
-
-    // Cada producto puede tener un estado distinto al desarchivar
-    const peticiones = productos.map(
-      producto => {
-        const nuevoEstado = this.todosArchivados()
-                              ? this.resolverEstadoDesarchivarProducto(producto) // cada uno según su stock
-                              : 'descontinuado'; // descontinuados todos
-
-        return this.inventarioService.actualizarProducto(
-          producto.id.toString(),
-          { estado: nuevoEstado }
-        )
-      }
-    );
-
-    // Lanzamos todas las peticiones al mismo tiempo
-    forkJoin(peticiones).subscribe({
-      next: ( resp ) => {
-        resp.forEach( resp => {
-          this.productos.update( productos =>
-            productos.map( producto => producto.id === resp.id ? resp : producto )
-          );
-        });
-
-        this.limpiarSeleccion(); // Cierra kebabs
-      }
-    })
-  }
-
-  // =========================
-  // Modals
+  // ===================================================== MDALS VER/EDITAR PRODUCTO
 
   // Abrir modal Detalle producto
   abrirDetalleProducto ( id: number ): void {
