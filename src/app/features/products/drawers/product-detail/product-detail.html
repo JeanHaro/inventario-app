@@ -142,12 +142,29 @@
       </div>
 
       <div class="product-detail__tags-value">
-        <span [class]="`badge badge--tecnologia`">
-          Tecnología
-        </span>
-        <span [class]="`badge badge--tecnologia`">
-          2+
-        </span>
+        @for ( tag of tagsVisibles(); track tag ) {
+          <span [class]="`badge badge--tag badge--tag-${getTagColor(tag)}`">
+            {{ tag }}
+          </span>
+        }
+
+        @if ( tagsRestantes() > 0 ) {
+          <button
+            (click)="showAllTags.set(!showAllTags())"
+            class="badge badge--more"
+          >
+            +{{ tagsRestantes() }}
+          </button>
+        }
+
+        @if ( showAllTags() ) {
+          <button
+            (click)="showAllTags.set(false)"
+            class="badge badge--less"
+          >
+            Ver menos
+          </button>
+        }
       </div>
     </div>
 

@@ -173,4 +173,60 @@
       background-color: var(--notif-warning-before);
     }
   }
+
+  // --------------------------------
+  // TAGS GENERALES
+  // --------------------------------
+  &--tag {
+    &-violet {
+      background: #ede9fe;
+      color: #6d28d9;
+    }
+
+    &-blue {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    &-green {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    &-orange {
+      background: #ffedd5;
+      color: #c2410c;
+    }
+
+    &-red {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    &-teal {
+      background: #ccfbf1;
+      color: #0f766e;
+    }
+
+    &-pink {
+      background: #fce7f3;
+      color: #be185d;
+    }
+
+    &-indigo {
+      background: #e0e7ff;
+      color: #4338ca;
+    }
+  }
+
+  // --------------------------------
+  // BOTONES
+  // --------------------------------
+  &--more,
+  &--less {
+    background: var(--color-gris-2);
+    color: var(--color-texto-secundario);
+    cursor: pointer;
+    border: 1px dashed var(--color-gris-3);
+  }
 }
