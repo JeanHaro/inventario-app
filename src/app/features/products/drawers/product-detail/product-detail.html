@@ -205,13 +205,27 @@
       TABS: Variantes / Imágenes
     ================================ -->
     <div class="product-detail__tabs">
-      <button class="product-detail__tabs-btn none active" >
+      <button
+        [class.active]="activeTab() === 'variantes'"
+        (click)="activeTab.set('variantes')"
+        class="product-detail__tabs-btn none"
+      >
         Variantes
       </button>
 
-      <button class="product-detail__tabs-btn none" >
+      <button
+        [class.active]="activeTab() === 'imagenes'"
+        (click)="activeTab.set('imagenes')"
+        class="product-detail__tabs-btn none"
+      >
         Imagenes
       </button>
+
+      <!-- Indicador animado -->
+      <div
+        class="product-detail__tabs-indicator"
+        [class.right]="activeTab() === 'imagenes'"
+      ></div>
     </div>
 
     <!-- ================================
@@ -222,231 +236,234 @@
       <!-- ================================
         VISTA: Variantes
       ================================ -->
-      <div class="product-detail__panel product-detail__panel--variants">
+      @if ( activeTab() === 'variantes' ) {
+        <div class="product-detail__panel product-detail__panel--variants">
+          <!-- Herramientas de variantes: filtro y orden -->
+          <div class="product-detail__variants-toolbar">
 
-        <!-- Herramientas de variantes: filtro y orden -->
-        <div class="product-detail__variants-toolbar">
-
-          <!-- Filtrar por estado -->
-          <div class="product-detail__filter">
-            <div class="product-detail__filter-title">
-              <fa-icon [icon]="faFilter"></fa-icon>
-              <span>Filtrar por:</span>
-            </div>
-
-            <div
-              [class.active]="showFilterOptions()"
-              class="select"
-            >
-              <!-- Valor seleccionado -->
-              <div
-                (click)="toggleOptionsFilter($event)"
-                class="select__value"
-              >
-                <span>{{ 'Descontinuado' }}</span>
-                <fa-icon [icon]="faAngleDown"></fa-icon>
+            <!-- Filtrar por estado -->
+            <div class="product-detail__filter">
+              <div class="product-detail__filter-title">
+                <fa-icon [icon]="faFilter"></fa-icon>
+                <span>Filtrar por:</span>
               </div>
 
-              <!-- Opciones -->
               <div
-                #filterOptionsRef
-                class="select__options"
+                [class.active]="showFilterOptions()"
+                class="select"
               >
-                <button
-                  name="todos"
-                  class="select__option none btn b--hidden"
+                <!-- Valor seleccionado -->
+                <div
+                  (click)="toggleOptionsFilter($event)"
+                  class="select__value"
                 >
-                  <span class="badge">Todos</span>
-                </button>
+                  <span>{{ 'Descontinuado' }}</span>
+                  <fa-icon [icon]="faAngleDown"></fa-icon>
+                </div>
 
-                <button
-                  name="disponible"
-                  class="select__option none btn b--hidden"
+                <!-- Opciones -->
+                <div
+                  #filterOptionsRef
+                  class="select__options"
                 >
-                  <span class="badge badge--disponible">Disponible</span>
-                </button>
-
-                <button
-                  name="sin_stock"
-                  class="select__option none btn b--hidden"
-                >
-                  <span class="badge badge--sin_stock">Sin stock</span>
-                </button>
-
-                <button
-                  name="reservado"
-                  class="select__option none btn b--hidden"
-                >
-                  <span class="badge badge--reservado">Reservado</span>
-                </button>
-
-                <button
-                  name="descontinuado"
-                  class="select__option none btn b--hidden"
-                >
-                  <span class="badge badge--descontinuado">Descontinuado</span>
-                </button>
-              </div>
-            </div>
-          </div>
-          <!-- END: Filtrar por estado -->
-
-          <!-- Ordenar por -->
-          <div class="product-detail__order">
-            <div class="product-detail__order-title">
-              <fa-icon [icon]="faArrowDownShortWide"></fa-icon>
-              <span>Ordenar por</span>
-            </div>
-
-            <div
-              [class.active]="showOrderOptions()"
-              class="select"
-            >
-              <!-- Valor seleccionado -->
-              <div
-                (click)="toggleOptionsOrder($event)"
-                class="select__value"
-              >
-                <span>{{ 'Defecto' }}</span>
-                <fa-icon [icon]="faAngleDown"></fa-icon>
-              </div>
-
-              <!-- Opciones -->
-              <div
-                #orderOptionsRef
-                class="select__options"
-              >
-                <button
-                  name="defecto"
-                  class="select__option none btn b--hidden"
-                >
-                  <span>Defecto</span>
-                </button>
-
-                <button
-                  name="nombre"
-                  class="select__option none btn b--hidden"
-                >
-                  <span>Nombre</span>
-                </button>
-
-                <button
-                  name="stock"
-                  class="select__option none btn b--hidden"
-                >
-                  <span>Stock</span>
-                </button>
-
-                <button
-                  name="precio"
-                  class="select__option none btn b--hidden"
-                >
-                  <span>Precio</span>
-                </button>
-
-                <button
-                  name="estado"
-                  class="select__option none btn b--hidden"
-                >
-                  <span>Estado</span>
-                </button>
-              </div>
-            </div>
-          </div>
-          <!-- END: Ordenar por -->
-
-        </div>
-        <!-- END: Herramientas de variantes -->
-
-        <!-- Lista de variantes -->
-        <div class="product-detail__variants">
-          @for ( variante of producto().variantes; track variante.id ) {
-            <div class="product-detail__variant">
-
-              <!-- Imagen -->
-              <div class="product-detail__variant-img">
-                @if ( variante.imagen?.length ) {
-                  <img
-                    [src]="variante.imagen"
-                    [alt]="variante.nombre ?? 'Imagen de variante'"
+                  <button
+                    name="todos"
+                    class="select__option none btn b--hidden"
                   >
-                } @else {
-                  <img src="./img/iphone15.png" alt="Imagen por defecto">
-                }
+                    <span class="badge">Todos</span>
+                  </button>
+
+                  <button
+                    name="disponible"
+                    class="select__option none btn b--hidden"
+                  >
+                    <span class="badge badge--disponible">Disponible</span>
+                  </button>
+
+                  <button
+                    name="sin_stock"
+                    class="select__option none btn b--hidden"
+                  >
+                    <span class="badge badge--sin_stock">Sin stock</span>
+                  </button>
+
+                  <button
+                    name="reservado"
+                    class="select__option none btn b--hidden"
+                  >
+                    <span class="badge badge--reservado">Reservado</span>
+                  </button>
+
+                  <button
+                    name="descontinuado"
+                    class="select__option none btn b--hidden"
+                  >
+                    <span class="badge badge--descontinuado">Descontinuado</span>
+                  </button>
+                </div>
               </div>
-
-              <!-- Nombre y SKU -->
-              <div class="product-detail__variant-information">
-                <span class="product-detail__variant-name">
-                  {{ producto().nombre }} {{ variante.nombre ?? '' }}
-                </span>
-                <span class="product-detail__variant-sku">
-                  {{ variante.sku ?? 'sin-sku' }}
-                </span>
-              </div>
-
-              <!-- Estado -->
-              <div class="product-detail__variant-state">
-                <span>Estado</span>
-                <span [class]="`badge badge--${variante.estado}`">
-                  {{ variante.estado }}
-                </span>
-              </div>
-
-              <!-- Stock -->
-              <div class="product-detail__variant-stock">
-                <span>Stock</span>
-                <span>{{ variante.stock | compactNumber: 'stock' }}</span>
-              </div>
-
-              <!-- Precio adicional -->
-              <div class="product-detail__variant-price">
-                <span>Precio</span>
-                <span>{{ variante.precioAdicional ?? 0 | compactNumber: 'precio' }}</span>
-              </div>
-
-              <!-- Acciones de variante -->
-              <div class="product-detail__variant-action">
-
-                <!-- Editar variante -->
-                <button class="product-detail__action-btn product-detail__action-btn--edit btn b--hidden none">
-                  <fa-icon [icon]="faPenToSquare"></fa-icon>
-                  <span class="sr-only">Editar variante</span>
-                </button>
-
-                <!-- Ver variante -->
-                <button
-                  class="product-detail__action-btn product-detail__action-btn--see btn b--hidden none"
-                >
-                  <fa-icon [icon]="faEye"></fa-icon>
-                  <span class="sr-only">Ver variante</span>
-                </button>
-
-              </div>
-              <!-- END: Acciones de variante -->
-
             </div>
-          } @empty {
-            <p>No tiene variantes</p>
-          }
-        </div>
-        <!-- END: Lista de variantes -->
+            <!-- END: Filtrar por estado -->
 
-      </div>
+            <!-- Ordenar por -->
+            <div class="product-detail__order">
+              <div class="product-detail__order-title">
+                <fa-icon [icon]="faArrowDownShortWide"></fa-icon>
+                <span>Ordenar por</span>
+              </div>
+
+              <div
+                [class.active]="showOrderOptions()"
+                class="select"
+              >
+                <!-- Valor seleccionado -->
+                <div
+                  (click)="toggleOptionsOrder($event)"
+                  class="select__value"
+                >
+                  <span>{{ 'Defecto' }}</span>
+                  <fa-icon [icon]="faAngleDown"></fa-icon>
+                </div>
+
+                <!-- Opciones -->
+                <div
+                  #orderOptionsRef
+                  class="select__options"
+                >
+                  <button
+                    name="defecto"
+                    class="select__option none btn b--hidden"
+                  >
+                    <span>Defecto</span>
+                  </button>
+
+                  <button
+                    name="nombre"
+                    class="select__option none btn b--hidden"
+                  >
+                    <span>Nombre</span>
+                  </button>
+
+                  <button
+                    name="stock"
+                    class="select__option none btn b--hidden"
+                  >
+                    <span>Stock</span>
+                  </button>
+
+                  <button
+                    name="precio"
+                    class="select__option none btn b--hidden"
+                  >
+                    <span>Precio</span>
+                  </button>
+
+                  <button
+                    name="estado"
+                    class="select__option none btn b--hidden"
+                  >
+                    <span>Estado</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- END: Ordenar por -->
+
+          </div>
+          <!-- END: Herramientas de variantes -->
+
+          <!-- Lista de variantes -->
+          <div class="product-detail__variants">
+            @for ( variante of producto().variantes; track variante.id ) {
+              <div class="product-detail__variant">
+
+                <!-- Imagen -->
+                <div class="product-detail__variant-img">
+                  @if ( variante.imagen?.length ) {
+                    <img
+                      [src]="variante.imagen"
+                      [alt]="variante.nombre ?? 'Imagen de variante'"
+                    >
+                  } @else {
+                    <img src="./img/iphone15.png" alt="Imagen por defecto">
+                  }
+                </div>
+
+                <!-- Nombre y SKU -->
+                <div class="product-detail__variant-information">
+                  <span class="product-detail__variant-name">
+                    {{ producto().nombre }} {{ variante.nombre ?? '' }}
+                  </span>
+                  <span class="product-detail__variant-sku">
+                    {{ variante.sku ?? 'sin-sku' }}
+                  </span>
+                </div>
+
+                <!-- Estado -->
+                <div class="product-detail__variant-state">
+                  <span>Estado</span>
+                  <span [class]="`badge badge--${variante.estado}`">
+                    {{ variante.estado }}
+                  </span>
+                </div>
+
+                <!-- Stock -->
+                <div class="product-detail__variant-stock">
+                  <span>Stock</span>
+                  <span>{{ variante.stock | compactNumber: 'stock' }}</span>
+                </div>
+
+                <!-- Precio adicional -->
+                <div class="product-detail__variant-price">
+                  <span>Precio</span>
+                  <span>{{ variante.precioAdicional ?? 0 | compactNumber: 'precio' }}</span>
+                </div>
+
+                <!-- Acciones de variante -->
+                <div class="product-detail__variant-action">
+
+                  <!-- Editar variante -->
+                  <button class="product-detail__action-btn product-detail__action-btn--edit btn b--hidden none">
+                    <fa-icon [icon]="faPenToSquare"></fa-icon>
+                    <span class="sr-only">Editar variante</span>
+                  </button>
+
+                  <!-- Ver variante -->
+                  <button
+                    class="product-detail__action-btn product-detail__action-btn--see btn b--hidden none"
+                  >
+                    <fa-icon [icon]="faEye"></fa-icon>
+                    <span class="sr-only">Ver variante</span>
+                  </button>
+
+                </div>
+                <!-- END: Acciones de variante -->
+
+              </div>
+            } @empty {
+              <p>No tiene variantes</p>
+            }
+          </div>
+          <!-- END: Lista de variantes -->
+
+        </div>
+      }
       <!-- END: VISTA: Variantes -->
 
       <!-- ================================
         VISTA: Imágenes
       ================================ -->
-      <div class="product-detail__panel product-detail__panel--images hidden">
-        @for ( imagen of producto().imagenes; track imagen ) {
-          <div class="product-detail__image">
-            <img [src]="imagen" alt="Imagen del producto">
-          </div>
-        } @empty {
-          <p>No hay imágenes</p>
-        }
-      </div>
+      @if ( activeTab() === 'imagenes' ) {
+        <div class="product-detail__panel product-detail__panel--images">
+          @for ( imagen of producto().imagenes; track imagen ) {
+            <div class="product-detail__image">
+              <img [src]="imagen" alt="Imagen del producto">
+            </div>
+          } @empty {
+            <p>No hay imágenes</p>
+          }
+        </div>
+      }
       <!-- END: VISTA: Imágenes -->
 
     </div>

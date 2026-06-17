@@ -196,41 +196,43 @@
   // TABS: Variantes / Imágenes
   // ================================
   &__tabs {
+    position: relative;
+
     display: flex;
+    gap: 0;
 
     margin-top: 2rem;
     border-bottom: 0.2rem solid var(--color-blanco-8);
 
     &-btn {
-      position: relative;
-
       background-color: transparent;
       padding: 1rem;
       color: var(--color-blanco-6);
 
+      width: 10rem;
       cursor: pointer;
       transition: 0.5s ease;
-
-      &:after {
-        content: '';
-        position: absolute;
-        top: 100%;
-        left: 0;
-
-        width: 0;
-        height: 0.2rem;
-        background-color: var(--color-primario);
-
-        transition: 0.5s ease;
-      }
 
       &.active {
         color: var(--color-primario);
         font-weight: 600;
+      }
+    }
 
-        &:after {
-          width: 100%;
-        }
+    // Indicador que se desliza
+    &-indicator {
+      position: absolute;
+      top: 100%;
+      left: 0;
+
+      width: 10rem;
+      height: 0.2rem;
+      background: var(--color-primario);
+      border-radius: 2px 2px 0 0;
+      transition: transform 0.3s ease;
+
+      &.right {
+        transform: translateX(100%); // se mueve al segundo tab
       }
     }
   }

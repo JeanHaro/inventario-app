@@ -28,6 +28,8 @@ import {
 // Interfaces
 import { Producto } from '../../models/products.model';
 
+type Tabs = 'variantes' | 'imagenes';
+
 @Component({
   selector: 'app-product-detail',
   standalone: false,
@@ -60,6 +62,7 @@ export class ProductDetail implements OnInit {
   showOptionsMenu = signal<boolean>(false);
   showFilterOptions = signal<boolean>(false);
   showOrderOptions = signal<boolean>(false);
+  activeTab = signal<Tabs>('variantes');
 
   private readonly TAG_COLORS = [
     'violet', 'blue', 'green', 'orange', 'red', 'teal', 'pink', 'indigo'
