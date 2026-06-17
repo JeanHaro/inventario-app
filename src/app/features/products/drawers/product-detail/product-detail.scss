@@ -541,17 +541,23 @@
   // VISTA: Imágenes
   // ================================
   &__panel--images {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
+    columns: 2;
+    column-gap: 1rem;
+
+    @media (min-width: 712px) {
+      columns: 3;
+    }
+
+    @media (min-width: 1024px) {
+      columns: 4;
+    }
   }
 
   &__image {
     position: relative;
 
-    min-width: 10rem;
-    max-width: 10rem;
+    break-inside: avoid;
+    margin-bottom: 1rem;
     width: 100%;
     border-radius: 0.5rem;
 
@@ -562,18 +568,22 @@
       position: absolute;
       inset: 0;
       background-color: #000;
-      opacity: 0;
+      opacity: 0.3;
       border-radius: 0.5rem;
 
       transition: 0.5s ease;
     }
 
     &:hover::after {
-      opacity: 0.3;
+      opacity: 0.1;
     }
 
     img {
+      width: 100%;
+      height: auto;      // ← clave: altura natural de cada imagen = efecto masonry
+      display: block;
       border-radius: 0.5rem;
+      object-fit: cover;
     }
   }
 }
