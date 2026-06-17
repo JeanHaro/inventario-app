@@ -19,7 +19,11 @@
     </button>
 
     <!-- BUSCADOR (Mobile) -->
-    <div class="header__search-mobile" [class.active]="showSearch()">
+    <div
+      class="header__search-mobile"
+      [class.active]="showSearch()"
+      #searchMobileRef
+    >
       <input
         class="none input"
         type="text"
@@ -41,7 +45,7 @@
         >
 
         <button
-          (click)="openSearch()"
+          (click)="openSearch($event)"
           class="header__tools-btn none btn"
         >
           <fa-icon
@@ -69,7 +73,10 @@
       </button>
 
       <!-- NOTIFICACIONES -->
-      <button (click)="openNotifications()" class="header__tools-btn none btn">
+      <button
+        (click)="openNotifications($event)"
+        class="header__tools-btn none btn"
+      >
         <fa-icon
           [icon]="faBell"
           class="header__tools-icon"
@@ -87,6 +94,9 @@
       </button>
     </div>
 
-    <app-notification-dropdown [class.active]="showNotification()" />
+    <app-notification-dropdown
+      [class.active]="showNotification()"
+      #notificationRef
+    />
   </div>
 </header>
