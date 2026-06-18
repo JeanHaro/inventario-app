@@ -274,8 +274,11 @@
     position: relative;
 
     margin-top: 1rem;
-
     cursor: pointer;
+
+    &.state {
+      width: 13rem;
+    }
 
     &.active {
       fa-icon {
@@ -369,6 +372,10 @@
 
       &:hover {
         background-color: var(--color-blanco-3);
+      }
+
+      &.active {
+        background-color: var(--color-blanco-4);
       }
 
       span {

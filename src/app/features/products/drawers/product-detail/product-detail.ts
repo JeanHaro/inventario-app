@@ -26,7 +26,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 // Interfaces
-import { Producto } from '../../models/products.model';
+import { EstadoVariante, Producto, Variante } from '../../models/products.model';
 
 type Tabs = 'variantes' | 'imagenes';
 
@@ -62,7 +62,10 @@ export class ProductDetail implements OnInit {
   showOptionsMenu = signal<boolean>(false);
   showFilterOptions = signal<boolean>(false);
   showOrderOptions = signal<boolean>(false);
+
   activeTab = signal<Tabs>('variantes');
+
+  filterState = signal<EstadoVariante | 'todos'>('todos'); // Estados para el filtro
 
   private readonly TAG_COLORS = [
     'violet', 'blue', 'green', 'orange', 'red', 'teal', 'pink', 'indigo'
@@ -90,6 +93,17 @@ export class ProductDetail implements OnInit {
 
     return Math.max(0, etiquetas.length - this.maxTags())
   })
+
+  // ================================================== CAMBIAR ESTADO POR FILTRO
+
+  // Filtrar los productos por estado
+  readonly variantesPorEstado = computed<Variante[]>(() => {
+    if ( this.filterState() === 'todos' ) return this.producto().variantes;
+
+    return this.producto().variantes.filter(
+      variante => variante.estado === this.filterState()
+    );
+  });
 
   // TODO: HOSTLISTENER
   // ====================================================== MOSTRAR OPCIONES
@@ -178,5 +192,13 @@ export class ProductDetail implements OnInit {
     const hash = tag.split('').reduce( ( acc, char ) => acc + char.charCodeAt(0), 0);
 
     return this.TAG_COLORS[ hash % this.TAG_COLORS.length];
+  }
+
+  // ================================================== CAMBIAR ESTADO POR FILTRO
+  // Seleccionar filtro
+  seleccionarFiltro ( estado: EstadoVariante | 'todos' ): void {
+    this.showFilterOptions.set(false); // Cerramos el dropdown
+
+    this.filterState.set(estado);
   }
 }

@@ -250,14 +250,21 @@
 
               <div
                 [class.active]="showFilterOptions()"
-                class="select"
+                class="select state"
               >
                 <!-- Valor seleccionado -->
                 <div
                   (click)="toggleOptionsFilter($event)"
                   class="select__value"
                 >
-                  <span>{{ 'Descontinuado' }}</span>
+                  <span>
+                    {{
+                      filterState() === 'sin_stock'
+                        ? 'Sin stock'
+                        : filterState()
+                      | titlecase
+                    }}
+                  </span>
                   <fa-icon [icon]="faAngleDown"></fa-icon>
                 </div>
 
@@ -267,35 +274,45 @@
                   class="select__options"
                 >
                   <button
+                    (click)="seleccionarFiltro('todos')"
                     name="todos"
+                    [class.active]="filterState() === 'todos'"
                     class="select__option none btn b--hidden"
                   >
                     <span class="badge">Todos</span>
                   </button>
 
                   <button
+                    (click)="seleccionarFiltro('disponible')"
                     name="disponible"
+                    [class.active]="filterState() === 'disponible'"
                     class="select__option none btn b--hidden"
                   >
                     <span class="badge badge--disponible">Disponible</span>
                   </button>
 
                   <button
+                    (click)="seleccionarFiltro('sin_stock')"
                     name="sin_stock"
+                    [class.active]="filterState() === 'sin_stock'"
                     class="select__option none btn b--hidden"
                   >
                     <span class="badge badge--sin_stock">Sin stock</span>
                   </button>
 
                   <button
+                    (click)="seleccionarFiltro('reservado')"
                     name="reservado"
+                    [class.active]="filterState() === 'reservado'"
                     class="select__option none btn b--hidden"
                   >
                     <span class="badge badge--reservado">Reservado</span>
                   </button>
 
                   <button
+                    (click)="seleccionarFiltro('descontinuado')"
                     name="descontinuado"
+                    [class.active]="filterState() === 'descontinuado'"
                     class="select__option none btn b--hidden"
                   >
                     <span class="badge badge--descontinuado">Descontinuado</span>
@@ -374,7 +391,7 @@
 
           <!-- Lista de variantes -->
           <div class="product-detail__variants">
-            @for ( variante of producto().variantes; track variante.id ) {
+            @for ( variante of variantesPorEstado(); track variante.id ) {
               <div class="product-detail__variant">
 
                 <!-- Imagen -->
