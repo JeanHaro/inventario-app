@@ -3,6 +3,7 @@ import {
   computed,
   ElementRef,
   HostListener,
+  inject,
   input,
   OnInit,
   output,
@@ -26,7 +27,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 // Interfaces
-import { EstadoVariante, Producto, Variante } from '../../models/products.model';
+import { EstadoProducto, EstadoVariante, Producto, Variante } from '../../models/products.model';
+import { InventarioService } from '../../services/inventario';
 
 type Tabs = 'variantes' | 'imagenes';
 type Fields = 'nombre' | 'stock' | 'precioAdicional' | 'estado';
@@ -38,6 +40,9 @@ type Fields = 'nombre' | 'stock' | 'precioAdicional' | 'estado';
   styleUrl: './product-detail.scss',
 })
 export class ProductDetail implements OnInit {
+  // TODO: INYECCIONES
+  private readonly inventarioService = inject(InventarioService);
+
   // TODO: VIEWCHILD
   readonly optionsMenuRef = viewChild<ElementRef<HTMLElement>>('optionsMenuRef');
   readonly filterOptionsRef = viewChild<ElementRef<HTMLElement>>('filterOptionsRef');
@@ -58,6 +63,7 @@ export class ProductDetail implements OnInit {
   // TODO: INPUT Y OUTPUT
   readonly producto = input.required<Producto>();
   readonly cerrarModal = output<void>();
+  readonly productoActualizado = output<Producto>(); // Avisamos que el producto se actualizo
 
   // TODO: SIGNALS
   showOptionsMenu = signal<boolean>(false);
@@ -130,6 +136,12 @@ export class ProductDetail implements OnInit {
     })
   });
 
+  // ========================================================== ARCHIVAR
+
+  // Verificamos que el producto esta archivado
+  readonly productoArchivado = computed<boolean>(() =>
+    this.producto().estado === 'descontinuado'
+  );
 
   // TODO: HOSTLISTENER
   // ====================================================== MOSTRAR OPCIONES
@@ -177,12 +189,22 @@ export class ProductDetail implements OnInit {
     else this.maxTags.set(1);
   }
 
-  // TODO: Hooks
+  // TODO: HOOKS
   ngOnInit(): void {
     this.actualizarMaxTags();
   }
 
-  // TODO: MÉTODOS
+  // TODO: MÉTODOS PRIVADOS
+  // ========================================================== ARCHIVAR
+
+  // Decide a que estado pasar al desarchivar, segun el stock real de las variantes
+  private resolverEstadoDesarchivar(): EstadoProducto {
+    const tieneStock = this.producto().variantes.some( v => v.stock > 0 );
+    return tieneStock ? 'disponible' : 'agotado';
+  }
+
+
+  // TODO: MÉTODOS PÚBLICOS
   // ====================================================== MOSTRAR OPCIONES
 
   // Abrir y cerrar menu de opciones
@@ -234,5 +256,24 @@ export class ProductDetail implements OnInit {
     this.showOrderOptions.set(false); // Cerramos el dropdwon
 
     this.sortField.set(field);
+  }
+
+  // ========================================================== ARCHIVAR
+
+  // Archivar / Desarchivar el producto
+  toggleArchivoProducto(): void {
+    const nuevoEstado: EstadoProducto = this.productoArchivado()
+                  ? this.resolverEstadoDesarchivar()
+                  : 'descontinuado';
+
+    this.inventarioService.actualizarProducto(
+      this.producto().id.toString(),
+      { estado: nuevoEstado }
+    ).subscribe({
+      next: (resp) => {
+        this.productoActualizado.emit(resp); // avisamos al padre
+        this.showOptionsMenu.set(false); // Cerramos el menu
+      }
+    });
   }
 }

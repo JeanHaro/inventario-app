@@ -52,9 +52,12 @@
       </button>
 
       <!-- Archivar -->
-      <button class="none btn b--white-primary">
-        <fa-icon [icon]="faBoxArchive"></fa-icon>
-        <span>Archivar</span>
+      <button
+        (click)="toggleArchivoProducto()"
+        class="none btn b--white-primary"
+      >
+        <fa-icon [icon]="productoArchivado() ? faBoxOpen : faBoxArchive"></fa-icon>
+        <span>{{ productoArchivado() ? 'Desarchivar' : 'Archivar' }}</span>
       </button>
 
     </div>

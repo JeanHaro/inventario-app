@@ -217,6 +217,7 @@
     <app-product-detail
       [producto]="productoSeleccionado()!"
       (cerrarModal)="cerrarDetalleProducto()"
+      (productoActualizado)="actualizarProductoEnLista($event)"
     />
   }
 </div>

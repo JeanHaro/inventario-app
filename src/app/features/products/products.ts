@@ -344,4 +344,15 @@ export class Products implements OnInit {
   cerrarDetalleProducto() {
     this.productoSeleccionado.set(null);
   }
+
+  // ========================================= ACHIVAR PRODUCTO DESDE PRODUCT DETAIL
+
+  // Actualiza el producto en el signal local y mantiene sincronizado el drawer
+  actualizarProductoEnLista ( producto: Producto ): void {
+    this.productos.update( productos =>
+      productos.map( p => p.id === producto.id ? producto : p )
+    );
+
+    this.productoSeleccionado.set(producto); // Mantiene el drawer mostrando el dato actualizado
+  }
 }
