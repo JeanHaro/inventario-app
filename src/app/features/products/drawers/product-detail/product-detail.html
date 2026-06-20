@@ -338,7 +338,12 @@
                   (click)="toggleOptionsOrder($event)"
                   class="select__value"
                 >
-                  <span>{{ 'Defecto' }}</span>
+                  <span>{{
+                      sortField() === 'precioAdicional'
+                        ? 'Precio'
+                        : sortField()
+                      | titlecase
+                    }}</span>
                   <fa-icon [icon]="faAngleDown"></fa-icon>
                 </div>
 
@@ -348,35 +353,45 @@
                   class="select__options"
                 >
                   <button
+                    (click)="seleccionarOrdenamiento('defecto')"
                     name="defecto"
+                    [class.active]="sortField() === 'defecto'"
                     class="select__option none btn b--hidden"
                   >
                     <span>Defecto</span>
                   </button>
 
                   <button
+                    (click)="seleccionarOrdenamiento('nombre')"
                     name="nombre"
+                    [class.active]="sortField() === 'nombre'"
                     class="select__option none btn b--hidden"
                   >
                     <span>Nombre</span>
                   </button>
 
                   <button
+                    (click)="seleccionarOrdenamiento('stock')"
                     name="stock"
+                    [class.active]="sortField() === 'stock'"
                     class="select__option none btn b--hidden"
                   >
                     <span>Stock</span>
                   </button>
 
                   <button
-                    name="precio"
+                    (click)="seleccionarOrdenamiento('precioAdicional')"
+                    name="precioAdicional"
+                    [class.active]="sortField() === 'precioAdicional'"
                     class="select__option none btn b--hidden"
                   >
                     <span>Precio</span>
                   </button>
 
                   <button
+                    (click)="seleccionarOrdenamiento('estado')"
                     name="estado"
+                    [class.active]="sortField() === 'estado'"
                     class="select__option none btn b--hidden"
                   >
                     <span>Estado</span>
@@ -391,7 +406,7 @@
 
           <!-- Lista de variantes -->
           <div class="product-detail__variants">
-            @for ( variante of variantesPorEstado(); track variante.id ) {
+            @for ( variante of variantesOrdenadas(); track variante.id ) {
               <div class="product-detail__variant">
 
                 <!-- Imagen -->

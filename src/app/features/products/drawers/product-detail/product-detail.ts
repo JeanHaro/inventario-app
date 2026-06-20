@@ -29,6 +29,7 @@ import {
 import { EstadoVariante, Producto, Variante } from '../../models/products.model';
 
 type Tabs = 'variantes' | 'imagenes';
+type Fields = 'nombre' | 'stock' | 'precioAdicional' | 'estado';
 
 @Component({
   selector: 'app-product-detail',
@@ -66,6 +67,7 @@ export class ProductDetail implements OnInit {
   activeTab = signal<Tabs>('variantes');
 
   filterState = signal<EstadoVariante | 'todos'>('todos'); // Estados para el filtro
+  sortField = signal<Fields | 'defecto'>('defecto');
 
   private readonly TAG_COLORS = [
     'violet', 'blue', 'green', 'orange', 'red', 'teal', 'pink', 'indigo'
@@ -104,6 +106,30 @@ export class ProductDetail implements OnInit {
       variante => variante.estado === this.filterState()
     );
   });
+
+  // ========================================================== ORDENAMIENTO
+
+  // Variantes ordenadas según el select
+  readonly variantesOrdenadas = computed<Variante[]>(() => {
+    const lista = [...this.variantesPorEstado()];
+    const field = this.sortField() as Fields;
+
+    if ( this.sortField() === 'defecto' ) return lista;
+
+    return lista.sort((a, b) => {
+      const valA: string | number = ( a[field] as string | number ) ?? '';
+      const valB: string | number = ( b[field] as string | number ) ?? '';
+
+       // Si son numéricos
+      if ( typeof valA === 'number' && typeof valB === 'number' ) {
+        return valA - valB;
+      }
+
+      // Si es string
+      return String(valA).localeCompare(String(valB), 'es');
+    })
+  });
+
 
   // TODO: HOSTLISTENER
   // ====================================================== MOSTRAR OPCIONES
@@ -200,5 +226,13 @@ export class ProductDetail implements OnInit {
     this.showFilterOptions.set(false); // Cerramos el dropdown
 
     this.filterState.set(estado);
+  }
+
+  // ========================================================== ORDENAMIENTO
+  // Seleccionar ordenamiento
+  seleccionarOrdenamiento ( field: Fields | 'defecto' ): void {
+    this.showOrderOptions.set(false); // Cerramos el dropdwon
+
+    this.sortField.set(field);
   }
 }
