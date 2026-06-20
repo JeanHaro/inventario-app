@@ -249,10 +249,18 @@
   // ================================
   // Herramientas de variantes: filtro y orden
   &__variants-toolbar {
-    display: flex;
+    display: grid;
+    grid-template-columns: min-content;
+    grid-template-areas: 'filter order'
+                          'add add';
     gap: 1.2rem;
 
     margin-bottom: 1.5rem;
+
+    @media (min-width: 480px) {
+      grid-template-columns: auto auto 1fr;
+      grid-template-areas: 'filter order add';
+    }
 
     span,
     fa-icon {
@@ -263,9 +271,41 @@
   // Filtrar por estado y Ordenar por
   &__filter,
   &__order {
+    justify-self: start;
+
     &-title {
       display: flex;
       gap: 0.8rem;
+    }
+  }
+
+  &__filter {
+    grid-area: filter;
+  }
+
+  &__order {
+    grid-area: order;
+  }
+
+  &__add {
+    display: grid;
+
+    grid-area: add;
+
+    height: 100%;
+
+    @media (min-width: 480px) {
+      justify-self: flex-end;
+    }
+
+    button {
+      gap: 1rem;
+
+      font-size: 100%;
+
+      @media (min-width: 480px) {
+        align-self: flex-end;
+      }
     }
   }
 

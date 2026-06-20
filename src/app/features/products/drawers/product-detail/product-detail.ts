@@ -23,7 +23,8 @@ import {
   faFilter,
   faArrowDownShortWide,
   faEye,
-  faAngleDown
+  faAngleDown,
+  faPlus
 } from '@fortawesome/free-solid-svg-icons';
 
 // Interfaces
@@ -59,6 +60,7 @@ export class ProductDetail implements OnInit {
   readonly faArrowDownShortWide: IconDefinition = faArrowDownShortWide;
   readonly faEye: IconDefinition = faEye;
   readonly faAngleDown: IconDefinition = faAngleDown;
+  readonly faPlus: IconDefinition = faPlus;
 
   // TODO: INPUT Y OUTPUT
   readonly producto = input.required<Producto>();
