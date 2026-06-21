@@ -18,3 +18,8 @@
   background-color: var(--color-terciario-hover);
   color: var(--color-blanco-1);
 }
+
+.i--warn {
+  background-color: var(--notif-critical-soft) !important;
+  border-color: var(--notif-critical-base) !important;
+}

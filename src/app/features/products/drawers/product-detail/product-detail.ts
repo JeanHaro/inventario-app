@@ -11,7 +11,12 @@ import {
   viewChild
 } from '@angular/core';
 
-import { form, FormField, required } from '@angular/forms/signals';
+import {
+  form,
+  FormField,
+  required,
+  min
+} from '@angular/forms/signals';
 
 // Font Awesome
 import {
@@ -266,7 +271,10 @@ export class ProductDetail implements OnInit {
   // El form de signalForms se construye sobre editModel
   editForm = form(this.editModel, ( schemaPath ) => {
     required( schemaPath.nombre, { message: 'El nombre es obligatorio' });
+    required( schemaPath.marca, { message: 'La marca es obligatorio' } );
     required( schemaPath.precio, { message: 'El precio es obligatorio' } );
+    min( schemaPath.precio, 0, { message: 'El precio no puede ser negativo' } );
+    min( schemaPath.descuento, 0, { message: 'El descuento no puede ser negativo' } );
   });
 
   // TODO: COMPUTED

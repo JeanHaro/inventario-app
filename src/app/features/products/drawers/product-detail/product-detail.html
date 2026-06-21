@@ -91,7 +91,26 @@
   ================================ -->
   <div class="product-detail__content">
     <!-- Nombre del producto -->
-    <h2>{{ producto().nombre }}</h2>
+    @if ( modoEdicion() ) {
+      <div class="product-detail__field-wrapper">
+        <input
+          [formField]="editForm.nombre"
+          type="text"
+          [class.i--warn]="editForm.nombre().invalid() && editForm.nombre().touched()"
+          class="product-detail__input none input"
+        >
+
+        @if ( editForm.nombre().invalid() && editForm.nombre().touched() ) {
+          <div class="product-detail__field-error">
+            @for ( error of editForm.nombre().errors(); track error.kind ) {
+              <span>{{ error.message }}</span>
+            }
+          </div>
+        }
+        </div>
+    } @else {
+      <h2>{{ producto().nombre }}</h2>
+    }
 
     <!-- Campos principales -->
     <div class="product-detail__fields">
@@ -148,11 +167,23 @@
         @if ( !modoEdicion() ) {
           <span>{{ producto().marca }}</span>
         } @else {
-          <input
-            [formField]="editForm.marca"
-            type="text"
-            class="product-detail__input none input"
-          >
+          <div class="product-detail__field-wrapper">
+            <input
+              [formField]="editForm.marca"
+              type="text"
+              [class.i--warn]="editForm.marca().invalid() && editForm.nombre().touched()"
+              class="product-detail__input none input"
+            >
+
+            @if ( editForm.marca().invalid() && editForm.marca().touched() ) {
+              <div class="product-detail__field-error">
+                @for ( error of editForm.marca().errors(); track error.kind ) {
+                  <span>{{ error.message }}</span>
+                }
+              </div>
+            }
+          </div>
+
         }
       </div>
 
@@ -182,11 +213,22 @@
         @if ( !modoEdicion() ) {
           <span>{{ producto().precio | compactNumber: 'precio' }}</span>
         } @else {
-          <input
-            [formField]="editForm.precio"
-            type="number"
-            class="product-detail__input none  input"
-          >
+          <div class="product-detail__field-wrapper">
+            <input
+              [formField]="editForm.precio"
+              type="number"
+              [class.i--warn]="editForm.precio().invalid() && editForm.nombre().touched()"
+              class="product-detail__input none  input"
+            >
+
+            @if ( editForm.precio().invalid() && editForm.precio().touched() ) {
+              <div class="product-detail__field-error">
+                @for ( error of editForm.precio().errors(); track error.kind ) {
+                  <span>{{ error.message }}</span>
+                }
+              </div>
+            }
+          </div>
         }
       </div>
 
@@ -199,11 +241,22 @@
         @if ( !modoEdicion() ) {
           <span>{{ ( producto().descuento ?? 0 ) / 100 | percent: '1.0-1' }}</span>
         } @else {
-          <input
-            [formField]="editForm.descuento"
-            type="number"
-            class="product-detail__input none input"
-          >
+          <div class="product-detail__field-wrapper">
+            <input
+              [formField]="editForm.descuento"
+              type="number"
+              [class.i--warn]="editForm.descuento().invalid() && editForm.nombre().touched()"
+              class="product-detail__input none input"
+            >
+
+            @if ( editForm.descuento().invalid() && editForm.descuento().touched() ) {
+              <div class="product-detail__field-error">
+                @for ( error of editForm.descuento().errors(); track error.kind ) {
+                  <span>{{ error.message }}</span>
+                }
+              </div>
+            }
+          </div>
         }
       </div>
     </div>
@@ -220,6 +273,8 @@
             <span [class]="`badge badge--tag badge--tag-${getTagColor(tag)}`">
               {{ tag }}
             </span>
+          }@empty {
+            <span>No tiene</span>
           }
 
           @if ( tagsRestantes() > 0 ) {

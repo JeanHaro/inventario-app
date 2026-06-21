@@ -132,18 +132,41 @@
     @media (min-width: 768px) {
       padding: 1.5rem 1.8rem;
     }
-
-    h2 {
-      margin-bottom: 3rem;
-    }
   }
 
-  @media (min-width: 1024px) {
-    // Campos principales
-    &__fields {
+  // Campos principales
+  &__fields {
+    margin-top: 3rem;
+
+    @media (min-width: 1024px) {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 2.5rem;
+    }
+  }
+
+  // Contenedor de inputs con errors
+  &__field-wrapper {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    width: 100%;
+  }
+
+  // Error
+  &__field-error {
+    position: absolute;
+    top: 102%;
+    left: 0;
+
+    font-size: 1.2rem;
+    color: var(--notif-critical-base);
+
+    span {
+      display: block;
     }
   }
 
