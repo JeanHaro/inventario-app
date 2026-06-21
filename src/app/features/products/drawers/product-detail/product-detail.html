@@ -10,6 +10,7 @@
 
     <!-- Cerrar -->
     <button
+      type="button"
       (click)="this.cerrarModal.emit()"
       class="product-detail__close none btn b--hidden"
     >
@@ -23,6 +24,7 @@
       @if ( !modoEdicion() ) {
         <!-- Editar -->
         <button
+          type="button"
           (click)="activarEdicion()"
           class="product-detail__edit none btn b--hidden"
         >
@@ -32,6 +34,7 @@
 
         <!-- Más opciones -->
         <button
+          type="button"
           (click)="toggleOptionsMenu($event)"
           class="product-detail__options none btn b--hidden"
         >
@@ -41,7 +44,8 @@
       } @else {
         <!-- Guardar -->
         <button
-          (click)="guardarEdicion()"
+          type="submit"
+          form="productEditForm"
           [disabled]="guardando()"
           class="product-detail__btn product-detail__btn-1 none btn b--primary"
         >
@@ -55,6 +59,7 @@
 
         <!-- Cancelar -->
         <button
+          type="button"
           (click)="cancelarEdicion()"
           [disabled]="guardando()"
           class="product-detail__btn product-detail__btn-2 none btn b--gray"
@@ -73,13 +78,14 @@
     >
 
       <!-- Descargar CSV -->
-      <button class="none btn b--white-primary">
+      <button type="button" class="none btn b--white-primary">
         <fa-icon [icon]="faFileArrowDown"></fa-icon>
         <span>Descargar CSV</span>
       </button>
 
       <!-- Archivar -->
       <button
+        type="button"
         (click)="toggleArchivoProducto()"
         class="none btn b--white-primary"
       >
@@ -97,261 +103,270 @@
     CONTENIDO DEL PRODUCTO
   ================================ -->
   <div class="product-detail__content">
-    <!-- Nombre del producto -->
-    @if ( modoEdicion() ) {
-      <div class="product-detail__field-wrapper" [class.is-saving]="guardando()">
-        <input
-          [formField]="editForm.nombre"
-          type="text"
-          [class.i--warn]="editForm.nombre().invalid() && editForm.nombre().touched()"
-          class="product-detail__input none input"
-        >
 
-        @if ( editForm.nombre().invalid() && editForm.nombre().touched() ) {
-          <div class="product-detail__field-error">
-            @for ( error of editForm.nombre().errors(); track error.kind ) {
-              <span>{{ error.message }}</span>
+    <form
+      id="productEditForm"
+      (ngSubmit)="guardarEdicion()"
+      novalidate
+    >
+      <!-- Nombre del producto -->
+      @if ( modoEdicion() ) {
+        <div class="product-detail__field-wrapper" [class.is-saving]="guardando()">
+          <input
+            [formField]="editForm.nombre"
+            type="text"
+            [class.i--warn]="editForm.nombre().invalid() && editForm.nombre().touched()"
+            class="product-detail__input none input"
+          >
+
+          @if ( editForm.nombre().invalid() && editForm.nombre().touched() ) {
+            <div class="product-detail__field-error">
+              @for ( error of editForm.nombre().errors(); track error.kind ) {
+                <span>{{ error.message }}</span>
+              }
+            </div>
+          }
+        </div>
+      } @else {
+        <h2>{{ producto().nombre }}</h2>
+      }
+
+      <!-- Campos principales -->
+      <div class="product-detail__fields" [class.is-saving]="guardando()">
+        <!-- Estado -->
+        <div class="product-detail__state">
+          <div class="product-detail__state-label">
+            <span>Estado</span>
+          </div>
+
+          <div class="product-detail__state-value">
+            <!-- Estado -->
+            @if ( !modoEdicion() ) {
+              <span [class]="`badge badge--${producto().estado}`">
+                {{ producto().estado }}
+              </span>
+            } @else {
+              <app-select
+                [options]="estadoOptions"
+                [value]="editModel().estado"
+                (valueChange)="actualizarEstado($event)"
+              />
+            }
+
+          </div>
+        </div>
+
+        <!-- Categoría -->
+        <div class="product-detail__category">
+          <div class="product-detail__category-label">
+            <span>Categoría</span>
+          </div>
+
+          <div class="product-detail__category-value">
+            @if ( !modoEdicion() ) {
+              <span [class]="`badge badge--${producto().categoria}`">
+                {{ producto().categoria }}
+              </span>
+            } @else {
+              <app-select
+                [options]="categoriaOptions"
+                [value]="editModel().categoria"
+                (valueChange)="actualizarCategoria($event)"
+              />
             }
           </div>
-        }
-      </div>
-    } @else {
-      <h2>{{ producto().nombre }}</h2>
-    }
-
-    <!-- Campos principales -->
-    <div class="product-detail__fields" [class.is-saving]="guardando()">
-      <!-- Estado -->
-      <div class="product-detail__state">
-        <div class="product-detail__state-label">
-          <span>Estado</span>
         </div>
 
-        <div class="product-detail__state-value">
-          <!-- Estado -->
+        <!-- Marca -->
+        <div class="product-detail__brand">
+          <div class="product-detail__brand-label">
+            <span>Marca</span>
+          </div>
+
           @if ( !modoEdicion() ) {
-            <span [class]="`badge badge--${producto().estado}`">
-              {{ producto().estado }}
-            </span>
+            <span>{{ producto().marca }}</span>
           } @else {
-            <app-select
-              [options]="estadoOptions"
-              [value]="editModel().estado"
-              (valueChange)="actualizarEstado($event)"
-            />
-          }
+            <div class="product-detail__field-wrapper">
+              <input
+                [formField]="editForm.marca"
+                type="text"
+                [class.i--warn]="editForm.marca().invalid() && editForm.marca().touched()"
+                class="product-detail__input none input"
+              >
 
-        </div>
-      </div>
+              @if ( editForm.marca().invalid() && editForm.marca().touched() ) {
+                <div class="product-detail__field-error">
+                  @for ( error of editForm.marca().errors(); track error.kind ) {
+                    <span>{{ error.message }}</span>
+                  }
+                </div>
+              }
+            </div>
 
-      <!-- Categoría -->
-      <div class="product-detail__category">
-        <div class="product-detail__category-label">
-          <span>Categoría</span>
-        </div>
-
-        <div class="product-detail__category-value">
-          @if ( !modoEdicion() ) {
-            <span [class]="`badge badge--${producto().categoria}`">
-              {{ producto().categoria }}
-            </span>
-          } @else {
-            <app-select
-              [options]="categoriaOptions"
-              [value]="editModel().categoria"
-              (valueChange)="actualizarCategoria($event)"
-            />
           }
         </div>
-      </div>
 
-      <!-- Marca -->
-      <div class="product-detail__brand">
-        <div class="product-detail__brand-label">
-          <span>Marca</span>
-        </div>
+        <!-- Modelo -->
+        <div class="product-detail__model">
+          <div class="product-detail__model-label">
+            <span>Modelo</span>
+          </div>
 
-        @if ( !modoEdicion() ) {
-          <span>{{ producto().marca }}</span>
-        } @else {
-          <div class="product-detail__field-wrapper">
+          @if ( !modoEdicion() ) {
+            <span>{{ producto().modelo ?? 'No tiene' }}</span>
+          } @else {
             <input
-              [formField]="editForm.marca"
+              [formField]="editForm.modelo"
               type="text"
-              [class.i--warn]="editForm.marca().invalid() && editForm.marca().touched()"
               class="product-detail__input none input"
             >
+          }
+        </div>
 
-            @if ( editForm.marca().invalid() && editForm.marca().touched() ) {
-              <div class="product-detail__field-error">
-                @for ( error of editForm.marca().errors(); track error.kind ) {
-                  <span>{{ error.message }}</span>
-                }
-              </div>
-            }
+        <!-- Precio -->
+        <div class="product-detail__price">
+          <div class="product-detail__price-label">
+            <span>Precio</span>
           </div>
 
-        }
+          @if ( !modoEdicion() ) {
+            <span>{{ producto().precio | compactNumber: 'precio' }}</span>
+          } @else {
+            <div class="product-detail__field-wrapper">
+              <input
+                [formField]="editForm.precio"
+                type="number"
+                [class.i--warn]="editForm.precio().invalid() && editForm.precio().touched()"
+                class="product-detail__input none  input"
+              >
+
+              @if ( editForm.precio().invalid() && editForm.precio().touched() ) {
+                <div class="product-detail__field-error">
+                  @for ( error of editForm.precio().errors(); track error.kind ) {
+                    <span>{{ error.message }}</span>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Descuento -->
+        <div class="product-detail__discount">
+          <div class="product-detail__discount-label">
+            <span>Descuento</span>
+          </div>
+
+          @if ( !modoEdicion() ) {
+            <span>{{ ( producto().descuento ?? 0 ) / 100 | percent: '1.0-1' }}</span>
+          } @else {
+            <div class="product-detail__field-wrapper">
+              <input
+                [formField]="editForm.descuento"
+                type="number"
+                [class.i--warn]="editForm.descuento().invalid() && editForm.descuento().touched()"
+                class="product-detail__input none input"
+              >
+
+              @if ( editForm.descuento().invalid() && editForm.descuento().touched() ) {
+                <div class="product-detail__field-error">
+                  @for ( error of editForm.descuento().errors(); track error.kind ) {
+                    <span>{{ error.message }}</span>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
       </div>
 
-      <!-- Modelo -->
-      <div class="product-detail__model">
-        <div class="product-detail__model-label">
-          <span>Modelo</span>
+      <!-- Etiqueta -->
+      <div class="product-detail__tags" [class.is-saving]="guardando()">
+        <div class="product-detail__tags-label">
+          <span>Etiquetas</span>
         </div>
 
         @if ( !modoEdicion() ) {
-          <span>{{ producto().modelo ?? 'No tiene' }}</span>
+          <div class="product-detail__tags-value">
+            @for ( tag of tagsVisibles(); track tag ) {
+              <span [class]="`badge badge--tag badge--tag-${getTagColor(tag)}`">
+                {{ tag }}
+              </span>
+            }@empty {
+              <span>No tiene</span>
+            }
+
+            @if ( tagsRestantes() > 0 ) {
+              <button
+                type="button"
+                (click)="showAllTags.set(!showAllTags())"
+                class="badge badge--more"
+              >
+                +{{ tagsRestantes() }}
+              </button>
+            }
+
+            @if ( showAllTags() ) {
+              <button
+                type="button"
+                (click)="showAllTags.set(false)"
+                class="badge badge--less"
+              >
+                Ver menos
+              </button>
+            }
+          </div>
         } @else {
           <input
-            [formField]="editForm.modelo"
+            [(ngModel)]="tagsInput"
+            [ngModelOptions]="{ standalone: true }"
             type="text"
+            placeholder="Separadas por comas: Nuevo, Oferta..."
             class="product-detail__input none input"
           >
         }
       </div>
 
-      <!-- Precio -->
-      <div class="product-detail__price">
-        <div class="product-detail__price-label">
-          <span>Precio</span>
+      <!-- Fechas -->
+      <div class="product-detail__dates" [class.is-saving]="guardando()">
+
+        <!-- Creado el -->
+        <div class="product-detail__start">
+          <div class="product-detail__start-label">
+            <span>Creado el</span>
+          </div>
+
+          <span>{{ producto().creadoEn | date: 'dd/MM/yy, HH:mm a' }}</span>
+        </div>
+
+        <!-- Actualizado el -->
+        <div class="product-detail__update">
+          <div class="product-detail__update-label">
+            <span>Actualizado el</span>
+          </div>
+
+          <span>{{ producto().actualizadoEn | date: 'dd/MM/yy, HH:mm a' }}</span>
+        </div>
+
+      </div>
+      <!-- END: Fechas -->
+
+      <!-- Descripción -->
+      <div class="product-detail__description" [class.is-saving]="guardando()">
+        <div class="product-detail__description-label">
+          <span>Descripción</span>
         </div>
 
         @if ( !modoEdicion() ) {
-          <span>{{ producto().precio | compactNumber: 'precio' }}</span>
+          <span>{{ producto().descripcion }}</span>
         } @else {
-          <div class="product-detail__field-wrapper">
-            <input
-              [formField]="editForm.precio"
-              type="number"
-              [class.i--warn]="editForm.precio().invalid() && editForm.precio().touched()"
-              class="product-detail__input none  input"
-            >
-
-            @if ( editForm.precio().invalid() && editForm.precio().touched() ) {
-              <div class="product-detail__field-error">
-                @for ( error of editForm.precio().errors(); track error.kind ) {
-                  <span>{{ error.message }}</span>
-                }
-              </div>
-            }
-          </div>
+          <textarea
+            [formField]="editForm.descripcion"
+            class="product-detail__input none input"
+          ></textarea>
         }
       </div>
-
-      <!-- Descuento -->
-      <div class="product-detail__discount">
-        <div class="product-detail__discount-label">
-          <span>Descuento</span>
-        </div>
-
-        @if ( !modoEdicion() ) {
-          <span>{{ ( producto().descuento ?? 0 ) / 100 | percent: '1.0-1' }}</span>
-        } @else {
-          <div class="product-detail__field-wrapper">
-            <input
-              [formField]="editForm.descuento"
-              type="number"
-              [class.i--warn]="editForm.descuento().invalid() && editForm.descuento().touched()"
-              class="product-detail__input none input"
-            >
-
-            @if ( editForm.descuento().invalid() && editForm.descuento().touched() ) {
-              <div class="product-detail__field-error">
-                @for ( error of editForm.descuento().errors(); track error.kind ) {
-                  <span>{{ error.message }}</span>
-                }
-              </div>
-            }
-          </div>
-        }
-      </div>
-    </div>
-
-    <!-- Etiqueta -->
-    <div class="product-detail__tags" [class.is-saving]="guardando()">
-      <div class="product-detail__tags-label">
-        <span>Etiquetas</span>
-      </div>
-
-      @if ( !modoEdicion() ) {
-        <div class="product-detail__tags-value">
-          @for ( tag of tagsVisibles(); track tag ) {
-            <span [class]="`badge badge--tag badge--tag-${getTagColor(tag)}`">
-              {{ tag }}
-            </span>
-          }@empty {
-            <span>No tiene</span>
-          }
-
-          @if ( tagsRestantes() > 0 ) {
-            <button
-              (click)="showAllTags.set(!showAllTags())"
-              class="badge badge--more"
-            >
-              +{{ tagsRestantes() }}
-            </button>
-          }
-
-          @if ( showAllTags() ) {
-            <button
-              (click)="showAllTags.set(false)"
-              class="badge badge--less"
-            >
-              Ver menos
-            </button>
-          }
-        </div>
-      } @else {
-        <input
-          [(ngModel)]="tagsInput"
-          [ngModelOptions]="{ standalone: true }"
-          type="text"
-          placeholder="Separadas por comas: Nuevo, Oferta..."
-          class="product-detail__input none input"
-        >
-      }
-    </div>
-
-    <!-- Fechas -->
-    <div class="product-detail__dates" [class.is-saving]="guardando()">
-
-      <!-- Creado el -->
-      <div class="product-detail__start">
-        <div class="product-detail__start-label">
-          <span>Creado el</span>
-        </div>
-
-        <span>{{ producto().creadoEn | date: 'dd/MM/yy, HH:mm a' }}</span>
-      </div>
-
-      <!-- Actualizado el -->
-      <div class="product-detail__update">
-        <div class="product-detail__update-label">
-          <span>Actualizado el</span>
-        </div>
-
-        <span>{{ producto().actualizadoEn | date: 'dd/MM/yy, HH:mm a' }}</span>
-      </div>
-
-    </div>
-    <!-- END: Fechas -->
-
-    <!-- Descripción -->
-    <div class="product-detail__description" [class.is-saving]="guardando()">
-      <div class="product-detail__description-label">
-        <span>Descripción</span>
-      </div>
-
-      @if ( !modoEdicion() ) {
-        <span>{{ producto().descripcion }}</span>
-      } @else {
-        <textarea
-          [formField]="editForm.descripcion"
-          class="product-detail__input none input"
-        ></textarea>
-      }
-    </div>
+    </form>
 
     <div
       class="product-detail__tabs-section"
@@ -362,6 +377,7 @@
       ================================ -->
       <div class="product-detail__tabs">
         <button
+          type="button"
           [class.active]="activeTab() === 'variantes'"
           (click)="activeTab.set('variantes')"
           class="product-detail__tabs-btn none"
@@ -370,6 +386,7 @@
         </button>
 
         <button
+          type="button"
           [class.active]="activeTab() === 'imagenes'"
           (click)="activeTab.set('imagenes')"
           class="product-detail__tabs-btn none"
