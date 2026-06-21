@@ -73,6 +73,18 @@
   --badge-descontinuado-before:  #64748B;
   --badge-descontinuado-border:#E2E8F0;
 
+  // BOTONES — Estados adicionales
+  --color-gris-btn:       #6B7280;
+  --color-gris-btn-hover: #4B5563;
+  --color-gris-btn-bg:    #E5E7EB;
+  --color-gris-btn-texto: #374151;
+
+  --color-success:       #059669;
+  --color-success-hover: #047857;
+
+  --color-warning:       #D97706;
+  --color-warning-hover: #B45309;
+
   // COLLAPSED
   --collapsed-height: 200rem; // MODIFICAR SI HAY ALGUN PRODUCTO CON MUCHAS VARIANTES QUE PASA EL LIMITE DEL ALTO
 }

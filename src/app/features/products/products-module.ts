@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { FormField } from '@angular/forms/signals';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
@@ -17,12 +18,14 @@ import { ProductForm } from './drawers/product-form/product-form';
 import { VariantDetail } from './drawers/variant-detail/variant-detail';
 import { VariantForm } from './drawers/variant-form/variant-form';
 
+// Componentes - Shared
+import { Select } from '../../shared/components/select/select';
+
 // Rutas
 import { productsRoutes } from './products.routes';
 
-// Modulos
-import { SharedModule } from '../../shared/shared-module';
-
+// Pipes
+import { CompactNumberPipe } from '../../shared/pipes/compact-number/compact-number.pipe';
 
 
 @NgModule({
@@ -41,8 +44,11 @@ import { SharedModule } from '../../shared/shared-module';
   imports: [
     CommonModule,
     FormsModule,
+    FormField,
     FontAwesomeModule,
-    SharedModule,
+    // Shared
+    Select,
+    CompactNumberPipe,
 
     // Rutas
     RouterModule.forChild(productsRoutes),

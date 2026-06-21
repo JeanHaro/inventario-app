@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-// Pipes
-import { CompactNumberPipe } from './pipes/compact-number/compact-number.pipe';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
-  declarations: [
-    CompactNumberPipe
+  declarations: [],
+  imports: [
+    CommonModule,
+    FontAwesomeModule,
   ],
-  imports: [CommonModule],
-  exports: [
-    CompactNumberPipe
-  ],
+  exports: [],
 })
 export class SharedModule {}

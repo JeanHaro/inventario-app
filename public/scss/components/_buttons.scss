@@ -23,6 +23,7 @@
     background-color: var(--color-blanco-1);
   }
 
+  // Acción principal (Guardar, Confirmar)
   &.b--primary {
     background-color: var(--color-primario);
     color: var(--color-blanco-1);
@@ -42,6 +43,7 @@
     }
   }
 
+  // Botones de menú/dropdown
   &.b--terciary {
     background-color: var(--color-terciario);
     color: var(--color-blanco-1);
@@ -51,6 +53,7 @@
     }
   }
 
+  // Acción destructiva o de alto riesgo (Eliminar)
   &.b--danger {
     background-color: var(--notif-critical-base);
     color: var(--color-blanco-1);
@@ -63,5 +66,36 @@
   &.b--danger-hover:hover {
     background-color: var(--notif-critical-base);
     color: var(--color-blanco-1);
+  }
+
+  // Gris — para acciones secundarias o de cancelación neutral
+  &.b--gray {
+    background-color: var(--color-gris-btn-bg);
+    color: var(--color-gris-btn-texto);
+
+    &:hover {
+      background-color: var(--color-gris-btn);
+      color: var(--color-blanco-1);
+    }
+  }
+
+  // Verde — para confirmaciones positivas (activar, completar, aprobar)
+  &.b--success {
+    background-color: var(--color-success);
+    color: var(--color-blanco-1);
+
+    &:hover {
+      background-color: var(--color-success-hover);
+    }
+  }
+
+  // Naranja — para advertencias (pausar, alertas, acciones reversibles riesgosas)
+  &.b--warning {
+    background-color: var(--color-warning);
+    color: var(--color-blanco-1);
+
+    &:hover {
+      background-color: var(--color-warning-hover);
+    }
   }
 }

@@ -20,21 +20,41 @@
     <!-- Herramientas: Editar y más opciones -->
     <div class="product-detail__tools">
 
-      <!-- Editar -->
-      <button class="product-detail__edit none btn b--hidden">
-        <fa-icon [icon]="faPenToSquare"></fa-icon>
-        <span class="sr-only">Editar</span>
-      </button>
+      @if ( !modoEdicion() ) {
+        <!-- Editar -->
+        <button
+          (click)="activarEdicion()"
+          class="product-detail__edit none btn b--hidden"
+        >
+          <fa-icon [icon]="faPenToSquare"></fa-icon>
+          <span class="sr-only">Editar</span>
+        </button>
 
-      <!-- Más opciones -->
-      <button
-        (click)="toggleOptionsMenu($event)"
-        class="product-detail__options none btn b--hidden"
-      >
-        <fa-icon [icon]="faEllipsis"></fa-icon>
-        <span class="sr-only">Más opciones</span>
-      </button>
+        <!-- Más opciones -->
+        <button
+          (click)="toggleOptionsMenu($event)"
+          class="product-detail__options none btn b--hidden"
+        >
+          <fa-icon [icon]="faEllipsis"></fa-icon>
+          <span class="sr-only">Más opciones</span>
+        </button>
+      } @else {
+        <!-- Cancelar -->
+        <button
+          (click)="cancelarEdicion()"
+          class="product-detail__btn product-detail__btn-1 none btn b--gray"
+        >
+          <span>Cancelar</span>
+        </button>
 
+        <!-- Guardar -->
+        <button
+          (click)="guardarEdicion()"
+          class="product-detail__btn product-detail__btn-2 none btn b--primary"
+        >
+          <span>Guardar</span>
+        </button>
+      }
     </div>
     <!-- END: Herramientas -->
 
@@ -82,9 +102,19 @@
         </div>
 
         <div class="product-detail__state-value">
-          <span [class]="`badge badge--${producto().estado}`">
-            {{ producto().estado }}
-          </span>
+          <!-- Estado -->
+          @if ( !modoEdicion() ) {
+            <span [class]="`badge badge--${producto().estado}`">
+              {{ producto().estado }}
+            </span>
+          } @else {
+            <app-select
+              [options]="estadoOptions"
+              [value]="editModel().estado"
+              (valueChange)="actualizarEstado($event)"
+            />
+          }
+
         </div>
       </div>
 
@@ -95,9 +125,17 @@
         </div>
 
         <div class="product-detail__category-value">
-          <span [class]="`badge badge--${producto().categoria}`">
-            {{ producto().categoria }}
-          </span>
+          @if ( !modoEdicion() ) {
+            <span [class]="`badge badge--${producto().categoria}`">
+              {{ producto().categoria }}
+            </span>
+          } @else {
+            <app-select
+              [options]="categoriaOptions"
+              [value]="editModel().categoria"
+              (valueChange)="actualizarCategoria($event)"
+            />
+          }
         </div>
       </div>
 
@@ -107,7 +145,15 @@
           <span>Marca</span>
         </div>
 
-        <span>{{ producto().marca }}</span>
+        @if ( !modoEdicion() ) {
+          <span>{{ producto().marca }}</span>
+        } @else {
+          <input
+            [formField]="editForm.marca"
+            type="text"
+            class="product-detail__input none input"
+          >
+        }
       </div>
 
       <!-- Modelo -->
@@ -116,7 +162,15 @@
           <span>Modelo</span>
         </div>
 
-        <span>{{ producto().modelo ?? 'No tiene' }}</span>
+        @if ( !modoEdicion() ) {
+          <span>{{ producto().modelo ?? 'No tiene' }}</span>
+        } @else {
+          <input
+            [formField]="editForm.modelo"
+            type="text"
+            class="product-detail__input none input"
+          >
+        }
       </div>
 
       <!-- Precio -->
@@ -125,7 +179,15 @@
           <span>Precio</span>
         </div>
 
-        <span>{{ producto().precio| compactNumber: 'precio' }}</span>
+        @if ( !modoEdicion() ) {
+          <span>{{ producto().precio | compactNumber: 'precio' }}</span>
+        } @else {
+          <input
+            [formField]="editForm.precio"
+            type="number"
+            class="product-detail__input none  input"
+          >
+        }
       </div>
 
       <!-- Descuento -->
@@ -134,7 +196,15 @@
           <span>Descuento</span>
         </div>
 
-        <span>{{ ( producto().descuento ?? 0 ) / 100 | percent: '1.0-1' }}</span>
+        @if ( !modoEdicion() ) {
+          <span>{{ ( producto().descuento ?? 0 ) / 100 | percent: '1.0-1' }}</span>
+        } @else {
+          <input
+            [formField]="editForm.descuento"
+            type="number"
+            class="product-detail__input none input"
+          >
+        }
       </div>
     </div>
 
@@ -144,31 +214,41 @@
         <span>Etiquetas</span>
       </div>
 
-      <div class="product-detail__tags-value">
-        @for ( tag of tagsVisibles(); track tag ) {
-          <span [class]="`badge badge--tag badge--tag-${getTagColor(tag)}`">
-            {{ tag }}
-          </span>
-        }
+      @if ( !modoEdicion() ) {
+        <div class="product-detail__tags-value">
+          @for ( tag of tagsVisibles(); track tag ) {
+            <span [class]="`badge badge--tag badge--tag-${getTagColor(tag)}`">
+              {{ tag }}
+            </span>
+          }
 
-        @if ( tagsRestantes() > 0 ) {
-          <button
-            (click)="showAllTags.set(!showAllTags())"
-            class="badge badge--more"
-          >
-            +{{ tagsRestantes() }}
-          </button>
-        }
+          @if ( tagsRestantes() > 0 ) {
+            <button
+              (click)="showAllTags.set(!showAllTags())"
+              class="badge badge--more"
+            >
+              +{{ tagsRestantes() }}
+            </button>
+          }
 
-        @if ( showAllTags() ) {
-          <button
-            (click)="showAllTags.set(false)"
-            class="badge badge--less"
-          >
-            Ver menos
-          </button>
-        }
-      </div>
+          @if ( showAllTags() ) {
+            <button
+              (click)="showAllTags.set(false)"
+              class="badge badge--less"
+            >
+              Ver menos
+            </button>
+          }
+        </div>
+      } @else {
+        <input
+          [(ngModel)]="tagsInput"
+          [ngModelOptions]="{ standalone: true }"
+          type="text"
+          placeholder="Separadas por comas: Nuevo, Oferta..."
+          class="product-detail__input none input"
+        >
+      }
     </div>
 
     <!-- Fechas -->
@@ -180,7 +260,7 @@
           <span>Creado el</span>
         </div>
 
-        <span>{{ producto().creadoEn | date: 'dd/MM/yy' }}</span>
+        <span>{{ producto().creadoEn | date: 'dd/MM/yy, HH:mm a' }}</span>
       </div>
 
       <!-- Actualizado el -->
@@ -189,7 +269,7 @@
           <span>Actualizado el</span>
         </div>
 
-        <span>{{ producto().actualizadoEn | date: 'dd/MM/yy' }}</span>
+        <span>{{ producto().actualizadoEn | date: 'dd/MM/yy, HH:mm a' }}</span>
       </div>
 
     </div>
@@ -201,319 +281,201 @@
         <span>Descripción</span>
       </div>
 
-      <span>{{ producto().descripcion }}</span>
+      @if ( !modoEdicion() ) {
+        <span>{{ producto().descripcion }}</span>
+      } @else {
+        <textarea
+          [formField]="editForm.descripcion"
+          class="product-detail__input none input"
+        ></textarea>
+      }
     </div>
 
-    <!-- ================================
-      TABS: Variantes / Imágenes
-    ================================ -->
-    <div class="product-detail__tabs">
-      <button
-        [class.active]="activeTab() === 'variantes'"
-        (click)="activeTab.set('variantes')"
-        class="product-detail__tabs-btn none"
-      >
-        Variantes
-      </button>
+    <div
+      class="product-detail__tabs-section"
+      [class.is-editing]="modoEdicion()"
+    >
+      <!-- ================================
+        TABS: Variantes / Imágenes
+      ================================ -->
+      <div class="product-detail__tabs">
+        <button
+          [class.active]="activeTab() === 'variantes'"
+          (click)="activeTab.set('variantes')"
+          class="product-detail__tabs-btn none"
+        >
+          Variantes
+        </button>
 
-      <button
-        [class.active]="activeTab() === 'imagenes'"
-        (click)="activeTab.set('imagenes')"
-        class="product-detail__tabs-btn none"
-      >
-        Imagenes
-      </button>
+        <button
+          [class.active]="activeTab() === 'imagenes'"
+          (click)="activeTab.set('imagenes')"
+          class="product-detail__tabs-btn none"
+        >
+          Imagenes
+        </button>
 
-      <!-- Indicador animado -->
-      <div
-        class="product-detail__tabs-indicator"
-        [class.right]="activeTab() === 'imagenes'"
-      ></div>
-    </div>
-
-    <!-- ================================
-      VISTA ACTIVA (Variantes o Imágenes)
-    ================================ -->
-    <div class="product-detail__tab-panel">
+        <!-- Indicador animado -->
+        <div
+          class="product-detail__tabs-indicator"
+          [class.right]="activeTab() === 'imagenes'"
+        ></div>
+      </div>
 
       <!-- ================================
-        VISTA: Variantes
+        VISTA ACTIVA (Variantes o Imágenes)
       ================================ -->
-      @if ( activeTab() === 'variantes' ) {
-        <div class="product-detail__panel product-detail__panel--variants">
-          <!-- Herramientas de variantes: filtro y orden -->
-          <div class="product-detail__variants-toolbar">
+      <div class="product-detail__tab-panel">
 
-            <!-- Filtrar por estado -->
-            <div class="product-detail__filter">
-              <div class="product-detail__filter-title">
-                <fa-icon [icon]="faFilter"></fa-icon>
-                <span>Filtrar por:</span>
-              </div>
+        <!-- ================================
+          VISTA: Variantes
+        ================================ -->
+        @if ( activeTab() === 'variantes' ) {
+          <div class="product-detail__panel product-detail__panel--variants">
+            <!-- Herramientas de variantes: filtro y orden -->
+            <div class="product-detail__variants-toolbar">
 
-              <div
-                [class.active]="showFilterOptions()"
-                class="select state"
-              >
-                <!-- Valor seleccionado -->
-                <div
-                  (click)="toggleOptionsFilter($event)"
-                  class="select__value"
-                >
-                  <span>
-                    {{
-                      filterState() === 'sin_stock'
-                        ? 'Sin stock'
-                        : filterState()
-                      | titlecase
-                    }}
-                  </span>
-                  <fa-icon [icon]="faAngleDown"></fa-icon>
+              <!-- Filtrar por estado -->
+              <div class="product-detail__filter">
+                <div class="product-detail__filter-title">
+                  <fa-icon [icon]="faFilter"></fa-icon>
+                  <span>Filtrar por:</span>
                 </div>
 
-                <!-- Opciones -->
-                <div
-                  #filterOptionsRef
-                  class="select__options"
-                >
-                  <button
-                    (click)="seleccionarFiltro('todos')"
-                    name="todos"
-                    [class.active]="filterState() === 'todos'"
-                    class="select__option none btn b--hidden"
-                  >
-                    <span class="badge">Todos</span>
-                  </button>
-
-                  <button
-                    (click)="seleccionarFiltro('disponible')"
-                    name="disponible"
-                    [class.active]="filterState() === 'disponible'"
-                    class="select__option none btn b--hidden"
-                  >
-                    <span class="badge badge--disponible">Disponible</span>
-                  </button>
-
-                  <button
-                    (click)="seleccionarFiltro('sin_stock')"
-                    name="sin_stock"
-                    [class.active]="filterState() === 'sin_stock'"
-                    class="select__option none btn b--hidden"
-                  >
-                    <span class="badge badge--sin_stock">Sin stock</span>
-                  </button>
-
-                  <button
-                    (click)="seleccionarFiltro('reservado')"
-                    name="reservado"
-                    [class.active]="filterState() === 'reservado'"
-                    class="select__option none btn b--hidden"
-                  >
-                    <span class="badge badge--reservado">Reservado</span>
-                  </button>
-
-                  <button
-                    (click)="seleccionarFiltro('descontinuado')"
-                    name="descontinuado"
-                    [class.active]="filterState() === 'descontinuado'"
-                    class="select__option none btn b--hidden"
-                  >
-                    <span class="badge badge--descontinuado">Descontinuado</span>
-                  </button>
-                </div>
+                <app-select
+                  [options]="filtroOptions"
+                  [value]="filterState()"
+                  (valueChange)="seleccionarFiltro($event)"
+                  width="15rem"
+                />
               </div>
+              <!-- END: Filtrar por estado -->
+
+              <!-- Ordenar por -->
+              <div class="product-detail__order">
+                <div class="product-detail__order-title">
+                  <fa-icon [icon]="faArrowDownShortWide"></fa-icon>
+                  <span>Ordenar por</span>
+                </div>
+
+                <app-select
+                  [options]="ordenOptions"
+                  [value]="sortField()"
+                  (valueChange)="seleccionarOrdenamiento($event)"
+                />
+              </div>
+              <!-- END: Ordenar por -->
+
+              <!-- Agregar variante -->
+              <div class="product-detail__add">
+                <button
+                  class="none btn b--primary"
+                >
+                  <fa-icon [icon]="faPlus"></fa-icon>
+                  Agregar variante
+                </button>
+              </div>
+              <!-- END: Agregar variante -->
             </div>
-            <!-- END: Filtrar por estado -->
+            <!-- END: Herramientas de variantes -->
 
-            <!-- Ordenar por -->
-            <div class="product-detail__order">
-              <div class="product-detail__order-title">
-                <fa-icon [icon]="faArrowDownShortWide"></fa-icon>
-                <span>Ordenar por</span>
-              </div>
+            <!-- Lista de variantes -->
+            <div class="product-detail__variants">
+              @for ( variante of variantesOrdenadas(); track variante.id ) {
+                <div class="product-detail__variant">
 
-              <div
-                [class.active]="showOrderOptions()"
-                class="select"
-              >
-                <!-- Valor seleccionado -->
-                <div
-                  (click)="toggleOptionsOrder($event)"
-                  class="select__value"
-                >
-                  <span>{{
-                      sortField() === 'precioAdicional'
-                        ? 'Precio'
-                        : sortField()
-                      | titlecase
-                    }}</span>
-                  <fa-icon [icon]="faAngleDown"></fa-icon>
-                </div>
+                  <!-- Imagen -->
+                  <div class="product-detail__variant-img">
+                    @if ( variante.imagen?.length ) {
+                      <img
+                        [src]="variante.imagen"
+                        [alt]="variante.nombre ?? 'Imagen de variante'"
+                      >
+                    } @else {
+                      <img src="./img/iphone15.png" alt="Imagen por defecto">
+                    }
+                  </div>
 
-                <!-- Opciones -->
-                <div
-                  #orderOptionsRef
-                  class="select__options"
-                >
-                  <button
-                    (click)="seleccionarOrdenamiento('defecto')"
-                    name="defecto"
-                    [class.active]="sortField() === 'defecto'"
-                    class="select__option none btn b--hidden"
-                  >
-                    <span>Defecto</span>
-                  </button>
+                  <!-- Nombre y SKU -->
+                  <div class="product-detail__variant-information">
+                    <span class="product-detail__variant-name">
+                      {{ producto().nombre }} {{ variante.nombre ?? '' }}
+                    </span>
+                    <span class="product-detail__variant-sku">
+                      {{ variante.sku ?? 'sin-sku' }}
+                    </span>
+                  </div>
 
-                  <button
-                    (click)="seleccionarOrdenamiento('nombre')"
-                    name="nombre"
-                    [class.active]="sortField() === 'nombre'"
-                    class="select__option none btn b--hidden"
-                  >
-                    <span>Nombre</span>
-                  </button>
-
-                  <button
-                    (click)="seleccionarOrdenamiento('stock')"
-                    name="stock"
-                    [class.active]="sortField() === 'stock'"
-                    class="select__option none btn b--hidden"
-                  >
-                    <span>Stock</span>
-                  </button>
-
-                  <button
-                    (click)="seleccionarOrdenamiento('precioAdicional')"
-                    name="precioAdicional"
-                    [class.active]="sortField() === 'precioAdicional'"
-                    class="select__option none btn b--hidden"
-                  >
-                    <span>Precio</span>
-                  </button>
-
-                  <button
-                    (click)="seleccionarOrdenamiento('estado')"
-                    name="estado"
-                    [class.active]="sortField() === 'estado'"
-                    class="select__option none btn b--hidden"
-                  >
+                  <!-- Estado -->
+                  <div class="product-detail__variant-state">
                     <span>Estado</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <!-- END: Ordenar por -->
+                    <span [class]="`badge badge--${variante.estado}`">
+                      {{ variante.estado }}
+                    </span>
+                  </div>
 
-            <!-- Agregar variante -->
-            <div class="product-detail__add">
-              <button
-                class="none btn b--primary"
-              >
-                <fa-icon [icon]="faPlus"></fa-icon>
-                Agregar variante
-              </button>
-            </div>
-            <!-- END: Agregar variante -->
-          </div>
-          <!-- END: Herramientas de variantes -->
+                  <!-- Stock -->
+                  <div class="product-detail__variant-stock">
+                    <span>Stock</span>
+                    <span>{{ variante.stock | compactNumber: 'stock' }}</span>
+                  </div>
 
-          <!-- Lista de variantes -->
-          <div class="product-detail__variants">
-            @for ( variante of variantesOrdenadas(); track variante.id ) {
-              <div class="product-detail__variant">
+                  <!-- Precio adicional -->
+                  <div class="product-detail__variant-price">
+                    <span>Precio</span>
+                    <span>{{ variante.precioAdicional ?? 0 | compactNumber: 'precio' }}</span>
+                  </div>
 
-                <!-- Imagen -->
-                <div class="product-detail__variant-img">
-                  @if ( variante.imagen?.length ) {
-                    <img
-                      [src]="variante.imagen"
-                      [alt]="variante.nombre ?? 'Imagen de variante'"
+                  <!-- Acciones de variante -->
+                  <div class="product-detail__variant-action">
+
+                    <!-- Editar variante -->
+                    <button class="product-detail__action-btn product-detail__action-btn--edit btn b--hidden none">
+                      <fa-icon [icon]="faPenToSquare"></fa-icon>
+                      <span class="sr-only">Editar variante</span>
+                    </button>
+
+                    <!-- Ver variante -->
+                    <button
+                      class="product-detail__action-btn product-detail__action-btn--see btn b--hidden none"
                     >
-                  } @else {
-                    <img src="./img/iphone15.png" alt="Imagen por defecto">
-                  }
-                </div>
+                      <fa-icon [icon]="faEye"></fa-icon>
+                      <span class="sr-only">Ver variante</span>
+                    </button>
 
-                <!-- Nombre y SKU -->
-                <div class="product-detail__variant-information">
-                  <span class="product-detail__variant-name">
-                    {{ producto().nombre }} {{ variante.nombre ?? '' }}
-                  </span>
-                  <span class="product-detail__variant-sku">
-                    {{ variante.sku ?? 'sin-sku' }}
-                  </span>
-                </div>
-
-                <!-- Estado -->
-                <div class="product-detail__variant-state">
-                  <span>Estado</span>
-                  <span [class]="`badge badge--${variante.estado}`">
-                    {{ variante.estado }}
-                  </span>
-                </div>
-
-                <!-- Stock -->
-                <div class="product-detail__variant-stock">
-                  <span>Stock</span>
-                  <span>{{ variante.stock | compactNumber: 'stock' }}</span>
-                </div>
-
-                <!-- Precio adicional -->
-                <div class="product-detail__variant-price">
-                  <span>Precio</span>
-                  <span>{{ variante.precioAdicional ?? 0 | compactNumber: 'precio' }}</span>
-                </div>
-
-                <!-- Acciones de variante -->
-                <div class="product-detail__variant-action">
-
-                  <!-- Editar variante -->
-                  <button class="product-detail__action-btn product-detail__action-btn--edit btn b--hidden none">
-                    <fa-icon [icon]="faPenToSquare"></fa-icon>
-                    <span class="sr-only">Editar variante</span>
-                  </button>
-
-                  <!-- Ver variante -->
-                  <button
-                    class="product-detail__action-btn product-detail__action-btn--see btn b--hidden none"
-                  >
-                    <fa-icon [icon]="faEye"></fa-icon>
-                    <span class="sr-only">Ver variante</span>
-                  </button>
+                  </div>
+                  <!-- END: Acciones de variante -->
 
                 </div>
-                <!-- END: Acciones de variante -->
+              } @empty {
+                <p>No tiene variantes</p>
+              }
+            </div>
+            <!-- END: Lista de variantes -->
 
+          </div>
+        }
+        <!-- END: VISTA: Variantes -->
+
+        <!-- ================================
+          VISTA: Imágenes
+        ================================ -->
+        @if ( activeTab() === 'imagenes' ) {
+          <div class="product-detail__panel product-detail__panel--images">
+            @for ( imagen of producto().imagenes; track imagen ) {
+              <div class="product-detail__image">
+                <img [src]="imagen" alt="Imagen del producto">
               </div>
             } @empty {
-              <p>No tiene variantes</p>
+              <p>No hay imágenes</p>
             }
           </div>
-          <!-- END: Lista de variantes -->
+        }
+        <!-- END: VISTA: Imágenes -->
 
-        </div>
-      }
-      <!-- END: VISTA: Variantes -->
-
-      <!-- ================================
-        VISTA: Imágenes
-      ================================ -->
-      @if ( activeTab() === 'imagenes' ) {
-        <div class="product-detail__panel product-detail__panel--images">
-          @for ( imagen of producto().imagenes; track imagen ) {
-            <div class="product-detail__image">
-              <img [src]="imagen" alt="Imagen del producto">
-            </div>
-          } @empty {
-            <p>No hay imágenes</p>
-          }
-        </div>
-      }
-      <!-- END: VISTA: Imágenes -->
-
+      </div>
+      <!-- END: VISTA ACTIVA -->
     </div>
-    <!-- END: VISTA ACTIVA -->
-
   </div>
   <!-- END: CONTENIDO DEL PRODUCTO -->
 

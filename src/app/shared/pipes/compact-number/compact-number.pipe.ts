@@ -4,7 +4,7 @@ type Tipo = 'precio' | 'stock';
 
 @Pipe({
   name: 'compactNumber',
-  standalone: false,
+  standalone: true,
 })
 export class CompactNumberPipe implements PipeTransform {
   private compactar ( value: number, divisor: number ): string {

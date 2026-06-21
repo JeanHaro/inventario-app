@@ -5,6 +5,37 @@
   position: relative;
   height: fit-content;
 
+  // ===============================
+  // GLOBAL
+  // ================================
+  &__btn {
+    position: absolute;
+    right: 0;
+
+    display: flex;
+    justify-content: space-between;
+    align-self: center;
+
+    font-size: 1.4rem;
+    padding: 0.9rem 1.8rem;
+
+    &-1 {
+      right: 11rem;
+    }
+  }
+
+  &__input {
+    border-bottom: 2px solid var(--color-blanco-8);
+    background-color: var(--color-blanco-2);
+
+    font-size: 1.4rem;
+  }
+
+  textarea {
+    resize: vertical;
+    line-height: 1.6;
+  }
+
   // ================================
   // BARRA SUPERIOR
   // ================================
@@ -43,6 +74,8 @@
   &__tools {
     display: flex;
     gap: 2rem;
+
+    position: relative;
   }
 
   // Menú de opciones
@@ -105,12 +138,12 @@
     }
   }
 
-
   @media (min-width: 1024px) {
     // Campos principales
     &__fields {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
+      gap: 2.5rem;
     }
   }
 
@@ -129,7 +162,7 @@
     align-items: center;
     gap: 1rem;
 
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     font-size: 1.4rem;
 
     @media (min-width: 1024px) {
@@ -139,6 +172,15 @@
     > span {
       font-weight: 600;
     }
+  }
+
+  &__tags {
+    margin-top: 2rem;
+  }
+
+  &__start,
+  &__update {
+    margin: 2rem 0 3rem;
   }
 
   // Descripción
@@ -190,6 +232,17 @@
   &__update-label,
   &__description-label {
     color: var(--color-blanco-6);
+  }
+
+  &__tabs-section {
+    transition: filter 0.3s ease, opacity 0.3s ease;
+
+    &.is-editing {
+      filter: blur(3px);
+      opacity: 0.6;
+      pointer-events: none; // no se puede interactuar mientras editas
+      user-select: none;
+    }
   }
 
   // ================================
@@ -257,7 +310,7 @@
 
     margin-bottom: 1.5rem;
 
-    @media (min-width: 480px) {
+    @media (min-width: 1024px) {
       grid-template-columns: auto auto 1fr;
       grid-template-areas: 'filter order add';
     }
@@ -294,7 +347,7 @@
 
     height: 100%;
 
-    @media (min-width: 480px) {
+    @media (min-width: 1024px) {
       justify-self: flex-end;
     }
 
@@ -303,123 +356,8 @@
 
       font-size: 100%;
 
-      @media (min-width: 480px) {
+      @media (min-width: 1024px) {
         align-self: flex-end;
-      }
-    }
-  }
-
-  // Input Select
-  .select {
-    position: relative;
-
-    margin-top: 1rem;
-    cursor: pointer;
-
-    &.state {
-      width: 13rem;
-    }
-
-    &.active {
-      fa-icon {
-        transform: rotate(180deg);
-      }
-
-      .select__options {
-        opacity: 1;
-        pointer-events: all;
-        transform: scale(1) translateY(0);
-      }
-    }
-
-    // Valor seleccionado
-    &__value {
-      display: flex;
-      align-items: center;
-
-      width: 100%;
-      border-radius: 0.5rem;
-      padding: 0.8rem;
-      background-color: var(--color-blanco-8);
-
-      span {
-        flex: 1;
-
-        text-align: center;
-      }
-
-      fa-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        justify-self: flex-end;
-
-        transition: 0.5s ease;
-      }
-    }
-
-    // Opciones
-    &__options {
-      position: absolute;
-      top: 100%;
-      left: 0;
-
-      display: flex;
-      flex-direction: column;
-      align-items: self-start;
-
-      pointer-events: none;
-      user-select: none;
-      width: 100%;
-      margin-top: 1rem;
-      border-radius: 0.5rem;
-      background-color: var(--color-blanco-1);
-      box-shadow: 0px 0px 3px 2px rgba(0,0,0,0.1);
-      max-height: 15rem;
-
-      overflow: hidden;
-      overflow-y: scroll;
-
-      opacity: 0;
-      pointer-events: none;
-      transform: scale(0.9) translateY(-0.5rem);
-      transform-origin: top;
-
-      // Scrollbar oculto pero funcional
-      &::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-        display: none;
-      }
-
-      transition: 0.5s ease;
-      z-index: 10;
-    }
-
-    // Opcion
-    &__option {
-      padding: 0.8rem 0.5rem;
-      width: 100%;
-      border-radius: 0;
-      border-bottom: 0.2px solid var(--color-blanco-3);
-
-      transition: 0.5s ease;
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      &:hover {
-        background-color: var(--color-blanco-3);
-      }
-
-      &.active {
-        background-color: var(--color-blanco-4);
-      }
-
-      span {
-        font-size: 1.2rem;
       }
     }
   }

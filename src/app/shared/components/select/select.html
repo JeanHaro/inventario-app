@@ -1,0 +1,37 @@
+<!-- Input Select -->
+<div
+  [class.active]="showOptions()"
+  class="select"
+  [style.width]="width()"
+>
+
+  <!-- Valor seleccionado -->
+  <div
+    (click)="toggle($event)"
+    class="select__value"
+  >
+    <span>{{ selected()?.label }}</span>
+
+    <fa-icon [icon]="faAngleDown"></fa-icon>
+  </div>
+
+  <!-- Opciones -->
+  <div #optionsRef class="select__options">
+    @for ( option of options(); track option.value ) {
+      <button
+        (click)="seleccionar(option.value)"
+        [class.active]="option.value === value()"
+        class="select__option none btn b--hidden"
+      >
+        @if ( option.badgeClass ) {
+          <span class="badge" [class]="option.badgeClass">
+            {{ option.label }}
+          </span>
+        } @else {
+          <span>{{ option.label }}</span>
+        }
+      </button>
+    }
+  </div>
+
+</div>

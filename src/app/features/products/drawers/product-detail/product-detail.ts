@@ -11,6 +11,8 @@ import {
   viewChild
 } from '@angular/core';
 
+import { form, FormField, required } from '@angular/forms/signals';
+
 // Font Awesome
 import {
   IconDefinition,
@@ -23,13 +25,21 @@ import {
   faFilter,
   faArrowDownShortWide,
   faEye,
-  faAngleDown,
   faPlus
 } from '@fortawesome/free-solid-svg-icons';
 
-// Interfaces
-import { EstadoProducto, EstadoVariante, Producto, Variante } from '../../models/products.model';
+// Servicio
 import { InventarioService } from '../../services/inventario';
+
+// Interfaces
+import {
+  Categoria,
+  EstadoProducto,
+  EstadoVariante,
+  Producto,
+  Variante
+} from '../../models/products.model';
+import { SelectOption } from '../../../../shared/components/select/models/select.model';
 
 type Tabs = 'variantes' | 'imagenes';
 type Fields = 'nombre' | 'stock' | 'precioAdicional' | 'estado';
@@ -46,8 +56,6 @@ export class ProductDetail implements OnInit {
 
   // TODO: VIEWCHILD
   readonly optionsMenuRef = viewChild<ElementRef<HTMLElement>>('optionsMenuRef');
-  readonly filterOptionsRef = viewChild<ElementRef<HTMLElement>>('filterOptionsRef');
-  readonly orderOptionsRef = viewChild<ElementRef<HTMLElement>>('orderOptionsRef');
 
   // TODO: ICONOS
   readonly faArrowRightFromBracket: IconDefinition = faArrowRightFromBracket;
@@ -59,7 +67,6 @@ export class ProductDetail implements OnInit {
   readonly faFilter: IconDefinition = faFilter;
   readonly faArrowDownShortWide: IconDefinition = faArrowDownShortWide;
   readonly faEye: IconDefinition = faEye;
-  readonly faAngleDown: IconDefinition = faAngleDown;
   readonly faPlus: IconDefinition = faPlus;
 
   // TODO: INPUT Y OUTPUT
@@ -67,10 +74,165 @@ export class ProductDetail implements OnInit {
   readonly cerrarModal = output<void>();
   readonly productoActualizado = output<Producto>(); // Avisamos que el producto se actualizo
 
+  // TODO: PROPIEDADES
+  readonly estadoOptions: SelectOption[] = [
+    {
+      value: 'disponible',
+      label: 'Disponible',
+      badgeClass: 'badge--disponible'
+    },
+    {
+      value: 'agotado',
+      label: 'Agotado',
+      badgeClass: 'badge--agotado'
+    },
+    {
+      value: 'reservado',
+      label: 'Reservado',
+      badgeClass: 'badge--reservado'
+    },
+    {
+      value: 'descontinuado',
+      label: 'Descontinuado',
+      badgeClass: 'badge--descontinuado'
+    },
+    {
+      value: 'proximamente',
+      label: 'Próximamente',
+      badgeClass: 'badge--proximamente'
+    },
+  ];
+
+  readonly categoriaOptions: SelectOption[] = [
+    {
+      value: 'tecnologia',
+      label: 'Tecnología',
+      badgeClass: 'badge--tecnologia'
+    },
+    {
+      value: 'hogar',
+      label: 'Hogar',
+      badgeClass: 'badge--hogar'
+    },
+    {
+      value: 'ropa',
+      label: 'Ropa',
+      badgeClass: 'badge--ropa'
+    },
+    {
+      value: 'alimentos',
+      label: 'Alimentos',
+      badgeClass: 'badge--alimentos'
+    },
+    {
+      value: 'electronica',
+      label: 'Electrónica',
+      badgeClass: 'badge--electronica'
+    },
+    {
+      value: 'calzado',
+      label: 'Calzado',
+      badgeClass: 'badge--calzado'
+    },
+    {
+      value: 'bebidas',
+      label: 'Bebidas',
+      badgeClass: 'badge--bebidas'
+    },
+    {
+      value: 'muebles',
+      label: 'Muebles',
+      badgeClass: 'badge--muebles'
+    },
+    {
+      value: 'deportes',
+      label: 'Deportes',
+      badgeClass: 'badge--deportes'
+    },
+    {
+      value: 'belleza',
+      label: 'Belleza',
+      badgeClass: 'badge--belleza'
+    },
+    {
+      value: 'juguetes',
+      label: 'Juguetes',
+      badgeClass: 'badge--juguetes'
+    },
+    {
+      value: 'libros',
+      label: 'Libros',
+      badgeClass: 'badge--libros'
+    },
+    {
+      value: 'vehiculos',
+      label: 'Vehículos',
+      badgeClass: 'badge--vehiculos'
+    },
+    {
+      value: 'herramientas',
+      label: 'Herramientas',
+      badgeClass: 'badge--herramientas'
+    },
+    {
+      value: 'otros',
+      label: 'Otros',
+      badgeClass: 'badge--otros'
+    }
+  ];
+
+  readonly filtroOptions: SelectOption[] = [
+    {
+      value: 'todos',
+      label: 'Todos'
+    },
+    {
+      value: 'disponible',
+      label: 'Disponible',
+      badgeClass: 'badge--disponible'
+    },
+    {
+      value: 'sin_stock',
+      label: 'Sin stock',
+      badgeClass: 'badge--sin_stock'
+    },
+    {
+      value: 'reservado',
+      label: 'Reservado',
+      badgeClass: 'badge--reservado'
+    },
+    {
+      value: 'descontinuado',
+      label: 'Descontinuado',
+      badgeClass: 'badge--descontinuado'
+    },
+  ];
+
+  readonly ordenOptions: SelectOption[] = [
+    {
+      value: 'defecto',
+      label: 'Defecto'
+    },
+    {
+      value: 'nombre',
+      label: 'Nombre'
+    },
+    {
+      value: 'stock',
+      label: 'Stock'
+    },
+    {
+      value: 'precioAdicional',
+      label: 'Precio'
+    },
+    {
+      value: 'estado',
+      label: 'Estado'
+    },
+  ];
+
   // TODO: SIGNALS
   showOptionsMenu = signal<boolean>(false);
-  showFilterOptions = signal<boolean>(false);
-  showOrderOptions = signal<boolean>(false);
 
   activeTab = signal<Tabs>('variantes');
 
@@ -82,6 +244,30 @@ export class ProductDetail implements OnInit {
   ] as const; // Paleta de colores predefinida para tags
   readonly maxTags = signal<number>(2); // Cantidad max de tags
   showAllTags = signal<boolean>(false); // Mostrar todos los tags
+
+  // ========================================================= EDICIÓN
+
+  modoEdicion = signal<boolean>(false); // ======= Modo edición para el formulario
+
+  // Se llena al activar edición
+  editModel = signal({
+    nombre: '',
+    marca: '',
+    modelo: '',
+    precio: 0,
+    descuento: 0,
+    categoria: '' as Categoria,
+    estado: '' as EstadoProducto,
+    descripcion: ''
+  });
+
+  tagsInput = signal<string>(''); // Tags o etiquetas se manejan a parte como texto separado por comas
+
+  // El form de signalForms se construye sobre editModel
+  editForm = form(this.editModel, ( schemaPath ) => {
+    required( schemaPath.nombre, { message: 'El nombre es obligatorio' });
+    required( schemaPath.precio, { message: 'El precio es obligatorio' } );
+  });
 
   // TODO: COMPUTED
   // ================================================== TAGS DE LOS PRODUCTOS
@@ -159,24 +345,6 @@ export class ProductDetail implements OnInit {
         this.showOptionsMenu.set(false);
       }
     }
-
-    // Verificación independiente del filtro
-    if ( this.showFilterOptions() ) {
-      const filterOptions = this.filterOptionsRef()?.nativeElement;
-      // Si existe el filter y el click fue fuera de este, entonces cerramos el menu
-      if ( filterOptions && !filterOptions.contains(event.target as Node) ) {
-        this.showFilterOptions.set(false);
-      }
-    }
-
-    // Verificación independiente del orden
-    if ( this.showOrderOptions() ) {
-      const orderOptions = this.orderOptionsRef()?.nativeElement;
-      // Si existe el order y el click fue fuera de este, entonces cerramos el menu
-      if ( orderOptions && !orderOptions.contains(event.target as Node) ) {
-        this.showOrderOptions.set(false);
-      }
-    }
   }
 
   // ================================================== TAGS DE LOS PRODUCTOS
@@ -213,27 +381,7 @@ export class ProductDetail implements OnInit {
   toggleOptionsMenu ( event: Event ): void {
     event.stopPropagation(); // Evita que cuando demos click al button lo cuente como si estuviera clickeando en el documento de afuera
 
-    this.showFilterOptions.set(false);
-    this.showOrderOptions.set(false);
     this.showOptionsMenu.set(!this.showOptionsMenu());
-  }
-
-  // Abrir y cerrar las opciones del filtro
-  toggleOptionsFilter ( event: Event ): void {
-    event.stopPropagation();
-
-    this.showOptionsMenu.set(false);
-    this.showOrderOptions.set(false);
-    this.showFilterOptions.set(!this.showFilterOptions());
-  }
-
-  // Abrir y cerrar las opciones del orden
-  toggleOptionsOrder ( event: Event ): void {
-    event.stopPropagation();
-
-    this.showOptionsMenu.set(false);
-    this.showFilterOptions.set(false);
-    this.showOrderOptions.set(!this.showOrderOptions());
   }
 
   // ================================================== TAGS DE LOS PRODUCTOS
@@ -246,18 +394,14 @@ export class ProductDetail implements OnInit {
 
   // ================================================== CAMBIAR ESTADO POR FILTRO
   // Seleccionar filtro
-  seleccionarFiltro ( estado: EstadoVariante | 'todos' ): void {
-    this.showFilterOptions.set(false); // Cerramos el dropdown
-
-    this.filterState.set(estado);
+  seleccionarFiltro ( valor: string ): void {
+    this.filterState.set( valor as EstadoVariante | 'todos' );
   }
 
   // ========================================================== ORDENAMIENTO
   // Seleccionar ordenamiento
-  seleccionarOrdenamiento ( field: Fields | 'defecto' ): void {
-    this.showOrderOptions.set(false); // Cerramos el dropdwon
-
-    this.sortField.set(field);
+  seleccionarOrdenamiento ( valor: string ): void {
+    this.sortField.set( valor as Fields );
   }
 
   // ========================================================== ARCHIVAR
@@ -277,5 +421,63 @@ export class ProductDetail implements OnInit {
         this.showOptionsMenu.set(false); // Cerramos el menu
       }
     });
+  }
+
+  // ========================================================= EDICIÓN
+
+  // Activar modo edición, carga los valores actuales del producto
+  activarEdicion(): void {
+    const p = this.producto();
+
+    this.editModel.set({
+      nombre: p.nombre,
+      marca: p.marca ?? '',
+      modelo: p.modelo ?? '',
+      precio: p.precio,
+      descuento: p.descuento ?? 0,
+      categoria: p.categoria,
+      estado: p.estado,
+      descripcion: p.descripcion ?? ''
+    });
+
+    this.tagsInput.set( ( p.etiquetas ?? [] ).join(', ') );
+
+    this.showOptionsMenu.set(false);
+    this.modoEdicion.set(true)
+  }
+
+  // Cancelar - descarta los cambios
+  cancelarEdicion(): void {
+    this.modoEdicion.set(false);
+  }
+
+  // Guardar - envía los cambios a la API
+  guardarEdicion(): void {
+    if ( !this.editForm().valid() ) return;
+
+    const valores = this.editModel();
+
+    const etiquetas = this.tagsInput().split(',').map( tag => tag.trim() ).filter(
+      tag => tag.length > 0
+    );
+
+    this.inventarioService.actualizarProducto(
+      this.producto().id.toString(),
+      { ...valores, etiquetas }
+    ).subscribe({
+      next: ( resp ) => {
+        this.productoActualizado.emit(resp);
+        this.modoEdicion.set(false);
+      }
+    })
+  }
+
+  // ========================================================== SELECTS
+  actualizarEstado ( valor: string ): void {
+    this.editModel.update( m => ({ ...m, estado: valor as EstadoProducto }) );
+  }
+
+  actualizarCategoria ( valor: string ): void {
+    this.editModel.update( m => ({ ...m, categoria: valor as Categoria }) );
   }
 }
