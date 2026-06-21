@@ -13,7 +13,6 @@ import {
 
 import {
   form,
-  FormField,
   required,
   min
 } from '@angular/forms/signals';
@@ -27,10 +26,6 @@ import {
   faFileArrowDown,
   faBoxArchive,
   faBoxOpen,
-  faFilter,
-  faArrowDownShortWide,
-  faEye,
-  faPlus,
   faSpinner
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -41,14 +36,11 @@ import { InventarioService } from '../../services/inventario';
 import {
   Categoria,
   EstadoProducto,
-  EstadoVariante,
   Producto,
-  Variante
 } from '../../models/products.model';
 import { SelectOption } from '../../../../shared/components/select/models/select.model';
 
 type Tabs = 'variantes' | 'imagenes';
-type Fields = 'nombre' | 'stock' | 'precioAdicional' | 'estado';
 
 @Component({
   selector: 'app-product-detail',
@@ -70,10 +62,6 @@ export class ProductDetail implements OnInit {
   readonly faFileArrowDown: IconDefinition = faFileArrowDown;
   readonly faBoxArchive: IconDefinition = faBoxArchive;
   readonly faBoxOpen: IconDefinition = faBoxOpen;
-  readonly faFilter: IconDefinition = faFilter;
-  readonly faArrowDownShortWide: IconDefinition = faArrowDownShortWide;
-  readonly faEye: IconDefinition = faEye;
-  readonly faPlus: IconDefinition = faPlus;
   readonly faSpinner: IconDefinition = faSpinner;
 
   // TODO: INPUT Y OUTPUT
@@ -188,63 +176,10 @@ export class ProductDetail implements OnInit {
     }
   ];
 
-  readonly filtroOptions: SelectOption[] = [
-    {
-      value: 'todos',
-      label: 'Todos'
-    },
-    {
-      value: 'disponible',
-      label: 'Disponible',
-      badgeClass: 'badge--disponible'
-    },
-    {
-      value: 'sin_stock',
-      label: 'Sin stock',
-      badgeClass: 'badge--sin_stock'
-    },
-    {
-      value: 'reservado',
-      label: 'Reservado',
-      badgeClass: 'badge--reservado'
-    },
-    {
-      value: 'descontinuado',
-      label: 'Descontinuado',
-      badgeClass: 'badge--descontinuado'
-    },
-  ];
-
-  readonly ordenOptions: SelectOption[] = [
-    {
-      value: 'defecto',
-      label: 'Defecto'
-    },
-    {
-      value: 'nombre',
-      label: 'Nombre'
-    },
-    {
-      value: 'stock',
-      label: 'Stock'
-    },
-    {
-      value: 'precioAdicional',
-      label: 'Precio'
-    },
-    {
-      value: 'estado',
-      label: 'Estado'
-    },
-  ];
-
   // TODO: SIGNALS
   showOptionsMenu = signal<boolean>(false);
 
   activeTab = signal<Tabs>('variantes');
-
-  filterState = signal<EstadoVariante | 'todos'>('todos'); // Estados para el filtro
-  sortField = signal<Fields | 'defecto'>('defecto');
 
   private readonly TAG_COLORS = [
     'violet', 'blue', 'green', 'orange', 'red', 'teal', 'pink', 'indigo'
@@ -300,40 +235,6 @@ export class ProductDetail implements OnInit {
 
     return Math.max(0, etiquetas.length - this.maxTags())
   })
-
-  // ================================================== CAMBIAR ESTADO POR FILTRO
-
-  // Filtrar los productos por estado
-  readonly variantesPorEstado = computed<Variante[]>(() => {
-    if ( this.filterState() === 'todos' ) return this.producto().variantes;
-
-    return this.producto().variantes.filter(
-      variante => variante.estado === this.filterState()
-    );
-  });
-
-  // ========================================================== ORDENAMIENTO
-
-  // Variantes ordenadas según el select
-  readonly variantesOrdenadas = computed<Variante[]>(() => {
-    const lista = [...this.variantesPorEstado()];
-    const field = this.sortField() as Fields;
-
-    if ( this.sortField() === 'defecto' ) return lista;
-
-    return lista.sort((a, b) => {
-      const valA: string | number = ( a[field] as string | number ) ?? '';
-      const valB: string | number = ( b[field] as string | number ) ?? '';
-
-       // Si son numéricos
-      if ( typeof valA === 'number' && typeof valB === 'number' ) {
-        return valA - valB;
-      }
-
-      // Si es string
-      return String(valA).localeCompare(String(valB), 'es');
-    })
-  });
 
   // ========================================================== ARCHIVAR
 
@@ -396,23 +297,12 @@ export class ProductDetail implements OnInit {
   }
 
   // ================================================== TAGS DE LOS PRODUCTOS
+
   getTagColor ( tag: string ): string {
     // Suma los códigos de caracteres del nombre -> número estable
     const hash = tag.split('').reduce( ( acc, char ) => acc + char.charCodeAt(0), 0);
 
     return this.TAG_COLORS[ hash % this.TAG_COLORS.length];
-  }
-
-  // ================================================== CAMBIAR ESTADO POR FILTRO
-  // Seleccionar filtro
-  seleccionarFiltro ( valor: string ): void {
-    this.filterState.set( valor as EstadoVariante | 'todos' );
-  }
-
-  // ========================================================== ORDENAMIENTO
-  // Seleccionar ordenamiento
-  seleccionarOrdenamiento ( valor: string ): void {
-    this.sortField.set( valor as Fields );
   }
 
   // ========================================================== ARCHIVAR

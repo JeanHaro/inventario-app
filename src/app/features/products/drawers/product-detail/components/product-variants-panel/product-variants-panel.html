@@ -1,0 +1,126 @@
+<!-- ================================
+  VISTA: Variantes
+================================ -->
+<div class="product-detail__panel product-detail__panel--variants">
+  <!-- Herramientas de variantes: filtro y orden -->
+  <div class="product-detail__variants-toolbar">
+
+    <!-- Filtrar por estado -->
+    <div class="product-detail__filter">
+      <div class="product-detail__filter-title">
+        <fa-icon [icon]="faFilter"></fa-icon>
+        <span>Filtrar por:</span>
+      </div>
+
+      <app-select
+        [options]="filtroOptions"
+        [value]="filterState()"
+        (valueChange)="seleccionarFiltro($event)"
+        width="15rem"
+      />
+    </div>
+    <!-- END: Filtrar por estado -->
+
+    <!-- Ordenar por -->
+    <div class="product-detail__order">
+      <div class="product-detail__order-title">
+        <fa-icon [icon]="faArrowDownShortWide"></fa-icon>
+        <span>Ordenar por</span>
+      </div>
+
+      <app-select
+        [options]="ordenOptions"
+        [value]="sortField()"
+        (valueChange)="seleccionarOrdenamiento($event)"
+      />
+    </div>
+    <!-- END: Ordenar por -->
+
+    <!-- Agregar variante -->
+    <div class="product-detail__add">
+      <button
+        class="none btn b--primary"
+      >
+        <fa-icon [icon]="faPlus"></fa-icon>
+        Agregar variante
+      </button>
+    </div>
+    <!-- END: Agregar variante -->
+  </div>
+  <!-- END: Herramientas de variantes -->
+
+  <!-- Lista de variantes -->
+  <div class="product-detail__variants">
+    @for ( variante of variantesOrdenadas(); track variante.id ) {
+      <div class="product-detail__variant">
+
+        <!-- Imagen -->
+        <div class="product-detail__variant-img">
+          @if ( variante.imagen?.length ) {
+            <img
+              [src]="variante.imagen"
+              [alt]="variante.nombre ?? 'Imagen de variante'"
+            >
+          } @else {
+            <img src="./img/iphone15.png" alt="Imagen por defecto">
+          }
+        </div>
+
+        <!-- Nombre y SKU -->
+        <div class="product-detail__variant-information">
+          <span class="product-detail__variant-name">
+            {{ producto().nombre }} {{ variante.nombre ?? '' }}
+          </span>
+          <span class="product-detail__variant-sku">
+            {{ variante.sku ?? 'sin-sku' }}
+          </span>
+        </div>
+
+        <!-- Estado -->
+        <div class="product-detail__variant-state">
+          <span>Estado</span>
+          <span [class]="`badge badge--${variante.estado}`">
+            {{ variante.estado }}
+          </span>
+        </div>
+
+        <!-- Stock -->
+        <div class="product-detail__variant-stock">
+          <span>Stock</span>
+          <span>{{ variante.stock | compactNumber: 'stock' }}</span>
+        </div>
+
+        <!-- Precio adicional -->
+        <div class="product-detail__variant-price">
+          <span>Precio</span>
+          <span>{{ variante.precioAdicional ?? 0 | compactNumber: 'precio' }}</span>
+        </div>
+
+        <!-- Acciones de variante -->
+        <div class="product-detail__variant-action">
+
+          <!-- Editar variante -->
+          <button class="product-detail__action-btn product-detail__action-btn--edit btn b--hidden none">
+            <fa-icon [icon]="faPenToSquare"></fa-icon>
+            <span class="sr-only">Editar variante</span>
+          </button>
+
+          <!-- Ver variante -->
+          <button
+            class="product-detail__action-btn product-detail__action-btn--see btn b--hidden none"
+          >
+            <fa-icon [icon]="faEye"></fa-icon>
+            <span class="sr-only">Ver variante</span>
+          </button>
+
+        </div>
+        <!-- END: Acciones de variante -->
+
+      </div>
+    } @empty {
+      <p>No tiene variantes</p>
+    }
+  </div>
+  <!-- END: Lista de variantes -->
+
+</div>

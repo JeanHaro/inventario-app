@@ -8,12 +8,17 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 // Componente Padre
 import { Products } from './products';
-// Componentes hijos
+// -> Componentes hijos
 import { ProductsFilters } from './components/products-filters/products-filters';
 import { ProductsTools } from './components/products-tools/products-tools';
 import { ProductsTable } from './components/products-table/products-table';
+
 // Drawers
 import { ProductDetail } from './drawers/product-detail/product-detail';
+// -> Componentes hijos
+import { ProductVariantsPanel } from './drawers/product-detail/components/product-variants-panel/product-variants-panel';
+import { ProductImagesPanel } from './drawers/product-detail/components/product-images-panel/product-images-panel';
+
 import { ProductForm } from './drawers/product-form/product-form';
 import { VariantDetail } from './drawers/variant-detail/variant-detail';
 import { VariantForm } from './drawers/variant-form/variant-form';
@@ -40,6 +45,8 @@ import { CompactNumberPipe } from '../../shared/pipes/compact-number/compact-num
     ProductForm,
     VariantDetail,
     VariantForm,
+    ProductVariantsPanel,
+    ProductImagesPanel,
   ],
   imports: [
     CommonModule,
