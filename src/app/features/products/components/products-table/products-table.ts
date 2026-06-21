@@ -69,6 +69,7 @@ export class ProductsTable {
   readonly kebabProducto = output<number>();
   readonly kebabVariante = output<VarianteRef>();
   readonly seleccionLimpiada = output<void>();
+  readonly editarProducto = output<number>(); // PARAMS: EDITAR PRODUCTO
 
   // TODO: COMPUTED
   // =================================================== SELECCIONAR CHECKBOX

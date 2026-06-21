@@ -1,3 +1,5 @@
+import { ActivatedRoute, Router } from '@angular/router';
+
 import {
   Component,
   computed,
@@ -5,10 +7,13 @@ import {
   OnInit,
   signal
 } from '@angular/core';
-import { rxResource } from '@angular/core/rxjs-interop';
 
 // Rxjs
 import { forkJoin, map, of } from 'rxjs';
+import {
+  rxResource,
+  toSignal
+} from '@angular/core/rxjs-interop';
 
 // Font Awesome
 import {
@@ -46,7 +51,9 @@ import { InventarioService } from './services/inventario';
 })
 export class Products implements OnInit {
 
-  // Inyecciones
+  // TODO: INYECCIONES
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private inventarioService = inject(InventarioService);
 
   // TODO: ICONOS
@@ -62,16 +69,23 @@ export class Products implements OnInit {
   productos = signal<Producto[]>([]);
   variante = signal<Variante | null>(null);
   productosSeleccionados = signal<Set<number>>(new Set());
-  productoSeleccionado = signal<Producto | null>(null);
+  // productoSeleccionado = signal<Producto | null>(null);
   estadoSeleccionado = signal<EstadoProducto | 'Todas'>('Todas');
   variantePanel  = signal<VariantePanel | null>(null);
   querySearch = signal<string>('');
 
+  // TODO: toSignal
+  // ========================================================= PARAMS
+
+  // Convertimos el observable de query params en un signal reactivo
+  private readonly queryParams = toSignal(
+    this.route.queryParamMap,
+    { initialValue: this.route.snapshot.queryParamMap }
+  );
+
   ngOnInit(): void {
     this.inventarioService.obtenerProductos().subscribe({
-      next: ( resp ) => {
-        this.productos.set(resp);
-      },
+      next: ( resp ) => this.productos.set(resp),
     });
   }
 
@@ -120,12 +134,27 @@ export class Products implements OnInit {
     if ( seleccionados.length === 0 ) return false;
 
     return seleccionados.every( p => p.estado === 'descontinuado' ); // Verifica que todos los productos están en estado descontinuado, gracias al every
-  })
+  });
 
   // Indica si la variante actual está archivada
   readonly varianteEstaArchivada = computed<boolean>( () =>
     this.variante()?.estado === 'descontinuado'
-  )
+  );
+
+  // ========================================================= PARAMS
+
+  // El produco seleccionado se deriva de la URL - ya no es un signal mutable
+  readonly productoSeleccionado = computed<Producto | null>(() => {
+    const id = this.queryParams().get('id');
+    if ( !id ) return null;
+
+    return this.productos().find( producto => producto.id === Number(id) ) ?? null;
+  });
+
+  // Verificar el modo del drawer (PARAMS: EDITAR PRODUCTO)
+  readonly modoInicial = computed<boolean>(() =>
+    this.queryParams().get('modo') === 'editar'
+  );
 
   // =======================================================================
 
@@ -337,12 +366,23 @@ export class Products implements OnInit {
     if ( !producto ) return; // Si no encuentra producto
 
     this.limpiarSeleccion();
-    this.productoSeleccionado.set(producto);
+
+    // Params
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { id, modo: null },
+      queryParamsHandling: 'merge'
+    });
   }
 
   // Cerrar modal Detalle producto
   cerrarDetalleProducto() {
-    this.productoSeleccionado.set(null);
+    // Params
+    this.router.navigate( [], {
+      relativeTo: this.route,
+      queryParams: { id: null, modo: null },
+      queryParamsHandling: 'merge'
+    });
   }
 
   // ========================================= ACHIVAR PRODUCTO DESDE PRODUCT DETAIL
@@ -352,7 +392,30 @@ export class Products implements OnInit {
     this.productos.update( productos =>
       productos.map( p => p.id === producto.id ? producto : p )
     );
+  }
 
-    this.productoSeleccionado.set(producto); // Mantiene el drawer mostrando el dato actualizado
+  // ====================================================== PARAMS: EDITAR PRODUCTO
+
+  // Sincronizamos la URL con el modo
+  sincronizarModoEdicion ( activo: boolean ): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { modo: activo ? 'editar' : null },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  // Abre el drawer directo en modo edición
+  editarProducto ( id: number ): void {
+    const producto = this.productos().find( producto => producto.id === id );
+    if ( !producto ) return;
+
+    this.limpiarSeleccion();
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { id, modo: 'editar' },
+      queryParamsHandling: 'merge'
+    });
   }
 }

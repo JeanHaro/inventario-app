@@ -206,7 +206,10 @@
           <div class="products__td products__action">
 
             <!-- Editar producto -->
-            <button class="products__action-btn products__action-btn--edit btn b--hidden none">
+            <button
+              (click)="editarProducto.emit(producto.id)"
+              class="products__action-btn products__action-btn--edit btn b--hidden none"
+            >
               <fa-icon [icon]="faPenToSquare"></fa-icon>
               <span class="sr-only">Editar</span>
             </button>

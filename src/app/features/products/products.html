@@ -33,6 +33,7 @@
         (kebabProducto)="toggleKebabProducto($event)"
         (kebabVariante)="obtenerVariante($event)"
         (seleccionLimpiada)="limpiarSeleccion()"
+        (editarProducto)="editarProducto($event)"
       />
 
     </div>
@@ -211,13 +212,16 @@
   DRAWER: PRODUCT DETAIL
 ================================ -->
 <div
-  [class.active]="productoSeleccionado() !== null" class="drawers drawers--product-detail"
+  [class.active]="productoSeleccionado() !== null"
+  class="drawers drawers--product-detail"
 >
   @if ( productoSeleccionado() !== null ) {
     <app-product-detail
       [producto]="productoSeleccionado()!"
+      [iniciarEnEdicion]="modoInicial()"
       (cerrarModal)="cerrarDetalleProducto()"
       (productoActualizado)="actualizarProductoEnLista($event)"
+      (modoEdicionCambiado)="sincronizarModoEdicion($event)"
     />
   }
 </div>

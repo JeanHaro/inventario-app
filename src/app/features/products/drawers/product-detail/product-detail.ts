@@ -66,6 +66,8 @@ export class ProductDetail implements OnInit {
 
   // TODO: INPUT Y OUTPUT
   readonly producto = input.required<Producto>();
+  readonly iniciarEnEdicion = input<boolean>(false); // PARAMS: EDITAR PRODUCTO
+  readonly modoEdicionCambiado = output<boolean>(); // PARAMS: EDITAR PRODUCTO
   readonly cerrarModal = output<void>();
   readonly productoActualizado = output<Producto>(); // Avisamos que el producto se actualizo
 
@@ -274,6 +276,11 @@ export class ProductDetail implements OnInit {
   // TODO: HOOKS
   ngOnInit(): void {
     this.actualizarMaxTags();
+
+    // PARAMS: EDITAR PRODUCTO
+    if ( this.iniciarEnEdicion() ) {
+      this.activarEdicion(); // Abre directo en modo edición
+    }
   }
 
   // TODO: MÉTODOS PRIVADOS
@@ -344,12 +351,14 @@ export class ProductDetail implements OnInit {
     this.tagsInput.set( ( p.etiquetas ?? [] ).join(', ') );
 
     this.showOptionsMenu.set(false);
-    this.modoEdicion.set(true)
+    this.modoEdicion.set(true);
+    this.modoEdicionCambiado.emit(true);
   }
 
   // Cancelar - descarta los cambios
   cancelarEdicion(): void {
     this.modoEdicion.set(false);
+    this.modoEdicionCambiado.emit(false);
   }
 
   // Guardar - envía los cambios a la API
@@ -371,6 +380,7 @@ export class ProductDetail implements OnInit {
       next: ( resp ) => {
         this.productoActualizado.emit(resp);
         this.modoEdicion.set(false);
+        this.modoEdicionCambiado.emit(false);
         this.guardando.set(false); // desactivamos loader cuando llega respuesta
       },
       error: () => {
