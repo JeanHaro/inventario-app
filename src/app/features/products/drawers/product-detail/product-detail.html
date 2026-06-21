@@ -178,7 +178,7 @@
             <input
               [formField]="editForm.marca"
               type="text"
-              [class.i--warn]="editForm.marca().invalid() && editForm.nombre().touched()"
+              [class.i--warn]="editForm.marca().invalid() && editForm.marca().touched()"
               class="product-detail__input none input"
             >
 
@@ -224,7 +224,7 @@
             <input
               [formField]="editForm.precio"
               type="number"
-              [class.i--warn]="editForm.precio().invalid() && editForm.nombre().touched()"
+              [class.i--warn]="editForm.precio().invalid() && editForm.precio().touched()"
               class="product-detail__input none  input"
             >
 
@@ -252,7 +252,7 @@
             <input
               [formField]="editForm.descuento"
               type="number"
-              [class.i--warn]="editForm.descuento().invalid() && editForm.nombre().touched()"
+              [class.i--warn]="editForm.descuento().invalid() && editForm.descuento().touched()"
               class="product-detail__input none input"
             >
 
