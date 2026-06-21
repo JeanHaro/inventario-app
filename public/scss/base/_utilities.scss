@@ -21,6 +21,7 @@ img {
   outline: none;
 }
 
+// sr-only para accesibilidad
 .sr-only {
   position: absolute;
   width: 1px;
@@ -36,4 +37,16 @@ img {
 .none {
   @extend .b-none;
   @extend .o-none;
+}
+
+// Loader
+.spin {
+  animation: spin 0.8s linear infinite;
+}
+
+// Estado cuando esta cargando
+.is-saving {
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.6;
 }

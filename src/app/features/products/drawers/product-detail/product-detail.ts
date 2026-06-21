@@ -30,7 +30,8 @@ import {
   faFilter,
   faArrowDownShortWide,
   faEye,
-  faPlus
+  faPlus,
+  faSpinner
 } from '@fortawesome/free-solid-svg-icons';
 
 // Servicio
@@ -73,6 +74,7 @@ export class ProductDetail implements OnInit {
   readonly faArrowDownShortWide: IconDefinition = faArrowDownShortWide;
   readonly faEye: IconDefinition = faEye;
   readonly faPlus: IconDefinition = faPlus;
+  readonly faSpinner: IconDefinition = faSpinner;
 
   // TODO: INPUT Y OUTPUT
   readonly producto = input.required<Producto>();
@@ -253,6 +255,7 @@ export class ProductDetail implements OnInit {
   // ========================================================= EDICIÓN
 
   modoEdicion = signal<boolean>(false); // ======= Modo edición para el formulario
+  guardando = signal<boolean>(false);
 
   // Se llena al activar edición
   editModel = signal({
@@ -463,6 +466,8 @@ export class ProductDetail implements OnInit {
   guardarEdicion(): void {
     if ( !this.editForm().valid() ) return;
 
+    this.guardando.set(true); // actuvamos el loader
+
     const valores = this.editModel();
 
     const etiquetas = this.tagsInput().split(',').map( tag => tag.trim() ).filter(
@@ -476,6 +481,10 @@ export class ProductDetail implements OnInit {
       next: ( resp ) => {
         this.productoActualizado.emit(resp);
         this.modoEdicion.set(false);
+        this.guardando.set(false); // desactivamos loader cuando llega respuesta
+      },
+      error: () => {
+        this.guardando.set(false); // desactivamos loader cuando hay error
       }
     })
   }
