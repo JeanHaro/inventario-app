@@ -2,11 +2,64 @@
   VISTA: Imagenes
 ================================ -->
 <div class="product-detail__panel product-detail__panel--images">
-  @for ( imagen of images(); track imagen ) {
-    <div class="product-detail__image">
-      <img [src]="imagen" alt="Imagen del producto">
+  <!-- Botón para subir imágenes -->
+  <button
+    (click)="abrirSelector()"
+    [disabled]="subiendo()"
+    class="product-detail__images-upload-btn none btn b--primary"
+  >
+    @if ( subiendo() ) {
+      <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
+      <span>Subiendo...</span>
+    } @else {
+      <fa-icon [icon]="faPlus"></fa-icon>
+      <span>Subir imágenes</span>
+    }
+  </button>
+
+  <!-- Texto de ayuda -->
+  <p class="product-detail__images-hint">
+    Formatos permitidos: JPEG, PNG, WEBP, GIF. Máximo 5MB por imagen, hasta 10 imágenes.
+  </p>
+  <!-- Mensaje de error -->
+  @if ( errorMessage() ) {
+    <div class="product-detail__images-error">
+      <span>{{ errorMessage() }}</span>
     </div>
-  } @empty {
-    <p>No hay imágenes</p>
   }
+
+  <!-- Input file oculto -->
+  <input
+    #fileInputRef
+    type="file"
+    accept="image/*"
+    multiple
+    hidden
+    (change)="onFilesSelected($event)"
+  >
+
+  <!-- Contenido de las imagenes -->
+  <div class="product-detail__images-content">
+    @for ( imagen of images(); track imagen ) {
+      <div class="product-detail__image">
+        <img [src]="imagen" alt="Imagen del producto">
+
+        <!-- Eliminar -->
+        <button
+          (click)="eliminarImagen(imagen)"
+          [disabled]="eliminando() === imagen"
+          aria-label="Eliminar imagen"
+          class="product-detail__image-delete none btn"
+        >
+          @if ( eliminando() === imagen ) {
+            <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
+          } @else {
+            <fa-icon [icon]="faTrash"></fa-icon>
+          }
+        </button>
+      </div>
+    } @empty {
+      <p>No hay imágenes</p>
+    }
+  </div>
 </div>

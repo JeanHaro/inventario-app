@@ -422,6 +422,8 @@
         @if ( activeTab() === 'imagenes' ) {
           <app-product-images-panel
             [images]="producto().imagenes ?? []"
+            [productoId]="producto().id"
+            (productoActualizado)="productoActualizado.emit($event)"
           />
         }
         <!-- END: VISTA: Imágenes -->

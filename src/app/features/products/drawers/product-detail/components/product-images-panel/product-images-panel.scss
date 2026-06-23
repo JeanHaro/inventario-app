@@ -1,10 +1,22 @@
 .product-detail {
-  // ================================
-  // VISTA: Imágenes
-  // ================================
-  &__panel--images {
+  // Botón para subir imágenes
+  &__images-upload-btn {
+    gap: 1rem;
+
+    font-size: 1.4rem;
+    width: 100%;
+
+    @media (min-width: 1024px) {
+      width: auto;
+    }
+  }
+
+  // Contenido de las imagenes
+  &__images-content {
     columns: 2;
-    column-gap: 1rem;
+    column-gap: 2rem;
+
+    margin-top: 1.5rem;
 
     @media (min-width: 712px) {
       columns: 3;
@@ -13,6 +25,19 @@
     @media (min-width: 1024px) {
       columns: 4;
     }
+  }
+
+  // Mensaje de ayuda
+  &__images-hint {
+    margin: 0.5rem 0;
+
+    font-size: 1.2rem;
+  }
+
+  // Mensaje de error
+  &__images-error {
+    font-size: 1.2rem;
+    color: var(--notif-critical-base);
   }
 
   &__image {
@@ -40,10 +65,34 @@
       opacity: 0.1;
     }
 
+    &:hover &-delete {
+      opacity: 1;
+    }
+
+    // Eliminar
+    &-delete {
+      position: absolute;
+      right: 0;
+      top: 0;
+
+      background: rgba(0, 0, 0, 0.8);
+      color: var(--color-blanco-1);
+      border-radius: 0 0 0 0.5rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      font-size: 1.4rem;
+
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      z-index: 2;
+    }
+
     img {
-      width: 100%;
-      height: auto;      // ← clave: altura natural de cada imagen = efecto masonry
       display: block;
+
+      width: auto;
+      height: auto;      // ← altura natural
+
       border-radius: 0.5rem;
       object-fit: cover;
     }
