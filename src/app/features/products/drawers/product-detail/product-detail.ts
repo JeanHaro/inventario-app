@@ -26,7 +26,9 @@ import {
   faFileArrowDown,
   faBoxArchive,
   faBoxOpen,
-  faSpinner
+  faSpinner,
+  faFloppyDisk,
+  faClose
 } from '@fortawesome/free-solid-svg-icons';
 
 // Servicio
@@ -63,6 +65,8 @@ export class ProductDetail implements OnInit {
   readonly faBoxArchive: IconDefinition = faBoxArchive;
   readonly faBoxOpen: IconDefinition = faBoxOpen;
   readonly faSpinner: IconDefinition = faSpinner;
+  readonly faFloppyDisk: IconDefinition = faFloppyDisk;
+  readonly faClose: IconDefinition = faClose;
 
   // TODO: INPUT Y OUTPUT
   readonly producto = input.required<Producto>();

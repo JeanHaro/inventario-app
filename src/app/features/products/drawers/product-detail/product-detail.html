@@ -53,6 +53,7 @@
             <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
             <span>Guardando...</span>
           } @else {
+            <fa-icon [icon]="faFloppyDisk"></fa-icon>
             <span>Guardar</span>
           }
         </button>
@@ -64,6 +65,7 @@
           [disabled]="guardando()"
           class="product-detail__btn product-detail__btn-2 none btn b--gray"
         >
+          <fa-icon [icon]="faClose"></fa-icon>
           <span>Cancelar</span>
         </button>
       }
@@ -106,6 +108,7 @@
 
     <form
       id="productEditForm"
+      [class.edicion]="modoEdicion()"
       (ngSubmit)="guardarEdicion()"
       novalidate
     >

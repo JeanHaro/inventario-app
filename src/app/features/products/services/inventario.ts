@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 
 // RxJs
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { catchError, delay, Observable, tap, throwError } from 'rxjs';
 
 // Models
 import {
@@ -265,7 +265,7 @@ export class InventarioService {
     const url = `${this.API_URL}/products/${id}`;
 
     return this.http.patch<Producto>(url, producto).pipe(
-
+      delay(2000),
       catchError( ( error: HttpErrorResponse ) => {
         const mensaje = error.error?.error ?? 'Error desconocido';
         console.error(`[${error.status}]`, mensaje);
