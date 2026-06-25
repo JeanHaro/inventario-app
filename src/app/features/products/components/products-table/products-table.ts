@@ -18,18 +18,18 @@ import {
 
 // Modelos
 import {
-  Producto,
+  Product,
   SortDirection,
   SortField,
   SortState,
-  type VariantePanel,
-  VarianteRef
+  type VariantPanel,
+  VariantRef
 } from '../../models/products.model';
 
 type StateCheckbox = 'vacio' | 'todos' | 'parcial' | 'ninguno';
 
 @Component({
-  selector: 'app-products-table',
+  selector: 'products-table',
   standalone: false,
   templateUrl: './products-table.html',
   styleUrl: './products-table.scss',
@@ -47,42 +47,41 @@ export class ProductsTable {
   readonly faSort:   IconDefinition = faSort;
   readonly faSortUp: IconDefinition = faSortUp;
   readonly faSortDown: IconDefinition = faSortDown;
-
   readonly faArrowUpShortWide: IconDefinition = faArrowUpShortWide;
 
-  // TODO: PROPIEDADES
+  // TODO: INPUT, OUTPUT Y MODEL
   // Signals internos de la tabla
-  productoExpandido = signal<number | null>(null);
+  expandedProduct = signal<number | null>(null);
   sortState = signal<SortState>({ field: null, direction: 'none' });
 
   // Models
   // Estos models, sirve si quieres que el valor fluya en ambas direcciones sin lógica adicional (sin logica adicional significa que en el padre no debe estar en un método ejecutando otros valores, solo un valor específico)
-  readonly variantePanel = model<VariantePanel | null>(null);
+  readonly variantPanel = model<VariantPanel | null>(null);
 
   // Inputs — datos que vienen del padre
-  readonly productos = input.required<Producto[]>();
-  readonly productosSeleccionados = input.required<Set<number>>();
+  readonly products = input.required<Product[]>();
+  readonly selectedProducts = input.required<Set<number>>();
 
   // Outputs — eventos que sube al padre
-  readonly seleccionToggled = output<number>();
-  readonly todasToggled = output<void>();
-  readonly kebabProducto = output<number>();
-  readonly kebabVariante = output<VarianteRef>();
-  readonly seleccionLimpiada = output<void>();
-  readonly editarProducto = output<number>(); // PARAMS: EDITAR PRODUCTO
+  readonly selectionToggled = output<number>();
+  readonly allToggled = output<void>();
+  readonly productKebab = output<number>();
+  readonly variantKebab = output<VariantRef>();
+  readonly selectionCleared = output<void>();
+  readonly editProduct = output<number>(); // PARAMS: EDITAR PRODUCTO
 
   // TODO: COMPUTED
   // =================================================== SELECCIONAR CHECKBOX
 
   // Obtener la cantidad de todos los productos seleccionados
-  readonly totalSeleccionados = computed<number>(() =>
-    this.productosSeleccionados().size
+  readonly totalSelected = computed<number>(() =>
+    this.selectedProducts().size
   );
 
   // Condicion del estado del checkbox
-  readonly checkboxEstado = computed<StateCheckbox>(() => {
-    const total    = this.totalSeleccionados();
-    const visibles = this.productos().length;
+  readonly checkboxState = computed<StateCheckbox>(() => {
+    const total    = this.totalSelected();
+    const visibles = this.products().length;
 
     if ( visibles === 0 )     return 'vacio';
     if ( total === visibles ) return 'todos';
@@ -93,8 +92,8 @@ export class ProductsTable {
   // ========================================================== ORDENAMIENTO
 
   // Productos ordenados según el estado del sort
-  readonly productosOrdenados = computed<Producto[]>( () => {
-    const lista = [...this.productos()]; // Para no mutar el signal de producto
+  readonly sortedProducts = computed<Product[]>( () => {
+    const lista = [...this.products()]; // Para no mutar el signal de producto
     const { field, direction } = this.sortState();
 
     // Sin ordenamiento activo devolvemos como vienen
@@ -127,76 +126,76 @@ export class ProductsTable {
     })
   })
 
-  // TODO: MÉTODOS
+  // TODO: MÉTODOS PÚBLICOS
   // ====================================================== COLAPSAR VARIANTES
 
   // Mostrar variantes
-  toggleVariantes ( id: number ): void {
-    const producto = this.productos()
+  toggleVariants ( id: number ): void {
+    const producto = this.products()
       .filter( p => p.id === id )
       .find( p => p.variantes.length > 0 );
 
     if ( !producto ) return;
 
-    this.variantePanel.set(null);
+    this.variantPanel.set(null);
 
-    const actual = this.productoExpandido();
-    this.productoExpandido.set( actual === id ? null : id );
+    const actual = this.expandedProduct();
+    this.expandedProduct.set( actual === id ? null : id );
   }
 
   // =================================================== SELECCIONAR CHECKBOX
 
   // Identificar si el producto esta seleccionado
-  estaSeleccionado ( id: number ): boolean {
-    return this.productosSeleccionados().has(id);
+  isSelected ( id: number ): boolean {
+    return this.selectedProducts().has(id);
   }
 
   // Seleccionar todas — avisa al padre para que ejecute la lógica
-  seleccionarTodas(): void {
-    this.todasToggled.emit();
+  selectAll(): void {
+    this.allToggled.emit();
   }
 
   // Añadir o sacar productos de la selección — avisa al padre con el id
-  toggleSeleccion ( id: number ): void {
-    this.seleccionToggled.emit(id);
+  toggleSelection ( id: number ): void {
+    this.selectionToggled.emit(id);
   }
 
   // ========================================================= PRODUCTO KEBAB
 
   // Mostrar Kebab por producto — cierra panel de variante y avisa al padre
-  toggleKebabProducto ( id: number ): void {
-    this.variantePanel.set(null);
-    this.kebabProducto.emit(id);
+  toggleProductKebab ( id: number ): void {
+    this.variantPanel.set(null);
+    this.productKebab.emit(id);
   }
 
   // ========================================================= VARIANTE KEBABS
 
   // Mostrar Kebab por variante
-  toggleKebabVariante ( id: number, productoId: number ): void {
-    this.seleccionLimpiada.emit();
-    this.kebabVariante.emit({ productoId, varianteId: id });
+  toggleVariantKebab ( id: number, productoId: number ): void {
+    this.selectionCleared.emit();
+    this.variantKebab.emit({ productoId, varianteId: id });
 
-    const actual = this.variantePanel();
+    const actual = this.variantPanel();
     const yaAbierto = actual?.tipo === 'kebab' && actual?.id === id;
 
-    this.variantePanel.set( yaAbierto ? null : { tipo: 'kebab', id, productoId } );
+    this.variantPanel.set( yaAbierto ? null : { tipo: 'kebab', id, productoId } );
   }
 
   // Mostrar el panel de stock de variante
-  abrirStockVariante ( id: number, productoId: number ): void {
-    this.seleccionLimpiada.emit();
-    this.kebabVariante.emit({ productoId, varianteId: id });
+  openVariantStock ( id: number, productoId: number ): void {
+    this.selectionCleared.emit();
+    this.variantKebab.emit({ productoId, varianteId: id });
 
-    const actual = this.variantePanel();
+    const actual = this.variantPanel();
     const yaAbierto = actual?.tipo === 'stock' && actual?.id === id;
 
-    this.variantePanel.set( yaAbierto ? null : { tipo: 'stock', id, productoId } );
+    this.variantPanel.set( yaAbierto ? null : { tipo: 'stock', id, productoId } );
   }
 
   // ========================================================== ORDENAMIENTO
 
   // Ciclar entre los 3 estados de ordenamiento: none -> asc -> desc -> none
-  cambiarOrden ( field: SortField ): void {
+  changeSort ( field: SortField ): void {
     const actual = this.sortState();
 
     // Si es una columna distinta, lo empezamos en asc
@@ -222,7 +221,7 @@ export class ProductsTable {
   }
 
   // Obtener el icono correcto según el campo y la dirección
-  iconOrden ( field: SortField ): IconDefinition {
+  sortIcon ( field: SortField ): IconDefinition {
     const { field: campoActual, direction } = this.sortState();
 
     if ( campoActual !== field || direction === 'none' ) return this.faSort;

@@ -7,7 +7,7 @@ type Tipo = 'precio' | 'stock';
   standalone: true,
 })
 export class CompactNumberPipe implements PipeTransform {
-  private compactar ( value: number, divisor: number ): string {
+  private compact ( value: number, divisor: number ): string {
     const resultado = value / divisor;
 
     return Number.isInteger(resultado)
@@ -16,8 +16,8 @@ export class CompactNumberPipe implements PipeTransform {
   }
 
   private formatPrecio ( value: number ): string {
-    if ( value >= 1_000_000_000 ) return `S/. ${this.compactar(value, 1_000_000_00)} B`;
-    if ( value >= 1_000_000 ) return `S/. ${this.compactar(value, 1_000_000)} M`;
+    if ( value >= 1_000_000_000 ) return `S/. ${this.compact(value, 1_000_000_00)} B`;
+    if ( value >= 1_000_000 ) return `S/. ${this.compact(value, 1_000_000)} M`;
 
     return new Intl.NumberFormat('es-PE', {
       style: 'currency',
@@ -28,9 +28,9 @@ export class CompactNumberPipe implements PipeTransform {
   }
 
   private formatStock ( value: number ): string {
-    if ( value >= 1_000_000_000 ) return `${this.compactar(value, 1_000_000_000)} B`;
-    if ( value >= 1_000_000 ) return `${this.compactar(value, 1_000_000)} M`;
-    if ( value >= 10_000 ) return `${this.compactar(value, 1_000)} k`;
+    if ( value >= 1_000_000_000 ) return `${this.compact(value, 1_000_000_000)} B`;
+    if ( value >= 1_000_000 ) return `${this.compact(value, 1_000_000)} M`;
+    if ( value >= 10_000 ) return `${this.compact(value, 1_000)} k`;
 
     return value.toLocaleString('es-PE');
   }

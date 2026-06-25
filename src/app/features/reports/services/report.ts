@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 
 // Modelos
 import {
-  EstadoProducto,
-  Producto
+  ProductState,
+  Product
 } from '../../products/models/products.model';
 import { InventoryReport, InventoryStats } from '../models/report.model';
 
@@ -16,12 +16,12 @@ export class ReportService {
   // =============================
 
   // Cuenta productos por uno o más estados - REST params
-  countByState ( products: Producto[], ...states: EstadoProducto[] ): number {
+  countByState ( products: Product[], ...states: ProductState[] ): number {
     return products.filter( p => states.includes(p.estado) ).length;
   }
 
   // Suma precio x stock total de todas las variantes de todos los productos
-  getTotalValue ( products: Producto[] ): number {
+  getTotalValue ( products: Product[] ): number {
     return products.reduce( (total, product) => {
         // Suma el stock total de todas las variantes del producto
         const stockTotal = product.variantes.reduce(
@@ -34,7 +34,7 @@ export class ReportService {
   }
 
   // Promedio de precios
-  getAveragePrice ( products: Producto[] ): number {
+  getAveragePrice ( products: Product[] ): number {
     if (products.length === 0) return 0;
 
     const totalPrice = products.reduce( (total, product) => total + product.precio, 0 );
@@ -43,7 +43,7 @@ export class ReportService {
   }
 
   // El producto más caro
-  getMostExpensive ( products: Producto[] ): Producto | null {
+  getMostExpensive ( products: Product[] ): Product | null {
     if (products.length === 0) return null;
 
     return products.reduce(
@@ -56,7 +56,7 @@ export class ReportService {
   }
 
   // El producto más barato
-  getCheapest ( products: Producto[] ): Producto | null {
+  getCheapest ( products: Product[] ): Product | null {
     if (products.length === 0) return null;
 
     return products.reduce(
@@ -73,7 +73,7 @@ export class ReportService {
   // =============================
 
   // Genera el objeto InventoryStats completo llamando a los métodos anteriores
-  generateStats ( products: Producto[] ): InventoryStats {
+  generateStats ( products: Product[] ): InventoryStats {
     return {
       totalProductos: products.length,
       totalDisponibles: this.countByState(products, 'disponible'),

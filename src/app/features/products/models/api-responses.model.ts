@@ -1,4 +1,4 @@
-import { Producto } from './products.model';
+import { Product } from './products.model';
 
 // Respuesta al eliminar un producto
 export interface DeleteResponse {
@@ -6,27 +6,27 @@ export interface DeleteResponse {
 }
 
 // Respuesta base
-interface ImagenBaseResponse {
+interface ImageBaseResponse {
   message: string;
-  producto: Producto;
+  producto: Product;
 }
 
 // Respuesta al subir imágenes del producto
-export interface ImagenesProductoResponse extends ImagenBaseResponse {
+export interface ProductImagesResponse extends ImageBaseResponse {
   imagenesNuevas: string[];
 }
 
 // Respuesta al subir imagen de variante
-export interface ImagenVarianteResponse extends ImagenBaseResponse {
+export interface VariantImageResponse extends ImageBaseResponse {
   imageUrl: string;
 }
 
 // Respuesta al eliminar imagen (producto o variante)
-export interface DeleteImagenResponse extends ImagenBaseResponse {}
+export interface DeleteImageResponse extends ImageBaseResponse {}
 
 
 // Respuesta del precio final
-export interface PrecioFinalResponse {
+export interface FinalPriceResponse {
   producto: string;
   precioBase: number;
   descuento: number;

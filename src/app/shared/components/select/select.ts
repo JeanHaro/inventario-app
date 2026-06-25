@@ -20,7 +20,7 @@ import {
 import { SelectOption } from './models/select.model';
 
 @Component({
-  selector: 'app-select',
+  selector: 'shared-select',
   standalone: true,
   imports: [
     FontAwesomeModule
@@ -71,7 +71,7 @@ export class Select {
     this.showOptions.set( !this.showOptions() );
   }
 
-  seleccionar ( value: string ): void {
+  select ( value: string ): void {
     this.valueChange.emit(value);
     this.showOptions.set(false);
   }

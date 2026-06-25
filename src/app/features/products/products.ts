@@ -32,19 +32,19 @@ import {
 
 // Modelos
 import {
-  EstadoProducto,
-  EstadoVariante,
-  Producto,
-  Variante,
-  VariantePanel,
-  VarianteRef
+  ProductState,
+  VariantState,
+  Product,
+  Variant,
+  VariantPanel,
+  VariantRef
 } from './models/products.model';
 
 // Servicios
 import { InventarioService } from './services/inventario';
 
 @Component({
-  selector: 'app-products',
+  selector: 'products',
   standalone: false,
   templateUrl: './products.html',
   styleUrl: './products.scss',
@@ -54,7 +54,7 @@ export class Products implements OnInit {
   // TODO: INYECCIONES
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private inventarioService = inject(InventarioService);
+  private readonly inventarioService = inject(InventarioService);
 
   // TODO: ICONOS
   readonly faEye: IconDefinition = faEye;
@@ -65,14 +65,13 @@ export class Products implements OnInit {
   readonly faBarcode: IconDefinition = faBarcode;
   readonly faFloppyDisk: IconDefinition = faFloppyDisk;
 
-  // TODO: PROPIEDADES
-  productos = signal<Producto[]>([]);
-  variante = signal<Variante | null>(null);
-  productosSeleccionados = signal<Set<number>>(new Set());
-  // productoSeleccionado = signal<Producto | null>(null);
-  estadoSeleccionado = signal<EstadoProducto | 'Todas'>('Todas');
-  variantePanel  = signal<VariantePanel | null>(null);
-  querySearch = signal<string>('');
+  // TODO: SIGNALS
+  products = signal<Product[]>([]);
+  variant = signal<Variant | null>(null);
+  selectedProducts = signal<Set<number>>(new Set());
+  selectedState = signal<ProductState | 'Todas'>('Todas');
+  variantPanel  = signal<VariantPanel | null>(null);
+  searchQuery = signal<string>('');
 
   // TODO: toSignal
   // ========================================================= PARAMS
@@ -84,8 +83,8 @@ export class Products implements OnInit {
   );
 
   ngOnInit(): void {
-    this.inventarioService.obtenerProductos().subscribe({
-      next: ( resp ) => this.productos.set(resp),
+    this.inventarioService.getProducts().subscribe({
+      next: ( resp ) => this.products.set(resp),
     });
   }
 
@@ -93,66 +92,66 @@ export class Products implements OnInit {
   // ================================================== CAMBIAR ESTADO POR FILTRO
 
   // Filtrar los productos por estado
-  readonly productosPorEstado = computed<Producto[]>(() => {
-    const query = this.querySearch();
+  readonly productsByState = computed<Product[]>(() => {
+    const query = this.searchQuery();
 
     // Si hay busqueda activa, usar el resource
     if ( query ) {
       const resultados = this.productResource.value() ?? [];
 
       // Con esto retornamos solo los productos de cada estado
-      if ( this.estadoSeleccionado() === 'Todas' ) return resultados;
-      return resultados.filter( p => p.estado === this.estadoSeleccionado() );
+      if ( this.selectedState() === 'Todas' ) return resultados;
+      return resultados.filter( p => p.estado === this.selectedState() );
     }
 
-    if ( this.estadoSeleccionado() === 'Todas' ) return this.productos();
+    if ( this.selectedState() === 'Todas' ) return this.products();
 
-    return this.productos().filter(
-      producto => producto.estado === this.estadoSeleccionado()
+    return this.products().filter(
+      producto => producto.estado === this.selectedState()
     );
   });
 
   // =================================================== SELECCIONAR CHECKBOX
 
   // Obtener la cantidad de todos los productos seleccionados
-  readonly totalSeleccionados = computed<number>(() => {
-    return this.productosSeleccionados().size;
+  readonly totalSelected = computed<number>(() => {
+    return this.selectedProducts().size;
   });
 
   // ========================================================== ARCHIVAR
 
   // Obtener los productos seleccionados para archivar
-  readonly productosParaArchivar = computed<Producto[]>(() => {
-    return this.productos().filter(
-      producto => this.productosSeleccionados().has(producto.id)
+  readonly productsToArchive = computed<Product[]>(() => {
+    return this.products().filter(
+      producto => this.selectedProducts().has(producto.id)
     );
   });
 
   // Para cambiar el nombre del botón archivar a desarchivar si todos los productos seleccionados están descontinuados
-  readonly todosArchivados = computed<boolean>( () => {
-    const seleccionados = this.productosParaArchivar();
+  readonly allArchived = computed<boolean>( () => {
+    const seleccionados = this.productsToArchive();
     if ( seleccionados.length === 0 ) return false;
 
     return seleccionados.every( p => p.estado === 'descontinuado' ); // Verifica que todos los productos están en estado descontinuado, gracias al every
   });
 
   // Indica si la variante actual está archivada
-  readonly varianteEstaArchivada = computed<boolean>( () =>
-    this.variante()?.estado === 'descontinuado'
+  readonly variantIsArchived = computed<boolean>( () =>
+    this.variant()?.estado === 'descontinuado'
   );
 
   // ========================================================= PARAMS
 
   // El produco seleccionado se deriva de la URL - ya no es un signal mutable
-  readonly productoSeleccionado = computed<Producto | null>(() => {
+  readonly selectedProduct = computed<Product | null>(() => {
     const id = this.queryParams().get('id');
     if ( !id ) return null;
 
-    return this.productos().find( producto => producto.id === Number(id) ) ?? null;
+    return this.products().find( producto => producto.id === Number(id) ) ?? null;
   });
 
   // Verificar el modo del drawer (PARAMS: EDITAR PRODUCTO)
-  readonly modoInicial = computed<boolean>(() =>
+  readonly startInEditMode = computed<boolean>(() =>
     this.queryParams().get('modo') === 'editar'
   );
 
@@ -161,17 +160,17 @@ export class Products implements OnInit {
   // TODO: rxResource
   // Buscar producto
   productResource = rxResource({
-    params: () => ({ query: this.querySearch() }),
+    params: () => ({ query: this.searchQuery() }),
     stream: ({ params }) => {
       // of - permite regresar un observable basado en lo que nosotros mandamos a invocar
       if ( !params.query ) return of([]);
 
       // Lo que hace forkJoin es que lanza las dos peticiones al mismo tiempo y cuando las dos responden te da los dos arrays juntos
       return forkJoin([
-        this.inventarioService.obtenerPorMarca(params.query),
-        this.inventarioService.obtenerPorEtiqueta(params.query),
-        this.inventarioService.buscarPorNombre(params.query),
-        this.inventarioService.buscarPorCategoria(params.query),
+        this.inventarioService.getByBrand(params.query),
+        this.inventarioService.getByTag(params.query),
+        this.inventarioService.searchByName(params.query),
+        this.inventarioService.searchByCategory(params.query),
       ]).pipe(
         map( ([ porMarca, porEtiqueta, porNombre, porCategoria ]) => {
           // Unimos ambos resultados
@@ -192,8 +191,8 @@ export class Products implements OnInit {
 
   // TODO: MÉTODOS PRIVADOS
   // Decide que estado aplicar según el estado actual de la variante
-  private resolverEstadoArchivar(): EstadoVariante {
-    const variante = this.variante();
+  private resolveArchiveState(): VariantState {
+    const variante = this.variant();
 
     // Si ya está archivada -> Desarchivar según su stock
     if ( variante?.estado === 'descontinuado' ) {
@@ -205,92 +204,92 @@ export class Products implements OnInit {
   }
 
   // Decide que estado aplicar según el estado actual de los productos (Solo cuando está desarchivado)
-  private resolverEstadoDesarchivarProducto ( producto: Producto ): EstadoProducto {
+  private resolveUnarchiveState ( producto: Product ): ProductState {
     const tieneStock = producto.variantes.some( v => v.stock > 0 ); // Si hay uno que tenga stock mayor a 0
 
     return tieneStock ? 'disponible' : 'agotado';
   }
 
   // Sincroniza la respuesta de la API con el signal local (producto)
-  private sincronizarRespuesta ( resp: Producto ): void {
-    this.productos.update( productos =>
+  private syncResponse ( resp: Product ): void {
+    this.products.update( productos =>
       productos.map( producto => producto.id === resp.id ? resp : producto )
     );
 
-    this.variante.set(null);
-    this.variantePanel.set(null);
+    this.variant.set(null);
+    this.variantPanel.set(null);
   }
 
   // TODO: MÉTODOS PÚBLICOS
   // ================================================== CAMBIAR ESTADO POR FILTRO
 
   // Cambiar el valor del estado seleccionado
-  estadoPorProducto ( estado: EstadoProducto | 'Todas' ): void {
-    this.limpiarSeleccion();
+  setSelectedState ( estado: ProductState | 'Todas' ): void {
+    this.clearSelection();
 
-    this.estadoSeleccionado.set(estado);
+    this.selectedState.set(estado);
   }
 
 
   // =================================================== SELECCIONAR CHECKBOX
 
   // Seleccionar todas
-  seleccionarTodas(): void {
-    const seleccionados = new Set( this.productosSeleccionados() );
+  selectAll(): void {
+    const seleccionados = new Set( this.selectedProducts() );
 
-    if ( this.totalSeleccionados() === this.productosPorEstado().length ) {
-      return this.limpiarSeleccion();
+    if ( this.totalSelected() === this.productsByState().length ) {
+      return this.clearSelection();
     }
 
-    this.productosPorEstado().forEach( product => seleccionados.add(product.id) );
-    this.productosSeleccionados.set(seleccionados);
+    this.productsByState().forEach( product => seleccionados.add(product.id) );
+    this.selectedProducts.set(seleccionados);
   }
 
   // Identificar si el producto esta seleccionado
-  estaSeleccionado ( id: number ): boolean {
-    return this.productosSeleccionados().has(id);
+  isSelected ( id: number ): boolean {
+    return this.selectedProducts().has(id);
   }
 
   // Añadir o sacar productos de la selección
-  toggleSeleccion ( id: number ): void {
-    const seleccionados = new Set( this.productosSeleccionados() );
+  toggleSelection ( id: number ): void {
+    const seleccionados = new Set( this.selectedProducts() );
 
     seleccionados.has(id) ? seleccionados.delete(id) : seleccionados.add(id);
 
-    this.productosSeleccionados.set(seleccionados);
+    this.selectedProducts.set(seleccionados);
   }
 
   // Limpiar selecciones
-  limpiarSeleccion(): void {
-    this.productosSeleccionados.set( new Set() );
+  clearSelection(): void {
+    this.selectedProducts.set( new Set() );
   }
 
   // ========================================================= PRODUCTO KEBAB
 
   // Mostrar Kebab por producto
-  toggleKebabProducto ( id: number ): void {
+  toggleProductKebab ( id: number ): void {
     // Si ese producto ya es el único seleccionado
-    if ( this.totalSeleccionados() === 1 && this.estaSeleccionado(id) ) {
-      return this.limpiarSeleccion();
+    if ( this.totalSelected() === 1 && this.isSelected(id) ) {
+      return this.clearSelection();
     }
 
     // Limpiar y seleccionar solo ese producto
-    this.productosSeleccionados.set( new Set([id]) );
+    this.selectedProducts.set( new Set([id]) );
   }
 
   // Archivar / Desarchivar productos seleccionados
-  archivarODesarchivarProductos(): void {
-    const productos = this.productosParaArchivar();
+  archiveOrUnarchiveProducts(): void {
+    const productos = this.productsToArchive();
     if ( productos.length === 0 ) return;
 
     // Cada producto puede tener un estado distinto al desarchivar
     const peticiones = productos.map(
       producto => {
-        const nuevoEstado = this.todosArchivados()
-                              ? this.resolverEstadoDesarchivarProducto(producto) // cada uno según su stock
+        const nuevoEstado = this.allArchived()
+                              ? this.resolveUnarchiveState(producto) // cada uno según su stock
                               : 'descontinuado'; // descontinuados todos
 
-        return this.inventarioService.actualizarProducto(
+        return this.inventarioService.updateProduct(
           producto.id.toString(),
           { estado: nuevoEstado }
         )
@@ -299,14 +298,18 @@ export class Products implements OnInit {
 
     // Lanzamos todas las peticiones al mismo tiempo
     forkJoin(peticiones).subscribe({
-      next: ( resp ) => {
-        resp.forEach( resp => {
-          this.productos.update( productos =>
-            productos.map( producto => producto.id === resp.id ? resp : producto )
+      next: ( productosActualizados ) => {
+        productosActualizados.forEach( productoActualizado => {
+          this.products.update( productos =>
+            productos.map( producto =>
+              producto.id === productoActualizado.id
+                        ? productoActualizado
+                        : producto
+            )
           );
         });
 
-        this.limpiarSeleccion(); // Cierra kebabs
+        this.clearSelection(); // Cierra kebabs
       }
     })
   }
@@ -314,58 +317,58 @@ export class Products implements OnInit {
   // ========================================================= VARIANTE KEBABS
 
   // Obtener variante
-  obtenerVariante ( ref: VarianteRef ): void {
-    const producto = this.productos().find( p => p.id === ref.productoId );
+  getVariant ( ref: VariantRef ): void {
+    const producto = this.products().find( p => p.id === ref.productoId );
     const variante = producto?.variantes.find( v => v.id === ref.varianteId ) ?? null;
 
-    this.variante.set(variante);
+    this.variant.set(variante);
   }
 
   // Actualizar stock
-  actualizarStock ( value: string ): void {
-    if ( !this.variantePanel() ) return;
-    if ( !this.variante() ) return;
+  updateStock ( value: string ): void {
+    if ( !this.variantPanel() ) return;
+    if ( !this.variant() ) return;
 
-    const productId = this.variantePanel()!.productoId;
-    const variantId = this.variante()!.id;
+    const productId = this.variantPanel()!.productoId;
+    const variantId = this.variant()!.id;
 
-    this.inventarioService.actualizarVariante(
+    this.inventarioService.updateVariant(
       productId.toString(),
       variantId.toString(),
       { stock: Number(value) }
     ).subscribe({
-      next: ( resp ) => this.sincronizarRespuesta(resp)
+      next: ( resp ) => this.syncResponse(resp)
     })
   }
 
   // Archivar / Desarchivar la variante
-  archivarODesarchivarVariante() {
-    if ( !this.variantePanel() ) return;
-    if ( !this.variante() ) return;
+  archiveOrUnarchiveVariant() {
+    if ( !this.variantPanel() ) return;
+    if ( !this.variant() ) return;
 
-    const productId = this.variantePanel()!.productoId;
-    const variantId = this.variante()!.id;
-    const nuevoEstado = this.resolverEstadoArchivar();
+    const productId = this.variantPanel()!.productoId;
+    const variantId = this.variant()!.id;
+    const nuevoEstado = this.resolveArchiveState();
 
-    this.inventarioService.actualizarVariante(
+    this.inventarioService.updateVariant(
       productId.toString(),
       variantId.toString(),
       { estado: nuevoEstado }
     ).subscribe({
-      next: ( resp ) => this.sincronizarRespuesta(resp),
+      next: ( resp ) => this.syncResponse(resp),
     })
   }
 
   // ===================================================== MDALS VER/EDITAR PRODUCTO
 
   // Abrir modal Detalle producto
-  abrirDetalleProducto ( id: number ): void {
-    const producto = this.productos().find(
+  openProductDetail ( id: number ): void {
+    const producto = this.products().find(
       producto => producto.id === id
     );
     if ( !producto ) return; // Si no encuentra producto
 
-    this.limpiarSeleccion();
+    this.clearSelection();
 
     // Params
     this.router.navigate([], {
@@ -376,7 +379,7 @@ export class Products implements OnInit {
   }
 
   // Cerrar modal Detalle producto
-  cerrarDetalleProducto() {
+  closeProductDetail() {
     // Params
     this.router.navigate( [], {
       relativeTo: this.route,
@@ -388,8 +391,8 @@ export class Products implements OnInit {
   // ========================================= ACHIVAR PRODUCTO DESDE PRODUCT DETAIL
 
   // Actualiza el producto en el signal local y mantiene sincronizado el drawer
-  actualizarProductoEnLista ( producto: Producto ): void {
-    this.productos.update( productos =>
+  updateProductInList ( producto: Product ): void {
+    this.products.update( productos =>
       productos.map( p => p.id === producto.id ? producto : p )
     );
   }
@@ -397,7 +400,7 @@ export class Products implements OnInit {
   // ====================================================== PARAMS: EDITAR PRODUCTO
 
   // Sincronizamos la URL con el modo
-  sincronizarModoEdicion ( activo: boolean ): void {
+  syncEditMode ( activo: boolean ): void {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { modo: activo ? 'editar' : null },
@@ -406,11 +409,11 @@ export class Products implements OnInit {
   }
 
   // Abre el drawer directo en modo edición
-  editarProducto ( id: number ): void {
-    const producto = this.productos().find( producto => producto.id === id );
+  editProduct ( id: number ): void {
+    const producto = this.products().find( producto => producto.id === id );
     if ( !producto ) return;
 
-    this.limpiarSeleccion();
+    this.clearSelection();
 
     this.router.navigate([], {
       relativeTo: this.route,

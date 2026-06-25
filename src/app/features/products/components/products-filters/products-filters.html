@@ -5,17 +5,17 @@
   <!-- BTN: Todos -->
   <button
     style="--i: 7;"
-    (click)="seleccionarEstado($event, 'Todas')"
-    [class.b--white]="estadoActivo() === 'Todas'"
+    (click)="selectState($event, 'Todas')"
+    [class.b--white]="activeState() === 'Todas'"
     class="products__filters-btn btn none"
   >
     <fa-icon [icon]="faTableCellsLarge"></fa-icon>
     <span>Todos</span>
     <span class="products__filters-amount">
-      @if ( productos().length > 100) {
+      @if ( products().length > 100) {
         +99
       } @else {
-        {{ productos().length }}
+        {{ products().length }}
       }
     </span>
   </button>
@@ -23,17 +23,17 @@
   <!-- BTN: Disponibles -->
   <button
     style="--i: 6;"
-    (click)="seleccionarEstado($event, 'disponible')"
-    [class.b--white]="estadoActivo() === 'disponible'"
+    (click)="selectState($event, 'disponible')"
+    [class.b--white]="activeState() === 'disponible'"
     class="products__filters-btn btn none"
   >
     <fa-icon [icon]="faCheckCircle"></fa-icon>
     <span>Disponibles</span>
     <span class="products__filters-amount">
-      @if ( conteosPorEstado().disponible! > 100) {
+      @if ( countsByState().disponible! > 100) {
         +99
       } @else {
-        {{ conteosPorEstado().disponible ?? 0 }}
+        {{ countsByState().disponible ?? 0 }}
       }
     </span>
   </button>
@@ -41,17 +41,17 @@
   <!-- BTN: Agotados -->
   <button
     style="--i: 5;"
-    (click)="seleccionarEstado($event, 'agotado')"
-    [class.b--white]="estadoActivo() === 'agotado'"
+    (click)="selectState($event, 'agotado')"
+    [class.b--white]="activeState() === 'agotado'"
     class="products__filters-btn btn none"
   >
     <fa-icon [icon]="faCircleXmark"></fa-icon>
     <span>Agotados</span>
     <span class="products__filters-amount">
-      @if ( conteosPorEstado().agotado! > 100) {
+      @if ( countsByState().agotado! > 100) {
         +99
       } @else {
-        {{ conteosPorEstado().agotado ?? 0 }}
+        {{ countsByState().agotado ?? 0 }}
       }
     </span>
   </button>
@@ -59,17 +59,17 @@
   <!-- BTN: Reservados -->
   <button
     style="--i: 4;"
-    (click)="seleccionarEstado($event, 'reservado')"
-    [class.b--white]="estadoActivo() === 'reservado'"
+    (click)="selectState($event, 'reservado')"
+    [class.b--white]="activeState() === 'reservado'"
     class="products__filters-btn btn none"
   >
     <fa-icon [icon]="faBookmark"></fa-icon>
     <span>Reservados</span>
     <span class="products__filters-amount">
-      @if ( conteosPorEstado().reservado! > 100) {
+      @if ( countsByState().reservado! > 100) {
         +99
       } @else {
-        {{ conteosPorEstado().reservado ?? 0 }}
+        {{ countsByState().reservado ?? 0 }}
       }
     </span>
   </button>
@@ -77,17 +77,17 @@
   <!-- BTN: Proximamente -->
   <button
     style="--i: 3;"
-    (click)="seleccionarEstado($event, 'proximamente')"
-    [class.b--white]="estadoActivo() === 'proximamente'"
+    (click)="selectState($event, 'proximamente')"
+    [class.b--white]="activeState() === 'proximamente'"
     class="products__filters-btn btn none"
   >
     <fa-icon [icon]="faCalendarDays"></fa-icon>
     <span>Proximamente</span>
     <span class="products__filters-amount">
-      @if ( conteosPorEstado().proximamente! > 100) {
+      @if ( countsByState().proximamente! > 100) {
         +99
       } @else {
-        {{ conteosPorEstado().proximamente ?? 0 }}
+        {{ countsByState().proximamente ?? 0 }}
       }
     </span>
   </button>
@@ -95,17 +95,17 @@
   <!-- BTN: Descontinuados -->
   <button
     style="--i: 2;"
-    (click)="seleccionarEstado($event, 'descontinuado')"
-    [class.b--white]="estadoActivo() === 'descontinuado'"
+    (click)="selectState($event, 'descontinuado')"
+    [class.b--white]="activeState() === 'descontinuado'"
     class="products__filters-btn btn none"
   >
     <fa-icon [icon]="faBan"></fa-icon>
     <span>Descontinuados</span>
     <span class="products__filters-amount">
-      @if ( conteosPorEstado().descontinuado! > 100) {
+      @if ( countsByState().descontinuado! > 100) {
         +99
       } @else {
-        {{ conteosPorEstado().descontinuado ?? 0 }}
+        {{ countsByState().descontinuado ?? 0 }}
       }
     </span>
   </button>
@@ -113,17 +113,17 @@
   <!-- BTN: Pausados -->
   <button
     style="--i: 1;"
-    (click)="seleccionarEstado($event, 'pausado')"
-    [class.b--white]="estadoActivo() === 'pausado'"
+    (click)="selectState($event, 'pausado')"
+    [class.b--white]="activeState() === 'pausado'"
     class="products__filters-btn btn none"
   >
     <fa-icon [icon]="faCirclePause"></fa-icon>
     <span>Pausados</span>
     <span class="products__filters-amount">
-      @if ( conteosPorEstado().pausado! > 100) {
+      @if ( countsByState().pausado! > 100) {
         +99
       } @else {
-        {{ conteosPorEstado().pausado ?? 0 }}
+        {{ countsByState().pausado ?? 0 }}
       }
     </span>
   </button>

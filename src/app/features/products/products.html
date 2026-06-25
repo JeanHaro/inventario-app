@@ -7,10 +7,10 @@
     <!-- ================================
       FILTROS
     ================================ -->
-    <app-product-filters
-      [productos]="productos()"
-      [estadoActivo]="estadoSeleccionado()"
-      (estadoCambiado)="estadoPorProducto($event)"
+    <products-filters
+      [products]="products()"
+      [activeState]="selectedState()"
+      (stateChanged)="setSelectedState($event)"
     />
     <!-- END: FILTROS -->
 
@@ -20,20 +20,19 @@
     <div class="products__content">
 
       <!-- HERRAMIENTAS -->
-      <app-products-tools (busqueda)="querySearch.set($event)"/>
+      <products-tools (search)="searchQuery.set($event)"/>
 
       <!-- TABLA -->
-      <app-products-table
-        [productos]="productosPorEstado()"
-        [productosSeleccionados]="productosSeleccionados()"
-
-        [(variantePanel)]="variantePanel"
-        (seleccionToggled)="toggleSeleccion($event)"
-        (todasToggled)="seleccionarTodas()"
-        (kebabProducto)="toggleKebabProducto($event)"
-        (kebabVariante)="obtenerVariante($event)"
-        (seleccionLimpiada)="limpiarSeleccion()"
-        (editarProducto)="editarProducto($event)"
+      <products-table
+        [products]="productsByState()"
+        [selectedProducts]="selectedProducts()"
+        [(variantPanel)]="variantPanel"
+        (selectionToggled)="toggleSelection($event)"
+        (todasToggled)="selectAll()"
+        (productKebab)="toggleProductKebab($event)"
+        (variantKebab)="getVariant($event)"
+        (selectionCleared)="clearSelection()"
+        (editProduct)="editProduct($event)"
       />
 
     </div>
@@ -43,12 +42,12 @@
       KEBAB MENU: Un producto seleccionado
     ================================ -->
     <div
-      [class.active]="totalSeleccionados() === 1"
+      [class.active]="totalSelected() === 1"
       class="products__kebab products__kebab-main"
     >
       <!-- Ver detalles -->
       <button
-        (click)="abrirDetalleProducto(productosParaArchivar()[0].id)"
+        (click)="openProductDetail(productsToArchive()[0].id)"
         class="products__btn products__btn--see btn b--terciary none"
       >
         <fa-icon [icon]="faEye"></fa-icon>
@@ -57,16 +56,16 @@
 
       <!-- Archivar -->
       <button
-        (click)="archivarODesarchivarProductos()"
+        (click)="archiveOrUnarchiveProducts()"
         class="products__btn products__btn--store btn b--terciary none"
       >
-        <fa-icon [icon]="todosArchivados() ? faBoxOpen : faBoxArchive"></fa-icon>
-        <span>{{ todosArchivados() ? 'Desarchivar' : 'Archivar' }}</span>
+        <fa-icon [icon]="allArchived() ? faBoxOpen : faBoxArchive"></fa-icon>
+        <span>{{ allArchived() ? 'Desarchivar' : 'Archivar' }}</span>
       </button>
 
       <!-- Cerrar -->
       <button
-        (click)="limpiarSeleccion()"
+        (click)="clearSelection()"
         class="products__btn products__btn--close btn b--danger none"
       >
         <fa-icon [icon]="faXmark"></fa-icon>
@@ -79,23 +78,23 @@
       KEBAB MENU: Varios productos seleccionados
     ================================ -->
     <div
-      [class.active]="totalSeleccionados() > 1"
+      [class.active]="totalSelected() > 1"
       class="selected__products products__kebab products__kebab-main"
     >
-      <span>{{ totalSeleccionados() }} seleccionados</span>
+      <span>{{ totalSelected() }} seleccionados</span>
 
       <!-- Archivar -->
       <button
-        (click)="archivarODesarchivarProductos()"
+        (click)="archiveOrUnarchiveProducts()"
         class="products__btn products__btn--store btn b--terciary none"
       >
-        <fa-icon [icon]="todosArchivados() ? faBoxOpen : faBoxArchive"></fa-icon>
-        <span>{{ todosArchivados() ? 'Desarchivar' : 'Archivar' }}</span>
+        <fa-icon [icon]="allArchived() ? faBoxOpen : faBoxArchive"></fa-icon>
+        <span>{{ allArchived() ? 'Desarchivar' : 'Archivar' }}</span>
       </button>
 
       <!-- Cerrar -->
       <button
-        (click)="limpiarSeleccion()"
+        (click)="clearSelection()"
         class="products__btn products__btn--close btn b--danger none"
       >
         <fa-icon [icon]="faXmark"></fa-icon>
@@ -108,7 +107,7 @@
       KEBAB MENU: Variante
     ================================ -->
     <div
-      [class.active]="variantePanel()?.tipo === 'kebab'"
+      [class.active]="variantPanel()?.tipo === 'kebab'"
       class="products__kebab products__kebab-variant"
     >
       <!-- Ver detalles -->
@@ -131,10 +130,10 @@
 
       <!-- Archivar -->
       <button
-        (click)="archivarODesarchivarVariante()"
+        (click)="archiveOrUnarchiveVariant()"
         class="products__btn products__btn--store btn b--terciary none"
       >
-        @if ( varianteEstaArchivada() ) {
+        @if ( variantIsArchived() ) {
           <fa-icon [icon]="faBoxOpen"></fa-icon>
           <span>Desarchivar</span>
         } @else {
@@ -145,7 +144,7 @@
 
       <!-- Cerrar -->
       <button
-        (click)="variantePanel.set(null)"
+        (click)="variantPanel.set(null)"
         class="products__btn products__btn--close btn b--danger none"
       >
         <fa-icon [icon]="faXmark"></fa-icon>
@@ -158,7 +157,7 @@
       STOCK: Actualizar variante
     ================================ -->
     <div
-      [class.active]="variantePanel()?.tipo === 'stock'"
+      [class.active]="variantPanel()?.tipo === 'stock'"
       class="products__stock-update"
     >
       <!-- Input de stock -->
@@ -170,14 +169,14 @@
           id="stock_product"
           min="0"
           placeholder="0"
-          [value]="variante()?.stock ?? 0"
+          [value]="variant()?.stock ?? 0"
           #stockValue
         >
       </div>
 
       <!-- Guardar -->
       <button
-        (click)="actualizarStock(stockValue.value)"
+        (click)="updateStock(stockValue.value)"
         class="products__btn btn b--terciary none"
       >
         <fa-icon [icon]="faFloppyDisk"></fa-icon>
@@ -186,7 +185,7 @@
 
       <!-- Cerrar -->
       <button
-        (click)="variantePanel.set(null)"
+        (click)="variantPanel.set(null)"
         class="products__btn products__btn--close btn b--danger none"
       >
         <fa-icon [icon]="faXmark"></fa-icon>
@@ -203,25 +202,25 @@
   DRAWER - OVERLAY
 ================================ -->
 <div
-  (click)="cerrarDetalleProducto()"
+  (click)="closeProductDetail()"
   class="drawers__overlay"
-  [class.active]="productoSeleccionado() !== null"
+  [class.active]="selectedProduct() !== null"
 ></div>
 
 <!-- ================================
   DRAWER: PRODUCT DETAIL
 ================================ -->
 <div
-  [class.active]="productoSeleccionado() !== null"
+  [class.active]="selectedProduct() !== null"
   class="drawers drawers--product-detail"
 >
-  @if ( productoSeleccionado() !== null ) {
-    <app-product-detail
-      [producto]="productoSeleccionado()!"
-      [iniciarEnEdicion]="modoInicial()"
-      (cerrarModal)="cerrarDetalleProducto()"
-      (productoActualizado)="actualizarProductoEnLista($event)"
-      (modoEdicionCambiado)="sincronizarModoEdicion($event)"
+  @if ( selectedProduct() !== null ) {
+    <product-detail
+      [product]="selectedProduct()!"
+      [startInEditMode]="startInEditMode()"
+      (closeModal)="closeProductDetail()"
+      (productUpdated)="updateProductInList($event)"
+      (editModeChanged)="syncEditMode($event)"
     />
   }
 </div>

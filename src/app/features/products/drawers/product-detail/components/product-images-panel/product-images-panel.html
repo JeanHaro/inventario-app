@@ -4,11 +4,11 @@
 <div class="product-detail__panel product-detail__panel--images">
   <!-- Botón para subir imágenes -->
   <button
-    (click)="abrirSelector()"
-    [disabled]="subiendo()"
+    (click)="openFileSelector()"
+    [disabled]="uploading()"
     class="product-detail__images-upload-btn none btn b--primary"
   >
-    @if ( subiendo() ) {
+    @if ( uploading() ) {
       <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
       <span>Subiendo...</span>
     } @else {
@@ -46,12 +46,12 @@
 
         <!-- Eliminar -->
         <button
-          (click)="eliminarImagen(imagen)"
-          [disabled]="eliminando() === imagen"
+          (click)="deleteImage(imagen)"
+          [disabled]="deleting() === imagen"
           aria-label="Eliminar imagen"
           class="product-detail__image-delete none btn"
         >
-          @if ( eliminando() === imagen ) {
+          @if ( deleting() === imagen ) {
             <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
           } @else {
             <fa-icon [icon]="faTrash"></fa-icon>

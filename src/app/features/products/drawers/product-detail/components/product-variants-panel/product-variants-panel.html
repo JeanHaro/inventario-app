@@ -12,10 +12,10 @@
         <span>Filtrar por:</span>
       </div>
 
-      <app-select
-        [options]="filtroOptions"
+      <shared-select
+        [options]="filterOptions"
         [value]="filterState()"
-        (valueChange)="seleccionarFiltro($event)"
+        (valueChange)="selectFilter($event)"
         width="15rem"
       />
     </div>
@@ -28,10 +28,10 @@
         <span>Ordenar por</span>
       </div>
 
-      <app-select
-        [options]="ordenOptions"
+      <shared-select
+        [options]="sortOptions"
         [value]="sortField()"
-        (valueChange)="seleccionarOrdenamiento($event)"
+        (valueChange)="selectSort($event)"
       />
     </div>
     <!-- END: Ordenar por -->
@@ -51,7 +51,7 @@
 
   <!-- Lista de variantes -->
   <div class="product-detail__variants">
-    @for ( variante of variantesOrdenadas(); track variante.id ) {
+    @for ( variante of sortedVariants(); track variante.id ) {
       <div class="product-detail__variant">
 
         <!-- Imagen -->
@@ -69,7 +69,7 @@
         <!-- Nombre y SKU -->
         <div class="product-detail__variant-information">
           <span class="product-detail__variant-name">
-            {{ producto().nombre }} {{ variante.nombre ?? '' }}
+            {{ product().nombre }} {{ variante.nombre ?? '' }}
           </span>
           <span class="product-detail__variant-sku">
             {{ variante.sku ?? 'sin-sku' }}

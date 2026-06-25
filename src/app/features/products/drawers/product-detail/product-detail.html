@@ -11,7 +11,7 @@
     <!-- Cerrar -->
     <button
       type="button"
-      (click)="this.cerrarModal.emit()"
+      (click)="this.closeModal.emit()"
       class="product-detail__close none btn b--hidden"
     >
       <fa-icon [icon]="faArrowRightFromBracket"></fa-icon>
@@ -21,11 +21,11 @@
     <!-- Herramientas: Editar y más opciones -->
     <div class="product-detail__tools">
 
-      @if ( !modoEdicion() ) {
+      @if ( !editMode() ) {
         <!-- Editar -->
         <button
           type="button"
-          (click)="activarEdicion()"
+          (click)="startEditing()"
           class="product-detail__edit none btn b--hidden"
         >
           <fa-icon [icon]="faPenToSquare"></fa-icon>
@@ -46,7 +46,7 @@
         <button
           type="submit"
           form="productEditForm"
-          [disabled]="guardando()"
+          [disabled]="saving()"
           class="product-detail__btn product-detail__btn-1 none btn b--primary"
         >
           <fa-icon [icon]="faFloppyDisk"></fa-icon>
@@ -56,8 +56,8 @@
         <!-- Cancelar -->
         <button
           type="button"
-          (click)="cancelarEdicion()"
-          [disabled]="guardando()"
+          (click)="cancelEditing()"
+          [disabled]="saving()"
           class="product-detail__btn product-detail__btn-2 none btn b--gray"
         >
           <fa-icon [icon]="faClose"></fa-icon>
@@ -83,11 +83,11 @@
       <!-- Archivar -->
       <button
         type="button"
-        (click)="toggleArchivoProducto()"
+        (click)="toggleProductArchive()"
         class="none btn b--white-primary"
       >
-        <fa-icon [icon]="productoArchivado() ? faBoxOpen : faBoxArchive"></fa-icon>
-        <span>{{ productoArchivado() ? 'Desarchivar' : 'Archivar' }}</span>
+        <fa-icon [icon]="productIsArchived() ? faBoxOpen : faBoxArchive"></fa-icon>
+        <span>{{ productIsArchived() ? 'Desarchivar' : 'Archivar' }}</span>
       </button>
 
     </div>
@@ -103,13 +103,13 @@
 
     <form
       id="productEditForm"
-      [class.edicion]="modoEdicion()"
-      [class.is-saving]="guardando()"
-      (ngSubmit)="guardarEdicion()"
+      [class.edicion]="editMode()"
+      [class.is-saving]="saving()"
+      (ngSubmit)="saveEditing()"
       novalidate
     >
       <!-- Overlay de carga -->
-      @if ( guardando() ) {
+      @if ( saving() ) {
         <div class="product-detail__form-overlay">
           <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
           <span>Guardando, espere por favor...</span>
@@ -117,7 +117,7 @@
       }
 
       <!-- Nombre del producto -->
-      @if ( modoEdicion() ) {
+      @if ( editMode() ) {
         <div class="product-detail__field-wrapper">
           <input
             [formField]="editForm.nombre"
@@ -135,7 +135,7 @@
           }
         </div>
       } @else {
-        <h2>{{ producto().nombre }}</h2>
+        <h2>{{ product().nombre }}</h2>
       }
 
       <!-- Campos principales -->
@@ -148,15 +148,15 @@
 
           <div class="product-detail__state-value">
             <!-- Estado -->
-            @if ( !modoEdicion() ) {
-              <span [class]="`badge badge--${producto().estado}`">
-                {{ producto().estado }}
+            @if ( !editMode() ) {
+              <span [class]="`badge badge--${product().estado}`">
+                {{ product().estado }}
               </span>
             } @else {
-              <app-select
-                [options]="estadoOptions"
+              <shared-select
+                [options]="stateOptions"
                 [value]="editModel().estado"
-                (valueChange)="actualizarEstado($event)"
+                (valueChange)="updateState($event)"
               />
             }
 
@@ -170,15 +170,15 @@
           </div>
 
           <div class="product-detail__category-value">
-            @if ( !modoEdicion() ) {
-              <span [class]="`badge badge--${producto().categoria}`">
-                {{ producto().categoria }}
+            @if ( !editMode() ) {
+              <span [class]="`badge badge--${product().categoria}`">
+                {{ product().categoria }}
               </span>
             } @else {
-              <app-select
-                [options]="categoriaOptions"
+              <shared-select
+                [options]="categoryOptions"
                 [value]="editModel().categoria"
-                (valueChange)="actualizarCategoria($event)"
+                (valueChange)="updateCategory($event)"
               />
             }
           </div>
@@ -190,8 +190,8 @@
             <span>Marca</span>
           </div>
 
-          @if ( !modoEdicion() ) {
-            <span>{{ producto().marca }}</span>
+          @if ( !editMode() ) {
+            <span>{{ product().marca }}</span>
           } @else {
             <div class="product-detail__field-wrapper">
               <input
@@ -219,8 +219,8 @@
             <span>Modelo</span>
           </div>
 
-          @if ( !modoEdicion() ) {
-            <span>{{ producto().modelo ?? 'No tiene' }}</span>
+          @if ( !editMode() ) {
+            <span>{{ product().modelo ?? 'No tiene' }}</span>
           } @else {
             <input
               [formField]="editForm.modelo"
@@ -236,8 +236,8 @@
             <span>Precio</span>
           </div>
 
-          @if ( !modoEdicion() ) {
-            <span>{{ producto().precio | compactNumber: 'precio' }}</span>
+          @if ( !editMode() ) {
+            <span>{{ product().precio | compactNumber: 'precio' }}</span>
           } @else {
             <div class="product-detail__field-wrapper">
               <input
@@ -264,8 +264,8 @@
             <span>Descuento</span>
           </div>
 
-          @if ( !modoEdicion() ) {
-            <span>{{ ( producto().descuento ?? 0 ) / 100 | percent: '1.0-1' }}</span>
+          @if ( !editMode() ) {
+            <span>{{ ( product().descuento ?? 0 ) / 100 | percent: '1.0-1' }}</span>
           } @else {
             <div class="product-detail__field-wrapper">
               <input
@@ -293,9 +293,9 @@
           <span>Etiquetas</span>
         </div>
 
-        @if ( !modoEdicion() ) {
+        @if ( !editMode() ) {
           <div class="product-detail__tags-value">
-            @for ( tag of tagsVisibles(); track tag ) {
+            @for ( tag of visibleTags(); track tag ) {
               <span [class]="`badge badge--tag badge--tag-${getTagColor(tag)}`">
                 {{ tag }}
               </span>
@@ -303,13 +303,13 @@
               <span>No tiene</span>
             }
 
-            @if ( tagsRestantes() > 0 ) {
+            @if ( remainingTags() > 0 ) {
               <button
                 type="button"
                 (click)="showAllTags.set(!showAllTags())"
                 class="badge badge--more"
               >
-                +{{ tagsRestantes() }}
+                +{{ remainingTags() }}
               </button>
             }
 
@@ -343,7 +343,7 @@
             <span>Creado el</span>
           </div>
 
-          <span>{{ producto().creadoEn | date: 'dd/MM/yy, HH:mm a' }}</span>
+          <span>{{ product().creadoEn | date: 'dd/MM/yy, HH:mm a' }}</span>
         </div>
 
         <!-- Actualizado el -->
@@ -352,7 +352,7 @@
             <span>Actualizado el</span>
           </div>
 
-          <span>{{ producto().actualizadoEn | date: 'dd/MM/yy, HH:mm a' }}</span>
+          <span>{{ product().actualizadoEn | date: 'dd/MM/yy, HH:mm a' }}</span>
         </div>
 
       </div>
@@ -364,8 +364,8 @@
           <span>Descripción</span>
         </div>
 
-        @if ( !modoEdicion() ) {
-          <span>{{ producto().descripcion }}</span>
+        @if ( !editMode() ) {
+          <span>{{ product().descripcion }}</span>
         } @else {
           <textarea
             [formField]="editForm.descripcion"
@@ -377,7 +377,7 @@
 
     <div
       class="product-detail__tabs-section"
-      [class.is-editing]="modoEdicion()"
+      [class.is-editing]="editMode()"
     >
       <!-- ================================
         TABS: Variantes / Imágenes
@@ -417,8 +417,8 @@
           VISTA: Variantes
         ================================ -->
         @if ( activeTab() === 'variantes' ) {
-          <app-product-variants-panel
-            [producto]="producto()"
+          <product-variants-panel
+            [product]="product()"
           />
         }
         <!-- END: VISTA: Variantes -->
@@ -427,10 +427,10 @@
           VISTA: Imágenes
         ================================ -->
         @if ( activeTab() === 'imagenes' ) {
-          <app-product-images-panel
-            [images]="producto().imagenes ?? []"
-            [productoId]="producto().id"
-            (productoActualizado)="productoActualizado.emit($event)"
+          <product-images-panel
+            [images]="product().imagenes ?? []"
+            [productId]="product().id"
+            (productUpdated)="productUpdated.emit($event)"
           />
         }
         <!-- END: VISTA: Imágenes -->

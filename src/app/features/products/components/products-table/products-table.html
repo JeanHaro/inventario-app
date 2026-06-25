@@ -13,14 +13,14 @@
       <input
         type="checkbox"
         id="check_products"
-        [checked]="checkboxEstado() === 'todos'"
-        [indeterminate]="checkboxEstado() === 'parcial'"
-        (click)="seleccionarTodas()"
+        [checked]="checkboxState() === 'todos'"
+        [indeterminate]="checkboxState() === 'parcial'"
+        (click)="selectAll()"
       >
       <label for="check_products">
-        @if ( checkboxEstado() === 'parcial' ) {
+        @if ( checkboxState() === 'parcial' ) {
           <fa-icon [icon]="faMinus"></fa-icon>
-        } @else if ( checkboxEstado() === 'todos' ) {
+        } @else if ( checkboxState() === 'todos' ) {
           <fa-icon [icon]="faCheck"></fa-icon>
         }
       </label>
@@ -32,11 +32,11 @@
       [class.is-sorted]="sortState().field === 'nombre'"
     >
       <button
-        (click)="cambiarOrden('nombre')"
+        (click)="changeSort('nombre')"
         class="products__sort-btn none btn b--hidden"
       >
         <span>Nombre</span>
-        <fa-icon [icon]="iconOrden('nombre')"></fa-icon>
+        <fa-icon [icon]="sortIcon('nombre')"></fa-icon>
       </button>
     </div>
 
@@ -46,11 +46,11 @@
       [class.is-sorted]="sortState().field === 'marca'"
     >
       <button
-        (click)="cambiarOrden('marca')"
+        (click)="changeSort('marca')"
         class="products__sort-btn none btn b--hidden"
       >
         <span>Marca / Modelo</span>
-        <fa-icon [icon]="iconOrden('marca')"></fa-icon>
+        <fa-icon [icon]="sortIcon('marca')"></fa-icon>
       </button>
     </div>
 
@@ -60,11 +60,11 @@
       [class.is-sorted]="sortState().field === 'precio'"
     >
       <button
-        (click)="cambiarOrden('precio')"
+        (click)="changeSort('precio')"
         class="products__sort-btn none btn b--hidden"
       >
         <span>Precio base</span>
-        <fa-icon [icon]="iconOrden('precio')"></fa-icon>
+        <fa-icon [icon]="sortIcon('precio')"></fa-icon>
       </button>
     </div>
 
@@ -74,10 +74,10 @@
       [class.is-sorted]="sortState().field === 'descuento'"
     >
       <button
-        (click)="cambiarOrden('descuento')"
+        (click)="changeSort('descuento')"
         class="products__sort-btn none btn b--hidden">
         <span>Descuento</span>
-        <fa-icon [icon]="iconOrden('descuento')"></fa-icon>
+        <fa-icon [icon]="sortIcon('descuento')"></fa-icon>
       </button>
     </div>
 
@@ -87,11 +87,11 @@
       [class.is-sorted]="sortState().field === 'categoria'"
     >
       <button
-        (click)="cambiarOrden('categoria')"
+        (click)="changeSort('categoria')"
         class="products__sort-btn none btn b--hidden"
       >
         <span>Categoría</span>
-        <fa-icon [icon]="iconOrden('categoria')"></fa-icon>
+        <fa-icon [icon]="sortIcon('categoria')"></fa-icon>
       </button>
     </div>
 
@@ -101,11 +101,11 @@
       [class.is-sorted]="sortState().field === 'estado'"
     >
       <button
-        (click)="cambiarOrden('estado')"
+        (click)="changeSort('estado')"
         class="products__sort-btn none btn b--hidden"
       >
         <span>Estado</span>
-        <fa-icon [icon]="iconOrden('estado')"></fa-icon>
+        <fa-icon [icon]="sortIcon('estado')"></fa-icon>
       </button>
     </div>
 
@@ -115,11 +115,11 @@
       [class.is-sorted]="sortState().field === 'variantes'"
     >
       <button
-        (click)="cambiarOrden('variantes')"
+        (click)="changeSort('variantes')"
         class="products__sort-btn none btn b--hidden"
       >
         <span># Variantes</span>
-        <fa-icon [icon]="iconOrden('variantes')"></fa-icon>
+        <fa-icon [icon]="sortIcon('variantes')"></fa-icon>
       </button>
     </div>
 
@@ -136,10 +136,10 @@
   ================================ -->
   <div class="products__table-body">
 
-    @for ( producto of productosOrdenados(); track producto.id ) {
+    @for ( producto of sortedProducts(); track producto.id ) {
 
       <!-- PRODUCTO -->
-      <div class="products__body-main" [class.active]="estaSeleccionado(producto.id)">
+      <div class="products__body-main" [class.active]="isSelected(producto.id)">
 
         <!-- FILA DEL PRODUCTO -->
         <div class="products__body-content">
@@ -149,8 +149,8 @@
             <input
               type="checkbox"
               [id]="`check_product-${producto.id}`"
-              [checked]="estaSeleccionado(producto.id)"
-              (change)="toggleSeleccion(producto.id)"
+              [checked]="isSelected(producto.id)"
+              (change)="toggleSelection(producto.id)"
             >
             <label [for]="`check_product-${producto.id}`">
               <fa-icon [icon]="faCheck"></fa-icon>
@@ -207,7 +207,7 @@
 
             <!-- Editar producto -->
             <button
-              (click)="editarProducto.emit(producto.id)"
+              (click)="editProduct.emit(producto.id)"
               class="products__action-btn products__action-btn--edit btn b--hidden none"
             >
               <fa-icon [icon]="faPenToSquare"></fa-icon>
@@ -222,8 +222,8 @@
 
             <!-- Mostrar / ocultar variantes -->
             <button
-              [class.is-collapsed]="productoExpandido() === producto.id"
-              (click)="toggleVariantes(producto.id)"
+              [class.is-collapsed]="expandedProduct() === producto.id"
+              (click)="toggleVariants(producto.id)"
               class="products__action-btn products__action-btn--dropdown btn b--hidden none"
             >
               <fa-icon class="icon-dropdown" [icon]="faChevronDown"></fa-icon>
@@ -232,8 +232,8 @@
 
             <!-- Más opciones del producto -->
             <button
-              [class.active]="estaSeleccionado(producto.id)"
-              (click)="toggleKebabProducto(producto.id)"
+              [class.active]="isSelected(producto.id)"
+              (click)="toggleProductKebab(producto.id)"
               class="products__action-btn products__action-btn--kebab btn b--hidden none"
             >
               <fa-icon [icon]="faEllipsisVertical"></fa-icon>
@@ -247,7 +247,7 @@
 
         <!-- VARIANTES ( is-collapsed = ocultas ) -->
         <div
-          [class.is-collapsed]="productoExpandido() !== producto.id"
+          [class.is-collapsed]="expandedProduct() !== producto.id"
           class="products__body-variants"
         >
 
@@ -306,8 +306,8 @@
 
                 <!-- Actualizar stock -->
                 <button
-                  [class.active]="variantePanel()?.tipo === 'stock' && variantePanel()?.id === variante.id"
-                  (click)="abrirStockVariante(variante.id, producto.id)"
+                  [class.active]="variantPanel()?.tipo === 'stock' && variantPanel()?.id === variante.id"
+                  (click)="openVariantStock(variante.id, producto.id)"
                   class="products__action-btn products__action-btn--stock btn b--hidden none"
                 >
                   <fa-icon [icon]="faBoxesStacked"></fa-icon>
@@ -316,8 +316,8 @@
 
                 <!-- Más opciones de variante -->
                 <button
-                  [class.active]="variantePanel()?.tipo === 'kebab' && variantePanel()?.id === variante.id"
-                  (click)="toggleKebabVariante(variante.id, producto.id)"
+                  [class.active]="variantPanel()?.tipo === 'kebab' && variantPanel()?.id === variante.id"
+                  (click)="toggleVariantKebab(variante.id, producto.id)"
                   class="products__action-btn products__action-btn--kebab btn b--hidden none"
                 >
                   <fa-icon [icon]="faEllipsisVertical"></fa-icon>

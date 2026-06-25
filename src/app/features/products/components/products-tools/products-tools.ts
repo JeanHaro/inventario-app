@@ -8,21 +8,21 @@ import {
 
 
 @Component({
-  selector: 'app-products-tools',
+  selector: 'products-tools',
   standalone: false,
   templateUrl: './products-tools.html',
   styleUrl: './products-tools.scss',
 })
 export class ProductsTools {
-  // Iconos
+  // TODO: ICONO
   readonly faPlus: IconDefinition = faPlus;
 
-  // TODO: PROPIEDADES
+  // TODO: OUTPUT
   // output
-  readonly busqueda = output<string>();
+  readonly search = output<string>();
 
-  // TODO: MÉTODOS
+  // TODO: MÉTODOS PÚBLICOS
   searchProduct ( value: string ) {
-    this.busqueda.emit(value);
+    this.search.emit(value);
   }
 }

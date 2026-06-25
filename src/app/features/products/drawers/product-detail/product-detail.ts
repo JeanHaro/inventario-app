@@ -36,16 +36,16 @@ import { InventarioService } from '../../services/inventario';
 
 // Interfaces
 import {
-  Categoria,
-  EstadoProducto,
-  Producto,
+  Category,
+  ProductState,
+  Product,
 } from '../../models/products.model';
 import { SelectOption } from '../../../../shared/components/select/models/select.model';
 
 type Tabs = 'variantes' | 'imagenes';
 
 @Component({
-  selector: 'app-product-detail',
+  selector: 'product-detail',
   standalone: false,
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.scss',
@@ -69,14 +69,14 @@ export class ProductDetail implements OnInit {
   readonly faClose: IconDefinition = faClose;
 
   // TODO: INPUT Y OUTPUT
-  readonly producto = input.required<Producto>();
-  readonly iniciarEnEdicion = input<boolean>(false); // PARAMS: EDITAR PRODUCTO
-  readonly modoEdicionCambiado = output<boolean>(); // PARAMS: EDITAR PRODUCTO
-  readonly cerrarModal = output<void>();
-  readonly productoActualizado = output<Producto>(); // Avisamos que el producto se actualizo
+  readonly product = input.required<Product>();
+  readonly startInEditMode = input<boolean>(false); // PARAMS: EDITAR PRODUCTO
+  readonly editModeChanged = output<boolean>(); // PARAMS: EDITAR PRODUCTO
+  readonly closeModal = output<void>();
+  readonly productUpdated = output<Product>(); // Avisamos que el producto se actualizo
 
   // TODO: PROPIEDADES
-  readonly estadoOptions: SelectOption[] = [
+  readonly stateOptions: SelectOption[] = [
     {
       value: 'disponible',
       label: 'Disponible',
@@ -104,7 +104,7 @@ export class ProductDetail implements OnInit {
     },
   ];
 
-  readonly categoriaOptions: SelectOption[] = [
+  readonly categoryOptions: SelectOption[] = [
     {
       value: 'tecnologia',
       label: 'Tecnología',
@@ -195,8 +195,8 @@ export class ProductDetail implements OnInit {
 
   // ========================================================= EDICIÓN
 
-  modoEdicion = signal<boolean>(false); // ======= Modo edición para el formulario
-  guardando = signal<boolean>(false);
+  editMode = signal<boolean>(false); // ======= Modo edición para el formulario
+  saving = signal<boolean>(false);
 
   // Se llena al activar edición
   editModel = signal({
@@ -205,8 +205,8 @@ export class ProductDetail implements OnInit {
     modelo: '',
     precio: 0,
     descuento: 0,
-    categoria: '' as Categoria,
-    estado: '' as EstadoProducto,
+    categoria: '' as Category,
+    estado: '' as ProductState,
     descripcion: ''
   });
 
@@ -225,8 +225,8 @@ export class ProductDetail implements OnInit {
   // ================================================== TAGS DE LOS PRODUCTOS
 
   // Tags que se muestran
-  readonly tagsVisibles = computed<string[]>(() => {
-    const etiquetas = this.producto().etiquetas ?? [];
+  readonly visibleTags = computed<string[]>(() => {
+    const etiquetas = this.product().etiquetas ?? [];
 
     if ( this.showAllTags() ) return etiquetas; // Todos
 
@@ -234,8 +234,8 @@ export class ProductDetail implements OnInit {
   })
 
   // Cantidad de tags que quedan ocultos
-  readonly tagsRestantes = computed<number>(() => {
-    const etiquetas = this.producto().etiquetas ?? [];
+  readonly remainingTags = computed<number>(() => {
+    const etiquetas = this.product().etiquetas ?? [];
 
     if ( this.showAllTags() ) return 0; // Ya no hay restantes
 
@@ -245,8 +245,8 @@ export class ProductDetail implements OnInit {
   // ========================================================== ARCHIVAR
 
   // Verificamos que el producto esta archivado
-  readonly productoArchivado = computed<boolean>(() =>
-    this.producto().estado === 'descontinuado'
+  readonly productIsArchived = computed<boolean>(() =>
+    this.product().estado === 'descontinuado'
   );
 
   // TODO: HOSTLISTENER
@@ -269,7 +269,7 @@ export class ProductDetail implements OnInit {
 
   // Actualiza maxTag según el ancho de la pantalla
   @HostListener('window:resize')
-  actualizarMaxTags(): void {
+  updateMaxTags(): void {
     const width = window.innerWidth;
 
     if ( width >= 1024 ) this.maxTags.set(4);
@@ -279,11 +279,11 @@ export class ProductDetail implements OnInit {
 
   // TODO: HOOKS
   ngOnInit(): void {
-    this.actualizarMaxTags();
+    this.updateMaxTags();
 
     // PARAMS: EDITAR PRODUCTO
-    if ( this.iniciarEnEdicion() ) {
-      this.activarEdicion(); // Abre directo en modo edición
+    if ( this.startInEditMode() ) {
+      this.startEditing(); // Abre directo en modo edición
     }
   }
 
@@ -291,8 +291,8 @@ export class ProductDetail implements OnInit {
   // ========================================================== ARCHIVAR
 
   // Decide a que estado pasar al desarchivar, segun el stock real de las variantes
-  private resolverEstadoDesarchivar(): EstadoProducto {
-    const tieneStock = this.producto().variantes.some( v => v.stock > 0 );
+  private resolveUnarchiveState(): ProductState {
+    const tieneStock = this.product().variantes.some( v => v.stock > 0 );
     return tieneStock ? 'disponible' : 'agotado';
   }
 
@@ -319,17 +319,17 @@ export class ProductDetail implements OnInit {
   // ========================================================== ARCHIVAR
 
   // Archivar / Desarchivar el producto
-  toggleArchivoProducto(): void {
-    const nuevoEstado: EstadoProducto = this.productoArchivado()
-                  ? this.resolverEstadoDesarchivar()
+  toggleProductArchive(): void {
+    const nuevoEstado: ProductState = this.productIsArchived()
+                  ? this.resolveUnarchiveState()
                   : 'descontinuado';
 
-    this.inventarioService.actualizarProducto(
-      this.producto().id.toString(),
+    this.inventarioService.updateProduct(
+      this.product().id.toString(),
       { estado: nuevoEstado }
     ).subscribe({
       next: (resp) => {
-        this.productoActualizado.emit(resp); // avisamos al padre
+        this.productUpdated.emit(resp); // avisamos al padre
         this.showOptionsMenu.set(false); // Cerramos el menu
       }
     });
@@ -338,8 +338,8 @@ export class ProductDetail implements OnInit {
   // ========================================================= EDICIÓN
 
   // Activar modo edición, carga los valores actuales del producto
-  activarEdicion(): void {
-    const p = this.producto();
+  startEditing(): void {
+    const p = this.product();
 
     this.editModel.set({
       nombre: p.nombre,
@@ -355,21 +355,21 @@ export class ProductDetail implements OnInit {
     this.tagsInput.set( ( p.etiquetas ?? [] ).join(', ') );
 
     this.showOptionsMenu.set(false);
-    this.modoEdicion.set(true);
-    this.modoEdicionCambiado.emit(true);
+    this.editMode.set(true);
+    this.editModeChanged.emit(true);
   }
 
   // Cancelar - descarta los cambios
-  cancelarEdicion(): void {
-    this.modoEdicion.set(false);
-    this.modoEdicionCambiado.emit(false);
+  cancelEditing(): void {
+    this.editMode.set(false);
+    this.editModeChanged.emit(false);
   }
 
   // Guardar - envía los cambios a la API
-  guardarEdicion(): void {
+  saveEditing(): void {
     if ( !this.editForm().valid() ) return;
 
-    this.guardando.set(true); // actuvamos el loader
+    this.saving.set(true); // actuvamos el loader
 
     const valores = this.editModel();
 
@@ -377,28 +377,28 @@ export class ProductDetail implements OnInit {
       tag => tag.length > 0
     );
 
-    this.inventarioService.actualizarProducto(
-      this.producto().id.toString(),
+    this.inventarioService.updateProduct(
+      this.product().id.toString(),
       { ...valores, etiquetas }
     ).subscribe({
       next: ( resp ) => {
-        this.productoActualizado.emit(resp);
-        this.modoEdicion.set(false);
-        this.modoEdicionCambiado.emit(false);
-        this.guardando.set(false); // desactivamos loader cuando llega respuesta
+        this.productUpdated.emit(resp);
+        this.editMode.set(false);
+        this.editModeChanged.emit(false);
+        this.saving.set(false); // desactivamos loader cuando llega respuesta
       },
       error: () => {
-        this.guardando.set(false); // desactivamos loader cuando hay error
+        this.saving.set(false); // desactivamos loader cuando hay error
       }
     })
   }
 
   // ========================================================== SELECTS
-  actualizarEstado ( valor: string ): void {
-    this.editModel.update( m => ({ ...m, estado: valor as EstadoProducto }) );
+  updateState ( valor: string ): void {
+    this.editModel.update( m => ({ ...m, estado: valor as ProductState }) );
   }
 
-  actualizarCategoria ( valor: string ): void {
-    this.editModel.update( m => ({ ...m, categoria: valor as Categoria }) );
+  updateCategory ( valor: string ): void {
+    this.editModel.update( m => ({ ...m, categoria: valor as Category }) );
   }
 }

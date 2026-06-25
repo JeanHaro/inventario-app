@@ -13,9 +13,9 @@ import {
 
 // Interfaces
 import {
-  Producto,
-  Variante,
-  EstadoVariante
+  Product,
+  Variant,
+  VariantState
 } from '../../../../models/products.model';
 import { SelectOption } from './../../../../../../shared/components/select/models/select.model';
 
@@ -23,7 +23,7 @@ type Fields = 'nombre' | 'stock' | 'precioAdicional' | 'estado';
 
 
 @Component({
-  selector: 'app-product-variants-panel',
+  selector: 'product-variants-panel',
   standalone: false,
   templateUrl: './product-variants-panel.html',
   styleUrl: './product-variants-panel.scss',
@@ -37,11 +37,11 @@ export class ProductVariantsPanel {
   readonly faEye: IconDefinition = faEye;
 
   // TODO: INPUT, recibe el nombre completo
-  readonly producto = input.required<Producto>();
+  readonly product = input.required<Product>();
 
   // TODO: PROPIEDADES
   // Opciones de los selects
-  readonly filtroOptions: SelectOption[] = [
+  readonly filterOptions: SelectOption[] = [
     {
       value: 'todos',
       label: 'Todos'
@@ -67,7 +67,7 @@ export class ProductVariantsPanel {
     },
   ];
 
-  readonly ordenOptions: SelectOption[] = [
+  readonly sortOptions: SelectOption[] = [
     {
       value: 'defecto',
       label: 'Defecto'
@@ -91,17 +91,17 @@ export class ProductVariantsPanel {
   ];
 
   // TODO: SIGNALS
-  filterState = signal<EstadoVariante | 'todos'>('todos');
+  filterState = signal<VariantState | 'todos'>('todos');
   sortField   = signal<Fields | 'defecto'>('defecto');
 
   // TODO: COMPUTED
   // ================================================== CAMBIAR ESTADO POR FILTRO
 
   // Filtrar variantes por estado
-  readonly variantesPorEstado = computed<Variante[]>(() => {
-    if ( this.filterState() === 'todos' ) return this.producto().variantes;
+  readonly variantsByState = computed<Variant[]>(() => {
+    if ( this.filterState() === 'todos' ) return this.product().variantes;
 
-    return this.producto().variantes.filter(
+    return this.product().variantes.filter(
       variante => variante.estado === this.filterState()
     );
   });
@@ -109,8 +109,8 @@ export class ProductVariantsPanel {
   // ========================================================== ORDENAMIENTO
 
   // Ordenar las variantes ya filtradas
-  readonly variantesOrdenadas = computed<Variante[]>(() => {
-    const lista = [ ...this.variantesPorEstado() ];
+  readonly sortedVariants = computed<Variant[]>(() => {
+    const lista = [ ...this.variantsByState() ];
     const field = this.sortField() as Fields;
 
     if ( this.sortField() === 'defecto' ) return lista;
@@ -130,12 +130,12 @@ export class ProductVariantsPanel {
   // TODO: MÉTODOS PÚBLICOS
   // ================================================== CAMBIAR ESTADO POR FILTRO
 
-  seleccionarFiltro ( valor: string ): void {
-    this.filterState.set( valor as EstadoVariante | 'todos' );
+  selectFilter ( valor: string ): void {
+    this.filterState.set( valor as VariantState | 'todos' );
   }
   // ========================================================== ORDENAMIENTO
 
-  seleccionarOrdenamiento ( valor: string ): void {
+  selectSort ( valor: string ): void {
     this.sortField.set( valor as Fields );
   }
 }

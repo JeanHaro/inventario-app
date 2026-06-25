@@ -5,7 +5,7 @@ import { InventarioService } from '../products/services/inventario';
 import { ReportService } from './services/report';
 
 // Modelos
-import { CATEGORIAS_LIST, Producto } from '../products/models/products.model';
+import { CATEGORY_LIST, Product } from '../products/models/products.model';
 import { InventoryReport, InventoryStats } from './models/report.model';
 
 @Component({
@@ -25,10 +25,10 @@ export class Reports implements OnInit {
   // Propiedades
   // ==========================
 
-  allProducts: Producto[] = [];
+  allProducts: Product[] = [];
   categorias: string[] = [
     'Todas',
-    ...CATEGORIAS_LIST
+    ...CATEGORY_LIST
   ];
 
   categoriaSeleccionada = signal<string>('Todas');
@@ -40,7 +40,7 @@ export class Reports implements OnInit {
   // Ciclo de vida
   // ==========================
   ngOnInit(): void {
-    this.inventarioService.obtenerProductos().subscribe({
+    this.inventarioService.getProducts().subscribe({
       next: ( resp ) => this.allProducts = resp
     });
 

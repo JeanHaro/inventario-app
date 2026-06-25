@@ -6,17 +6,17 @@ import { catchError, delay, Observable, tap, throwError } from 'rxjs';
 
 // Models
 import {
-  Categoria,
-  EstadoProducto,
-  Variante,
-  Producto
+  Category,
+  ProductState,
+  Variant,
+  Product
 } from '../models/products.model';
 import {
-  DeleteImagenResponse,
+  DeleteImageResponse,
   DeleteResponse,
-  ImagenesProductoResponse,
-  ImagenVarianteResponse,
-  PrecioFinalResponse
+  ProductImagesResponse,
+  VariantImageResponse,
+  FinalPriceResponse
 } from '../models/api-responses.model';
 
 // Environment
@@ -26,19 +26,19 @@ import { environment } from '../../../../environments/environment';
   providedIn: 'root',
 })
 export class InventarioService {
-  // Inyecciones
+  // TODO: INYECCIONES
   private http = inject(HttpClient);
 
-  // Propiedades
-  private API_URL = environment.apiUrl;
+  // TODO: PROPIEDADES
+  private apiUrl = environment.apiUrl;
 
 
-  // TODO: Métodos
+  // TODO: MÉTODOS
 
   // Obtener todos los productos
-  obtenerProductos(): Observable<Producto[]> {
+  getProducts(): Observable<Product[]> {
 
-    return this.http.get<Producto[]>(`${this.API_URL}/products`).pipe(
+    return this.http.get<Product[]>(`${this.apiUrl}/products`).pipe(
 
       tap( productos => console.log(`${productos.length} productos cargados`) ),
 
@@ -53,9 +53,9 @@ export class InventarioService {
   }
 
   // Obtener producto por ID
-  obtenerPorId ( id: string ): Observable<Producto> {
+  getById ( id: string ): Observable<Product> {
 
-    return this.http.get<Producto>(`${this.API_URL}/products/${id}`).pipe(
+    return this.http.get<Product>(`${this.apiUrl}/products/${id}`).pipe(
 
       tap( producto => console.log(`Producto cargado con id ${producto.id}`) ),
 
@@ -70,11 +70,11 @@ export class InventarioService {
   }
 
   // Obtener los productos por categoria
-  obtenerPorCategoria ( categoria: Categoria ): Observable<Producto[]> {
+  getByCategory ( categoria: Category ): Observable<Product[]> {
 
     const params = new HttpParams().set('categoria', categoria);
 
-    return this.http.get<Producto[]>(`${this.API_URL}/products`, { params }).pipe(
+    return this.http.get<Product[]>(`${this.apiUrl}/products`, { params }).pipe(
 
       catchError( ( error: HttpErrorResponse ) => {
         const mensaje = error.error?.error ?? 'Error desconocido';
@@ -87,11 +87,11 @@ export class InventarioService {
   }
 
   // Obtener los productos por estado
-  obtenerPorEstado ( estado: EstadoProducto): Observable<Producto[]> {
+  getByState ( estado: ProductState ): Observable<Product[]> {
 
     const params = new HttpParams().set('estado', estado);
 
-    return this.http.get<Producto[]>(`${this.API_URL}/products`, { params }).pipe(
+    return this.http.get<Product[]>(`${this.apiUrl}/products`, { params }).pipe(
 
       catchError( ( error: HttpErrorResponse ) => {
         const mensaje = error.error?.error ?? 'Error desconocido';
@@ -104,11 +104,11 @@ export class InventarioService {
   }
 
   // Obtener productos por marca
-  obtenerPorMarca ( marca: string ): Observable<Producto[]> {
+  getByBrand ( marca: string ): Observable<Product[]> {
 
     const params = new HttpParams().set('marca', marca);
 
-    return this.http.get<Producto[]>(`${this.API_URL}/products`, { params }).pipe(
+    return this.http.get<Product[]>(`${this.apiUrl}/products`, { params }).pipe(
 
       catchError( ( error: HttpErrorResponse ) => {
         const mensaje = error.error?.error ?? 'Error desconocido';
@@ -121,11 +121,11 @@ export class InventarioService {
   }
 
   // Obtener productos por etiqueta
-  obtenerPorEtiqueta ( etiqueta: string ): Observable<Producto[]> {
+  getByTag ( etiqueta: string ): Observable<Product[]> {
 
     const params = new HttpParams().set('etiqueta', etiqueta);
 
-    return this.http.get<Producto[]>(`${this.API_URL}/products`, { params }).pipe(
+    return this.http.get<Product[]>(`${this.apiUrl}/products`, { params }).pipe(
 
       catchError( ( error: HttpErrorResponse ) => {
         const mensaje = error.error?.error ?? 'Error desconocido';
@@ -138,11 +138,11 @@ export class InventarioService {
   }
 
   // Buscar producto por nombre
-  buscarPorNombre ( query: string ): Observable<Producto[]> {
+  searchByName ( query: string ): Observable<Product[]> {
 
     const params = new HttpParams().set('searchNombre', query);
 
-    return this.http.get<Producto[]>(`${this.API_URL}/products`, { params }).pipe(
+    return this.http.get<Product[]>(`${this.apiUrl}/products`, { params }).pipe(
 
       catchError( ( error: HttpErrorResponse ) => {
         const mensaje = error.error?.error ?? 'Error desconocido';
@@ -155,11 +155,11 @@ export class InventarioService {
   }
 
   // Buscar producto por categoria
-  buscarPorCategoria ( query: string ): Observable<Producto[]> {
+  searchByCategory ( query: string ): Observable<Product[]> {
 
     const params = new HttpParams().set('searchCategoria', query);
 
-    return this.http.get<Producto[]>(`${this.API_URL}/products`, { params }).pipe(
+    return this.http.get<Product[]>(`${this.apiUrl}/products`, { params }).pipe(
 
       catchError( ( error: HttpErrorResponse ) => {
         const mensaje = error.error?.error ?? 'Error desconocido';
@@ -172,10 +172,10 @@ export class InventarioService {
   }
 
   // Obtener precio final con descuento
-  obtenerPrecioFinal ( id: string ): Observable<PrecioFinalResponse> {
+  getFinalPrice ( id: string ): Observable<FinalPriceResponse> {
 
-    return this.http.get<PrecioFinalResponse>(
-      `${this.API_URL}/products/${id}/precio`
+    return this.http.get<FinalPriceResponse>(
+      `${this.apiUrl}/products/${id}/precio`
     ).pipe(
 
       catchError( ( error: HttpErrorResponse ) => {
@@ -189,12 +189,12 @@ export class InventarioService {
   }
 
   // Obtener precio final de variante con descuento
-  obtenerVariantePrecioFinal ( productId: string, variantId: string ): Observable<PrecioFinalResponse> {
+  getVariantFinalPrice ( productId: string, variantId: string ): Observable<FinalPriceResponse> {
 
     const params = new HttpParams().set('varianteId', variantId);
 
-    return this.http.get<PrecioFinalResponse>(
-      `${this.API_URL}/products/${productId}/precio`, { params }
+    return this.http.get<FinalPriceResponse>(
+      `${this.apiUrl}/products/${productId}/precio`, { params }
     ).pipe(
 
       catchError( ( error: HttpErrorResponse ) => {
@@ -208,10 +208,10 @@ export class InventarioService {
   }
 
   // Obtener variantes agotadas
-  obtenerVariantesAgotadas ( id: string ): Observable<Variante[]> {
+  getOutOfStockVariants ( id: string ): Observable<Variant[]> {
 
-    return this.http.get<Variante[]>(
-      `${this.API_URL}/products/${id}/variantes_agotadas`
+    return this.http.get<Variant[]>(
+      `${this.apiUrl}/products/${id}/variantes_agotadas`
     ).pipe(
 
       catchError( ( error: HttpErrorResponse ) => {
@@ -225,10 +225,10 @@ export class InventarioService {
   }
 
   // Obtener variantes con stock bajas
-  obtenerVariantesBajas ( id: string ): Observable<Variante[]> {
+  getLowStockVariants ( id: string ): Observable<Variant[]> {
 
-    return this.http.get<Variante[]>(
-      `${this.API_URL}/products/${id}/variantes_bajas`
+    return this.http.get<Variant[]>(
+      `${this.apiUrl}/products/${id}/variantes_bajas`
     ).pipe(
 
       catchError( ( error: HttpErrorResponse ) => {
@@ -242,9 +242,9 @@ export class InventarioService {
   }
 
   // Crear productos
-  crearProducto ( producto: Omit<Producto, 'id' | 'creadoEn' | 'actualizadoEn'> ): Observable<Producto> {
+  createProduct ( producto: Omit<Product, 'id' | 'creadoEn' | 'actualizadoEn'> ): Observable<Product> {
 
-    return this.http.post<Producto>(`${this.API_URL}/products`, producto).pipe(
+    return this.http.post<Product>(`${this.apiUrl}/products`, producto).pipe(
 
       catchError( ( error: HttpErrorResponse ) => {
         const mensaje = error.error?.error ?? 'Error desconocido';
@@ -257,14 +257,14 @@ export class InventarioService {
   }
 
   // Actualizar producto
-  actualizarProducto (
+  updateProduct (
     id: string,
-    producto: Partial<Omit<Producto, 'id' | 'creadoEn' | 'actualizadoEn'>>
-  ): Observable<Producto> {
+    producto: Partial<Omit<Product, 'id' | 'creadoEn' | 'actualizadoEn'>>
+  ): Observable<Product> {
 
-    const url = `${this.API_URL}/products/${id}`;
+    const url = `${this.apiUrl}/products/${id}`;
 
-    return this.http.patch<Producto>(url, producto).pipe(
+    return this.http.patch<Product>(url, producto).pipe(
       delay(1000),
       catchError( ( error: HttpErrorResponse ) => {
         const mensaje = error.error?.error ?? 'Error desconocido';
@@ -277,9 +277,9 @@ export class InventarioService {
   }
 
   // Eliminar producto
-  eliminarProducto ( id: string ): Observable<DeleteResponse> {
+  deleteProduct ( id: string ): Observable<DeleteResponse> {
 
-    const url = `${this.API_URL}/products/${id}`;
+    const url = `${this.apiUrl}/products/${id}`;
 
     return this.http.delete<DeleteResponse>(url).pipe(
 
@@ -294,13 +294,13 @@ export class InventarioService {
   }
 
   // Crear variantes
-  crearVariante (
+  createVariant (
     productId: string,
-    variante: Omit<Variante, 'id'>
-  ): Observable<Producto> {
+    variante: Omit<Variant, 'id'>
+  ): Observable<Product> {
 
-    return this.http.post<Producto>(
-      `${this.API_URL}/products/${productId}/variantes`, variante
+    return this.http.post<Product>(
+      `${this.apiUrl}/products/${productId}/variantes`, variante
     ).pipe(
 
       catchError( ( error: HttpErrorResponse ) => {
@@ -314,15 +314,15 @@ export class InventarioService {
   }
 
   // Actualizar variante
-  actualizarVariante (
+  updateVariant (
     productId: string,
     variantId: string,
-    variante: Partial<Omit<Variante, 'id'>>
-  ): Observable<Producto> {
+    variante: Partial<Omit<Variant, 'id'>>
+  ): Observable<Product> {
 
-    const url = `${this.API_URL}/products/${productId}/variantes/${variantId}`;
+    const url = `${this.apiUrl}/products/${productId}/variantes/${variantId}`;
 
-    return this.http.patch<Producto>(url, variante).pipe(
+    return this.http.patch<Product>(url, variante).pipe(
 
       catchError( ( error: HttpErrorResponse ) => {
         const mensaje = error.error?.error ?? 'Error desconocido';
@@ -335,11 +335,11 @@ export class InventarioService {
   }
 
   // Eliminar variante
-  eliminarVariante ( productId: string, varianteId: string ): Observable<Producto> {
+  deleteVariant ( productId: string, varianteId: string ): Observable<Product> {
 
-    const url = `${this.API_URL}/products/${productId}/variantes/${varianteId}`;
+    const url = `${this.apiUrl}/products/${productId}/variantes/${varianteId}`;
 
-    return this.http.delete<Producto>(url).pipe(
+    return this.http.delete<Product>(url).pipe(
 
       catchError( ( error: HttpErrorResponse ) => {
         const mensaje = error.error?.error ?? 'Error desconocido';
@@ -352,10 +352,10 @@ export class InventarioService {
   }
 
   // Subir imagenes del producto
-  subirImagenesProducto ( id: string, imagen: FormData ): Observable<ImagenesProductoResponse> {
+  uploadProductImages ( id: string, imagen: FormData ): Observable<ProductImagesResponse> {
 
-    return this.http.post<ImagenesProductoResponse>(
-      `${this.API_URL}/products/${id}/imagenes`, imagen
+    return this.http.post<ProductImagesResponse>(
+      `${this.apiUrl}/products/${id}/imagenes`, imagen
     ).pipe(
 
       catchError( ( error: HttpErrorResponse ) => {
@@ -369,12 +369,12 @@ export class InventarioService {
   }
 
   // Eliminar imagen del producto
-  eliminarImagenProducto ( id: string, imagen: string ): Observable<DeleteImagenResponse> {
+  deleteProductImage ( id: string, imagen: string ): Observable<DeleteImageResponse> {
 
     const params = new HttpParams().set('url', imagen);
 
-    return this.http.delete<DeleteImagenResponse>(
-      `${this.API_URL}/products/${id}/imagenes`, { params }
+    return this.http.delete<DeleteImageResponse>(
+      `${this.apiUrl}/products/${id}/imagenes`, { params }
     ).pipe(
 
       catchError( ( error: HttpErrorResponse ) => {
@@ -388,10 +388,10 @@ export class InventarioService {
   }
 
   // Subir y cambiar la imagen de la variante
-  subirImagenVariante ( productId: string, variantId: string, imagen: FormData ): Observable<ImagenVarianteResponse> {
+  uploadVariantImage ( productId: string, variantId: string, imagen: FormData ): Observable<VariantImageResponse> {
 
-    return this.http.post<ImagenVarianteResponse>(
-      `${this.API_URL}/products/${productId}/variantes/${variantId}/imagen`,
+    return this.http.post<VariantImageResponse>(
+      `${this.apiUrl}/products/${productId}/variantes/${variantId}/imagen`,
       imagen
     ).pipe(
 
@@ -406,10 +406,10 @@ export class InventarioService {
   }
 
   // Eliminar la imagen de la variante
-  eliminarImagenVariante ( productId: string, variantId: string ): Observable<DeleteImagenResponse> {
+  deleteVariantImage ( productId: string, variantId: string ): Observable<DeleteImageResponse> {
 
-    return this.http.delete<DeleteImagenResponse>(
-      `${this.API_URL}/products/${productId}/variantes/${variantId}/imagen`
+    return this.http.delete<DeleteImageResponse>(
+      `${this.apiUrl}/products/${productId}/variantes/${variantId}/imagen`
     ).pipe(
 
       catchError( ( error: HttpErrorResponse ) => {

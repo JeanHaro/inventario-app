@@ -20,10 +20,10 @@ import {
 import { InventarioService } from '../../../../services/inventario';
 
 // Interfaces
-import { Producto } from '../../../../models/products.model';
+import { Product } from '../../../../models/products.model';
 
 @Component({
-  selector: 'app-product-images-panel',
+  selector: 'product-images-panel',
   standalone: false,
   templateUrl: './product-images-panel.html',
   styleUrl: './product-images-panel.scss',
@@ -43,8 +43,8 @@ export class ProductImagesPanel {
 
   // TODO: INPUT Y OUTPUT
   readonly images = input.required<string[]>();
-  readonly productoId = input.required<number>();
-  readonly productoActualizado = output<Producto>(); // Avisa al padre que el producto cambio
+  readonly productId = input.required<number>();
+  readonly productUpdated = output<Product>(); // Avisa al padre que el producto cambio
 
   // TODO: PROPIEDADES
   private readonly VALID_TYPES = [
@@ -57,8 +57,8 @@ export class ProductImagesPanel {
   private readonly MAX_IMAGENES = 10;
 
   // TODO: SIGNALS
-  subiendo = signal<boolean>(false);
-  eliminando = signal<string | null>(null); // guarda la url de la imagen
+  uploading = signal<boolean>(false);
+  deleting = signal<string | null>(null); // guarda la url de la imagen
   errorMessage = signal<string | null>(null); // mensaje de error
 
   // TODO: MÉTODOS PRIVADOS
@@ -105,7 +105,7 @@ export class ProductImagesPanel {
   // TODO: MÉTODOS PÚBLICOS
 
   // Abre el selector de archivos nativo
-  abrirSelector(): void {
+  openFileSelector(): void {
     this.fileInputRef()?.nativeElement.click();
   }
 
@@ -124,15 +124,15 @@ export class ProductImagesPanel {
       const formData = new FormData();
       files.forEach( file => formData.append('imagenes', file) );
 
-      this.subiendo.set(true);
+      this.uploading.set(true);
 
-      this.inventarioService.subirImagenesProducto(
-        this.productoId().toString(),
+      this.inventarioService.uploadProductImages(
+        this.productId().toString(),
         formData
       ).subscribe({
         next: ( resp ) => {
-          this.productoActualizado.emit(resp.producto);
-          this.subiendo.set(false);
+          this.productUpdated.emit(resp.producto);
+          this.uploading.set(false);
           input.value = ''; // permite volver a seleccionar el mismo archivo despues
         },
         error: ( err ) => {
@@ -141,7 +141,7 @@ export class ProductImagesPanel {
             err.message ?? 'Ocurrió un error al subir las imágenes.'
           );
 
-          this.subiendo.set(false);
+          this.uploading.set(false);
           input.value = '';
         }
       });
@@ -149,19 +149,19 @@ export class ProductImagesPanel {
   }
 
   // Eliminar una imagen existente
-  eliminarImagen ( url: string ): void {
-    this.eliminando.set(url);
+  deleteImage ( url: string ): void {
+    this.deleting.set(url);
     this.errorMessage.set(null);
 
-    this.inventarioService.eliminarImagenProducto(
-      this.productoId().toString(),
+    this.inventarioService.deleteProductImage(
+      this.productId().toString(),
       url
     ).subscribe({
       next: ( resp ) => {
-        this.productoActualizado.emit(resp.producto);
-        this.eliminando.set(null);
+        this.productUpdated.emit(resp.producto);
+        this.deleting.set(null);
       },
-      error: () => this.eliminando.set(null)
+      error: () => this.deleting.set(null)
     });
   }
 }

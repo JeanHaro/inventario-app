@@ -17,19 +17,19 @@ import {
 
 // Interfaces
 import {
-  EstadoProducto,
-  Producto
+  ProductState,
+  Product
 } from '../../models/products.model';
 
 @Component({
-  selector: 'app-product-filters',
+  selector: 'products-filters',
   standalone: false,
   templateUrl: './products-filters.html',
   styleUrl: './products-filters.scss',
 })
 export class ProductsFilters {
-  // TODO: viewChild
-  readonly productFiltersContent = viewChild<ElementRef<HTMLElement>>('productFiltersRef');
+  // TODO: VIEWCHILD
+  readonly filtersContainerRef = viewChild<ElementRef<HTMLElement>>('productFiltersRef');
 
   // TODO: ICONOS
   readonly faTableCellsLarge: IconDefinition = faTableCellsLarge;
@@ -40,34 +40,34 @@ export class ProductsFilters {
   readonly faBan: IconDefinition = faBan;
   readonly faCirclePause: IconDefinition = faCirclePause;
 
-  // TODO: PROPIEDADES
+  // TODO: INPUT Y OUTPUT
   // Inputs
-  readonly productos = input.required<Producto[]>();
-  readonly estadoActivo = input<EstadoProducto | 'Todas'>('Todas'); // Recibimos del padre cual filtro esta activo
+  readonly products = input.required<Product[]>();
+  readonly activeState = input<ProductState | 'Todas'>('Todas'); // Recibimos del padre cual filtro esta activo
   // Output
-  readonly estadoCambiado = output<EstadoProducto | 'Todas'>(); // Avisamos al padre que estado seleccionamos
+  readonly stateChanged = output<ProductState | 'Todas'>(); // Avisamos al padre que estado seleccionamos
 
   // TODO: COMPUTED
   // Contar la cantidad de productos por estado
-  readonly conteosPorEstado = computed(() => {
-    return this.productos().reduce(
+  readonly countsByState = computed(() => {
+    return this.products().reduce(
       ( accumulator , producto ) => {
         accumulator[producto.estado] = ( accumulator[producto.estado] ?? 0 ) + 1;
 
         return accumulator;
       },
-      {} as Partial<Record<EstadoProducto, number>>
+      {} as Partial<Record<ProductState, number>>
     )
   });
 
-  // TODO: MÉTODOS
+  // TODO: MÉTODOS PÚBLICOS
   // Cambiar el valor del estado seleccionado
-  seleccionarEstado ( event: MouseEvent, estado: EstadoProducto | 'Todas' ): void {
+  selectState ( event: MouseEvent, estado: ProductState | 'Todas' ): void {
     // Emitimos el cambio de estado
-    this.estadoCambiado.emit(estado);
+    this.stateChanged.emit(estado);
 
     // 2. Centrar el botón clickeado en el scroll (Solo el contenedor de los filtros)
-    const container = this.productFiltersContent()!.nativeElement;
+    const container = this.filtersContainerRef()!.nativeElement;
     const btn = event.currentTarget as HTMLElement;
     // Posición del botón relativa al contenedor
     const btnLeft = btn.offsetLeft;
