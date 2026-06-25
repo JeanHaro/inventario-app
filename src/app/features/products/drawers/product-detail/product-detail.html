@@ -49,13 +49,8 @@
           [disabled]="guardando()"
           class="product-detail__btn product-detail__btn-1 none btn b--primary"
         >
-          @if ( guardando() ) {
-            <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
-            <span>Guardando...</span>
-          } @else {
-            <fa-icon [icon]="faFloppyDisk"></fa-icon>
-            <span>Guardar</span>
-          }
+          <fa-icon [icon]="faFloppyDisk"></fa-icon>
+          <span>Guardar</span>
         </button>
 
         <!-- Cancelar -->
@@ -109,12 +104,21 @@
     <form
       id="productEditForm"
       [class.edicion]="modoEdicion()"
+      [class.is-saving]="guardando()"
       (ngSubmit)="guardarEdicion()"
       novalidate
     >
+      <!-- Overlay de carga -->
+      @if ( guardando() ) {
+        <div class="product-detail__form-overlay">
+          <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
+          <span>Guardando, espere por favor...</span>
+        </div>
+      }
+
       <!-- Nombre del producto -->
       @if ( modoEdicion() ) {
-        <div class="product-detail__field-wrapper" [class.is-saving]="guardando()">
+        <div class="product-detail__field-wrapper">
           <input
             [formField]="editForm.nombre"
             type="text"
@@ -135,7 +139,7 @@
       }
 
       <!-- Campos principales -->
-      <div class="product-detail__fields" [class.is-saving]="guardando()">
+      <div class="product-detail__fields">
         <!-- Estado -->
         <div class="product-detail__state">
           <div class="product-detail__state-label">
@@ -284,7 +288,7 @@
       </div>
 
       <!-- Etiqueta -->
-      <div class="product-detail__tags" [class.is-saving]="guardando()">
+      <div class="product-detail__tags">
         <div class="product-detail__tags-label">
           <span>Etiquetas</span>
         </div>
@@ -331,7 +335,7 @@
       </div>
 
       <!-- Fechas -->
-      <div class="product-detail__dates" [class.is-saving]="guardando()">
+      <div class="product-detail__dates">
 
         <!-- Creado el -->
         <div class="product-detail__start">
@@ -355,7 +359,7 @@
       <!-- END: Fechas -->
 
       <!-- Descripción -->
-      <div class="product-detail__description" [class.is-saving]="guardando()">
+      <div class="product-detail__description">
         <div class="product-detail__description-label">
           <span>Descripción</span>
         </div>

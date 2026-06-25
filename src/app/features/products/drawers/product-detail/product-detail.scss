@@ -165,8 +165,24 @@
     }
   }
 
-  @media (min-width: 1024px) {
-    form {
+
+  form {
+    position: relative;
+
+    &.is-saving {
+      .product-detail__fields,
+      .product-detail__tags,
+      .product-detail__dates,
+      .product-detail__description,
+      > h2,
+      > .product-detail__field-wrapper {
+        filter: blur(3px);
+        pointer-events: none;
+        user-select: none;
+      }
+    }
+
+    @media (min-width: 1024px) {
       padding: 2rem;
 
       &.edicion {
@@ -176,6 +192,31 @@
     }
   }
 
+  // Overlay de carga
+  &__form-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+
+    border-radius: 1rem;
+
+    fa-icon {
+      font-size: 3rem;
+      color: var(--color-primario);
+    }
+
+    span {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--color-primario);
+    }
+  }
 
   // ================================
   // CONTENIDO DEL PRODUCTO

@@ -265,7 +265,7 @@ export class InventarioService {
     const url = `${this.API_URL}/products/${id}`;
 
     return this.http.patch<Producto>(url, producto).pipe(
-      delay(2000),
+      delay(1000),
       catchError( ( error: HttpErrorResponse ) => {
         const mensaje = error.error?.error ?? 'Error desconocido';
         console.error(`[${error.status}]`, mensaje);
