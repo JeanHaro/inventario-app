@@ -10,7 +10,7 @@
     (click)="toggle($event)"
     class="select__value"
   >
-    <span>{{ selected()?.label }}</span>
+    <span>{{ selected()?.label ?? 'Seleccionar ' }}</span>
 
     <fa-icon [icon]="faAngleDown"></fa-icon>
   </div>

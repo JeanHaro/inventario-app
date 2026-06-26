@@ -1,1 +1,239 @@
-<p>product-form works!</p>
+<!-- ================================
+  FORMULARIO: CREAR PRODUCTO
+================================ -->
+<div class="product-form">
+
+  <!-- ================================
+    BARRA SUPERIOR
+  ================================ -->
+  <div class="product-form__top">
+    <!-- Cerrar -->
+    <button
+      type="button"
+      class="product-form__close none btn b--hidden"
+    >
+      <fa-icon [icon]="faArrowRightFromBracket"></fa-icon>
+      <span>Cerrar</span>
+    </button>
+
+    <h3>Crear producto</h3>
+  </div>
+  <!-- END: BARRA SUPERIOR -->
+
+  <form novalidate>
+
+    <!-- Nombre -->
+    <div class="product-form__name">
+      <div class="product-form__name-label">
+        <span>Nombre</span>
+      </div>
+
+      <div class="product-form__field-wrapper">
+        <input
+          [formField]="editForm.nombre"
+          placeholder="Ingrese el nombre del producto"
+          type="text"
+          [class.i--warn]="editForm.nombre().invalid() && editForm.nombre().touched()"
+          class="product-form__input none input"
+        >
+
+        @if ( editForm.nombre().invalid() && editForm.nombre().touched() ) {
+          <div class="product-form__field-error">
+            @for ( error of editForm.nombre().errors(); track error.kind ) {
+              <span>{{ error.message }}</span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="product-form__fields">
+      <!-- Estado -->
+      <div class="product-form__state">
+        <div class="product-form__state-label">
+          <span>Estado</span>
+        </div>
+
+        <div class="product-form__field-wrapper">
+          <shared-select
+            [options]="stateOptions"
+            [value]="editModel().estado"
+            (valueChange)="updateState($event)"
+          ></shared-select>
+
+          @if ( editForm.estado().invalid() && editForm.estado().touched() ) {
+            <div class="product-form__field-error">
+              @for ( error of editForm.estado().errors(); track error.kind ) {
+                <span>{{ error.message }}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Categoría -->
+      <div class="product-form__category">
+        <div class="product-form__category-label">
+          <span>Categoría</span>
+        </div>
+
+        <div class="product-form__field-wrapper">
+          <shared-select
+            [options]="categoryOptions"
+            [value]="editModel().categoria"
+            (valueChange)="updateCategory($event)"
+          />
+
+          @if ( editForm.categoria().invalid() && editForm.categoria().touched() ) {
+            <div class="product-form__field-error">
+              @for ( error of editForm.categoria().errors(); track error.kind ) {
+                <span>{{ error.message }}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Marca -->
+      <div class="product-form__brand">
+        <div class="product-form__brand-label">
+          <span>Marca</span>
+        </div>
+
+        <div class="product-form__field-wrapper">
+          <input
+            [formField]="editForm.marca"
+            placeholder="Ingrese la marca del producto"
+            type="text"
+            [class.i--warn]="editForm.marca().invalid() && editForm.marca().touched()"
+            class="product-form__input none input"
+          >
+
+          @if ( editForm.marca().invalid() && editForm.marca().touched() ) {
+            <div class="product-form__field-error">
+              @for ( error of editForm.marca().errors(); track error.kind ) {
+                <span>{{ error.message }}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Modelo -->
+      <div class="product-form__model">
+        <div class="product-form__model-label">
+          <span>Modelo</span>
+        </div>
+
+        <input
+          [formField]="editForm.modelo"
+          placeholder="Ingrese el modelo del producto"
+          type="text"
+          class="product-form__input none input"
+        >
+      </div>
+
+      <!-- Precio -->
+      <div class="product-form__price">
+        <div class="product-form__price-label">
+          <span>Precio</span>
+        </div>
+
+        <div class="product-form__field-wrapper">
+          <input
+            [formField]="editForm.precio"
+            placeholder="Ingrese el precio del producto"
+            type="number"
+            [class.i--warn]="editForm.precio().invalid() && editForm.precio().touched()"
+            class="product-form__input none input"
+          >
+
+          @if ( editForm.precio().invalid() && editForm.precio().touched() ) {
+            <div class="product-form__field-error">
+              @for ( error of editForm.precio().errors(); track error.kind ) {
+                <span>{{ error.message }}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Descuento -->
+      <div class="product-form__discount">
+        <div class="product-form__discount-label">
+          <span>Descuento</span>
+        </div>
+
+        <div class="product-form__field-wrapper">
+          <input
+            [formField]="editForm.descuento"
+            placeholder="Ingrese el descuento del producto"
+            type="number"
+            [class.i--warn]="editForm.descuento().invalid() && editForm.descuento().touched()"
+            class="product-form__input none input"
+          >
+
+          @if ( editForm.descuento().invalid() && editForm.descuento().touched() ) {
+            <div class="product-form__field-error">
+              @for ( error of editForm.descuento().errors(); track error.kind ) {
+                <span>{{ error.message }}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+    </div>
+    <!-- END: CAMPOS PRINCIPALES -->
+
+    <!-- Etiquetas -->
+    <div class="product-form__tags">
+      <div class="product-form__tags-label">
+        <span>Etiquetas</span>
+      </div>
+
+      <input
+        [(ngModel)]="tagsInput"
+        [ngModelOptions]="{ standalone: true }"
+        type="text"
+        placeholder="Separadas por comas: Nuevo, Oferta..."
+        class="product-form__input none input"
+      >
+    </div>
+    <!-- END: Etiquetas -->
+
+    <!-- Descripción -->
+    <div class="product-form__description">
+      <div class="product-form__description-label">
+        <span>Descripción</span>
+      </div>
+
+      <textarea
+        [formField]="editForm.descripcion"
+        placeholder="Ingrese la descripción del producto"
+        class="product-form__input none input"
+      ></textarea>
+    </div>
+    <!-- END: Descripción -->
+
+    <div class="product-form__buttons">
+      <!-- Guardar -->
+      <button
+        type="submit"
+        class="product-form__btn none btn b--primary"
+      >
+        <span>Guardar</span>
+      </button>
+
+      <!-- Cancelar -->
+      <button
+        type="button"
+        class="product-form__btn none btn b--gray"
+      >
+        <span>Cancelar</span>
+      </button>
+    </div>
+  </form>
+
+</div>
+<!-- END: FORMULARIO -->
