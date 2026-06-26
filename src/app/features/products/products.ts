@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   Component,
   computed,
+  effect,
   inject,
   OnInit,
   signal
@@ -74,7 +75,7 @@ export class Products implements OnInit {
   searchQuery = signal<string>('');
 
   // TODO: toSignal
-  // ========================================================= PARAMS
+  // ====================================================== PARAMS: EDITAR PRODUCTO
 
   // Convertimos el observable de query params en un signal reactivo
   private readonly queryParams = toSignal(
@@ -87,6 +88,15 @@ export class Products implements OnInit {
       next: ( resp ) => this.products.set(resp),
     });
   }
+
+  // TODO: EFFECTS
+  // Limpia la selección automáticamente cada vez que se abre cualquier drawer
+  private readonly clearSelectionOnDrawerOpen = effect(() => {
+    // Vemos que esta seleccionado el producto o el productForm está en true
+    if ( this.selectedProduct() !== null || this.showProductForm() ) {
+      this.clearSelection();
+    }
+  });
 
   // TODO: COMPUTED
   // ================================================== CAMBIAR ESTADO POR FILTRO
@@ -140,7 +150,7 @@ export class Products implements OnInit {
     this.variant()?.estado === 'descontinuado'
   );
 
-  // ========================================================= PARAMS
+  // ===================================================== PARAMS: EDITAR PRODUCTO
 
   // El produco seleccionado se deriva de la URL - ya no es un signal mutable
   readonly selectedProduct = computed<Product | null>(() => {
@@ -153,6 +163,11 @@ export class Products implements OnInit {
   // Verificar el modo del drawer (PARAMS: EDITAR PRODUCTO)
   readonly startInEditMode = computed<boolean>(() =>
     this.queryParams().get('modo') === 'editar'
+  );
+
+  // ====================================================== PARAMS: CREAR PRODUCTO
+  readonly showProductForm = computed<boolean>(() =>
+    this.queryParams().get('modo') === 'crear'
   );
 
   // =======================================================================
@@ -359,16 +374,14 @@ export class Products implements OnInit {
     })
   }
 
-  // ===================================================== MDALS VER/EDITAR PRODUCTO
+  // ================================================= DRAWER VER/EDITAR PRODUCTO
 
-  // Abrir modal Detalle producto
+  // Abrir drawer Detalle producto
   openProductDetail ( id: number ): void {
     const producto = this.products().find(
       producto => producto.id === id
     );
     if ( !producto ) return; // Si no encuentra producto
-
-    this.clearSelection();
 
     // Params
     this.router.navigate([], {
@@ -378,10 +391,39 @@ export class Products implements OnInit {
     });
   }
 
-  // Cerrar modal Detalle producto
+  // Cerrar drawer Detalle producto
   closeProductDetail() {
     // Params
     this.router.navigate( [], {
+      relativeTo: this.route,
+      queryParams: { id: null, modo: null },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  // ================================================= DRAWER CREAR PRODUCTO
+
+  // Abrir drawer Formulario del producto
+  openProductForm(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { modo: 'crear' },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  // Cerrar drawer Formulario del producto
+  closeProductForm(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { modo: null },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  // Cerrar todos los drawers
+  closeAllDrawers(): void {
+    this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { id: null, modo: null },
       queryParamsHandling: 'merge'
@@ -412,8 +454,6 @@ export class Products implements OnInit {
   editProduct ( id: number ): void {
     const producto = this.products().find( producto => producto.id === id );
     if ( !producto ) return;
-
-    this.clearSelection();
 
     this.router.navigate([], {
       relativeTo: this.route,

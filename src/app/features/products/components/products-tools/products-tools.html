@@ -16,7 +16,10 @@
   </div>
 
   <!-- AGREGAR PRODUCTO -->
-  <button class="products__tools-btn none btn b--primary">
+  <button
+    (click)="addProduct.emit()"
+    class="products__tools-btn none btn b--primary"
+  >
     <fa-icon [icon]="faPlus"></fa-icon>
     <span>Agregar producto</span>
   </button>

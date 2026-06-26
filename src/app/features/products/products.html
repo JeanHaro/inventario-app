@@ -20,7 +20,10 @@
     <div class="products__content">
 
       <!-- HERRAMIENTAS -->
-      <products-tools (search)="searchQuery.set($event)"/>
+      <products-tools
+        (search)="searchQuery.set($event)"
+        (addProduct)="openProductForm()"
+      />
 
       <!-- TABLA -->
       <products-table
@@ -202,9 +205,9 @@
   DRAWER - OVERLAY
 ================================ -->
 <div
-  (click)="closeProductDetail()"
+  (click)="closeAllDrawers()"
   class="drawers__overlay"
-  [class.active]="selectedProduct() !== null"
+  [class.active]="selectedProduct() !== null || showProductForm()"
 ></div>
 
 <!-- ================================
@@ -225,10 +228,17 @@
   }
 </div>
 
+<!-- ================================
+  DRAWER: PRODUCT FORM
+================================ -->
 <div
+  [class.active]="showProductForm()"
   class="drawers drawers--product-form active"
-
 >
-  <product-form />
+  @if ( showProductForm() ) {
+    <product-form
+      (closeModal)="closeProductForm()"
+    />
+  }
 </div>
 

@@ -10,6 +10,7 @@
     <!-- Cerrar -->
     <button
       type="button"
+      (click)="closeModal.emit()"
       class="product-form__close none btn b--hidden"
     >
       <fa-icon [icon]="faArrowRightFromBracket"></fa-icon>
@@ -228,6 +229,7 @@
       <!-- Cancelar -->
       <button
         type="button"
+        (click)="closeModal.emit()"
         class="product-form__btn none btn b--gray"
       >
         <span>Cancelar</span>

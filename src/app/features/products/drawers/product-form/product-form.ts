@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, output, signal } from '@angular/core';
 
 // Font Awesome
 import {
@@ -23,6 +23,9 @@ import { form, min, required } from '@angular/forms/signals';
 export class ProductForm {
   // TODO: ICONOS
   readonly faArrowRightFromBracket: IconDefinition = faArrowRightFromBracket;
+
+  // TODO: OUTPUT
+  readonly closeModal = output<void>();
 
   // TODO: PROPIEDADES
   readonly stateOptions: SelectOption[] = [

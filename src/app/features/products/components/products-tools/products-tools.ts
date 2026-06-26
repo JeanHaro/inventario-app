@@ -18,8 +18,9 @@ export class ProductsTools {
   readonly faPlus: IconDefinition = faPlus;
 
   // TODO: OUTPUT
-  // output
   readonly search = output<string>();
+  readonly addProduct = output<void>();
+
 
   // TODO: MÉTODOS PÚBLICOS
   searchProduct ( value: string ) {
