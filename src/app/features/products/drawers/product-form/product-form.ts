@@ -14,7 +14,7 @@ import {
   Product,
   ProductState
 } from '../../models/products.model';
-import { form, min, required } from '@angular/forms/signals';
+import { form, min, required, validate } from '@angular/forms/signals';
 
 // Servicios
 import { InventarioService } from '../../services/inventario';
@@ -162,13 +162,34 @@ export class ProductForm {
 
   // El form de signalForms se construye sobre editModel
   editForm = form(this.editModel, ( schemaPath ) => {
-    required( schemaPath.nombre, { message: 'El nombre es obligatorio' });
-    required( schemaPath.marca, { message: 'La marca es obligatoria' });
     required( schemaPath.precio, { message: 'El precio es obligatorio' });
     required( schemaPath.categoria, { message: 'La categoría es obligatoria' });
     required( schemaPath.estado, { message: 'El estado es obligatorio' });
     min( schemaPath.precio, 0, { message: 'El precio no puede ser negativo' });
     min( schemaPath.descuento, 0, { message: 'El descuento no puede ser negativo' });
+
+    // Rechazamos valores que son solo espacios en blanco
+    validate( schemaPath.nombre, ( { value } ) => {
+      if ( value().trim().length === 0 ) {
+        return {
+          kind: 'whitespace',
+          message: 'El nombre es obligatorio'
+        };
+      }
+
+      return null;
+    });
+
+    validate( schemaPath.marca, ( { value } ) => {
+      if ( value().trim().length === 0 ) {
+        return {
+          kind: 'whitespace',
+          message: 'La marca es obligatoria'
+        };
+      }
+
+      return null;
+    });
   });
 
   // TODO: MÉTODOS PÚBLICOS
@@ -196,6 +217,8 @@ export class ProductForm {
 
     this.inventarioService.createProduct({
       ...valores,
+      nombre: valores.nombre.trim(),
+      marca: valores.marca.trim(),
       etiquetas,
       variantes: []
     }).subscribe({

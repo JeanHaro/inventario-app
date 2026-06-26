@@ -14,7 +14,8 @@ import {
 import {
   form,
   required,
-  min
+  min,
+  validate
 } from '@angular/forms/signals';
 
 // Font Awesome
@@ -214,11 +215,32 @@ export class ProductDetail implements OnInit {
 
   // El form de signalForms se construye sobre editModel
   editForm = form(this.editModel, ( schemaPath ) => {
-    required( schemaPath.nombre, { message: 'El nombre es obligatorio' });
-    required( schemaPath.marca, { message: 'La marca es obligatorio' } );
     required( schemaPath.precio, { message: 'El precio es obligatorio' } );
     min( schemaPath.precio, 0, { message: 'El precio no puede ser negativo' } );
     min( schemaPath.descuento, 0, { message: 'El descuento no puede ser negativo' } );
+
+    // Rechazamos valores que son solo espacios en blanco
+    validate( schemaPath.nombre, ( { value } ) => {
+      if ( value().trim().length === 0 ) {
+        return {
+          kind: 'whitespace',
+          message: 'El nombre es obligatorio'
+        };
+      }
+
+      return null;
+    });
+
+    validate( schemaPath.marca, ( { value } ) => {
+      if ( value().trim().length === 0 ) {
+        return {
+          kind: 'whitespace',
+          message: 'La marca es obligatoria'
+        };
+      }
+
+      return null;
+    });
   });
 
   // TODO: COMPUTED
@@ -379,7 +401,12 @@ export class ProductDetail implements OnInit {
 
     this.inventarioService.updateProduct(
       this.product().id.toString(),
-      { ...valores, etiquetas }
+      {
+        ...valores,
+        nombre: valores.nombre.trim(),
+        marca: valores.marca.trim(),
+        etiquetas
+      }
     ).subscribe({
       next: ( resp ) => {
         this.productUpdated.emit(resp);

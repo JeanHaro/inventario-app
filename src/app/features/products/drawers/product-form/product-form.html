@@ -237,7 +237,7 @@
       <!-- Guardar -->
       <button
         type="submit"
-        [disabled]="saving()"
+        [disabled]="saving() || this.editForm().invalid() "
         class="product-form__btn none btn b--primary"
       >
         <span>Guardar</span>

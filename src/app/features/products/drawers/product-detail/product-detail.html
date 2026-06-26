@@ -46,7 +46,7 @@
         <button
           type="submit"
           form="productEditForm"
-          [disabled]="saving()"
+          [disabled]="saving() || this.editForm().invalid()"
           class="product-detail__btn product-detail__btn-1 none btn b--primary"
         >
           <fa-icon [icon]="faFloppyDisk"></fa-icon>
