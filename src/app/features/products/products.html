@@ -238,6 +238,7 @@
   @if ( showProductForm() ) {
     <product-form
       (closeModal)="closeProductForm()"
+      (productCreated)="onProductCreated($event)"
     />
   }
 </div>

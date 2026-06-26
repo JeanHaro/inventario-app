@@ -1,8 +1,9 @@
-import { Component, output, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 
 // Font Awesome
 import {
   faArrowRightFromBracket,
+  faSpinner,
   IconDefinition
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -10,9 +11,13 @@ import {
 import { SelectOption } from '../../../../shared/components/select/models/select.model';
 import {
   Category,
+  Product,
   ProductState
 } from '../../models/products.model';
 import { form, min, required } from '@angular/forms/signals';
+
+// Servicios
+import { InventarioService } from '../../services/inventario';
 
 @Component({
   selector: 'product-form',
@@ -21,11 +26,16 @@ import { form, min, required } from '@angular/forms/signals';
   styleUrl: './product-form.scss',
 })
 export class ProductForm {
+  // TODO: INYECCIONES
+  private readonly inventarioService = inject(InventarioService);
+
   // TODO: ICONOS
   readonly faArrowRightFromBracket: IconDefinition = faArrowRightFromBracket;
+  readonly faSpinner: IconDefinition = faSpinner;
 
   // TODO: OUTPUT
   readonly closeModal = output<void>();
+  readonly productCreated = output<Product>(); // Avisamos que creamos el producto
 
   // TODO: PROPIEDADES
   readonly stateOptions: SelectOption[] = [
@@ -135,6 +145,8 @@ export class ProductForm {
   ];
 
   // TODO: SIGNALS
+  saving = signal<boolean>(false);
+
   // Modelo del nuevo producto - se inicia vacío
   editModel = signal({
     nombre: '',
@@ -167,5 +179,33 @@ export class ProductForm {
 
   updateCategory ( valor: string ): void {
     this.editModel.update( m => ({ ...m, categoria: valor as Category }) );
+  }
+
+  // ========================================================== CREAR PRODUCTO
+
+  createProduct(): void {
+    if ( !this.editForm().valid() ) return;
+
+    this.saving.set(true);
+
+    const valores = this.editModel();
+
+    const etiquetas = this.tagsInput().split(',').map( tag => tag.trim() ).filter(
+      tag => tag.length > 0
+    );
+
+    this.inventarioService.createProduct({
+      ...valores,
+      etiquetas,
+      variantes: []
+    }).subscribe({
+      next: ( resp ) => {
+        this.productCreated.emit(resp); // avisamos al padre que creamos el producto
+        this.saving.set(false);
+      },
+      error: () => {
+        this.saving.set(false);
+      }
+    })
   }
 }

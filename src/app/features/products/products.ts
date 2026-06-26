@@ -461,4 +461,17 @@ export class Products implements OnInit {
       queryParamsHandling: 'merge'
     });
   }
+
+  // ========================================================== CREAR PRODUCTO
+
+  // Recibe el producto recién creado, lo agrega a la lista, y abre su detalle
+  onProductCreated ( producto: Product ): void {
+    this.products.update( products => [ ...products, producto ] );
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { modo: null, id: producto.id }, // abrimos product detail
+      queryParamsHandling: 'merge'
+    })
+  }
 }

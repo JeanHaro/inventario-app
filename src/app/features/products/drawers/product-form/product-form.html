@@ -21,7 +21,19 @@
   </div>
   <!-- END: BARRA SUPERIOR -->
 
-  <form novalidate>
+  <form
+    novalidate
+    (ngSubmit)="createProduct()"
+    [class.is-saving]="saving()"
+  >
+    <!-- Overlay de carga -->
+    @if ( saving() ) {
+      <div class="product-form__form-overlay">
+        <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
+        <span>Creando producto, espere por favor...</span>
+      </div>
+    }
+
 
     <!-- Nombre -->
     <div class="product-form__name">
@@ -225,6 +237,7 @@
       <!-- Guardar -->
       <button
         type="submit"
+        [disabled]="saving()"
         class="product-form__btn none btn b--primary"
       >
         <span>Guardar</span>
@@ -234,6 +247,7 @@
       <button
         type="button"
         (click)="closeModal.emit()"
+        [disabled]="saving()"
         class="product-form__btn none btn b--gray"
       >
         <span>Cancelar</span>

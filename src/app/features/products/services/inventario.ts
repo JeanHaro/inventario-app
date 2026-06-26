@@ -245,7 +245,7 @@ export class InventarioService {
   createProduct ( producto: Omit<Product, 'id' | 'creadoEn' | 'actualizadoEn'> ): Observable<Product> {
 
     return this.http.post<Product>(`${this.apiUrl}/products`, producto).pipe(
-
+      delay(1000),
       catchError( ( error: HttpErrorResponse ) => {
         const mensaje = error.error?.error ?? 'Error desconocido';
         console.error(`[${error.status}]`, mensaje);

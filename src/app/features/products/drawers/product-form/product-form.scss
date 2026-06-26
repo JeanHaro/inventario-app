@@ -74,6 +74,17 @@
       padding: 1.5rem 1.8rem;
     }
 
+    &.is-saving {
+      .product-form__fields,
+      .product-form__name,
+      .product-form__tags,
+      .product-form__description {
+        filter: blur(3px);
+        pointer-events: none;
+        user-select: none;
+      }
+    }
+
     // Reservado para cuando se agregue el signal "saving"
     &.is-saving {
       .product-form__fields,
@@ -90,7 +101,7 @@
     }
   }
 
-  // Overlay de carga — reservado para cuando se agregue el guardado
+  // Overlay de carga
   &__form-overlay {
     position: absolute;
     inset: 0;
