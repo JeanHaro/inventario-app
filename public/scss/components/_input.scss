@@ -12,14 +12,22 @@
   @media (min-width: 768px) {
     font-size: 1.6rem;
   }
+
+  &.i--terciary {
+    background-color: var(--color-terciario-hover);
+    color: var(--color-blanco-1);
+  }
+
+  &.i--warn {
+    background-color: var(--notif-critical-soft) !important;
+    border-color: var(--notif-critical-base) !important;
+    font-weight: 300;
+    color: var(--notif-critical-base);
+
+    &::placeholder {
+      font-weight: 300;
+      color: var(--notif-critical-base);
+    }
+  }
 }
 
-.i--terciary {
-  background-color: var(--color-terciario-hover);
-  color: var(--color-blanco-1);
-}
-
-.i--warn {
-  background-color: var(--notif-critical-soft) !important;
-  border-color: var(--notif-critical-base) !important;
-}

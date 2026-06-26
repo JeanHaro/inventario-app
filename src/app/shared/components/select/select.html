@@ -9,9 +9,9 @@
   <div
     (click)="toggle($event)"
     class="select__value"
+    [class.i--warn]="invalid()"
   >
     <span>{{ selected()?.label ?? 'Seleccionar ' }}</span>
-
     <fa-icon [icon]="faAngleDown"></fa-icon>
   </div>
 

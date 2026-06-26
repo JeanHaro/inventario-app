@@ -32,7 +32,7 @@
       <div class="product-form__field-wrapper">
         <input
           [formField]="editForm.nombre"
-          placeholder="Ingrese el nombre del producto"
+          placeholder="Ingrese el nombre"
           type="text"
           [class.i--warn]="editForm.nombre().invalid() && editForm.nombre().touched()"
           class="product-form__input none input"
@@ -59,7 +59,9 @@
           <shared-select
             [options]="stateOptions"
             [value]="editModel().estado"
+            [invalid]="editForm.estado().invalid() && editForm.estado().touched()"
             (valueChange)="updateState($event)"
+            (closed)="editForm.estado().markAsTouched()"
           ></shared-select>
 
           @if ( editForm.estado().invalid() && editForm.estado().touched() ) {
@@ -82,7 +84,9 @@
           <shared-select
             [options]="categoryOptions"
             [value]="editModel().categoria"
+            [invalid]="editForm.categoria().invalid() && editForm.categoria().touched()"
             (valueChange)="updateCategory($event)"
+            (closed)="editForm.categoria().markAsTouched()"
           />
 
           @if ( editForm.categoria().invalid() && editForm.categoria().touched() ) {
@@ -104,7 +108,7 @@
         <div class="product-form__field-wrapper">
           <input
             [formField]="editForm.marca"
-            placeholder="Ingrese la marca del producto"
+            placeholder="Marca del producto"
             type="text"
             [class.i--warn]="editForm.marca().invalid() && editForm.marca().touched()"
             class="product-form__input none input"
@@ -128,7 +132,7 @@
 
         <input
           [formField]="editForm.modelo"
-          placeholder="Ingrese el modelo del producto"
+          placeholder="Modelo del producto"
           type="text"
           class="product-form__input none input"
         >
@@ -143,7 +147,7 @@
         <div class="product-form__field-wrapper">
           <input
             [formField]="editForm.precio"
-            placeholder="Ingrese el precio del producto"
+            placeholder="Precio del producto"
             type="number"
             [class.i--warn]="editForm.precio().invalid() && editForm.precio().touched()"
             class="product-form__input none input"
@@ -168,7 +172,7 @@
         <div class="product-form__field-wrapper">
           <input
             [formField]="editForm.descuento"
-            placeholder="Ingrese el descuento del producto"
+            placeholder="Descuento del producto"
             type="number"
             [class.i--warn]="editForm.descuento().invalid() && editForm.descuento().touched()"
             class="product-form__input none input"

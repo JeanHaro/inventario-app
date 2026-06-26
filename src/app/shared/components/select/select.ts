@@ -39,8 +39,9 @@ export class Select {
   readonly options = input.required<SelectOption[]>();
   readonly value = input.required<string>();
   readonly width = input<string>('13rem'); // permite ajustar el ancho según contexto
-  //  el padre decide qué hacer con el nuevo valor
-  readonly valueChange = output<string>();
+  readonly invalid = input<boolean>(false);
+  readonly valueChange = output<string>(); //  el padre decide qué hacer con el nuevo valor
+  readonly closed = output<void>(); // avisamos que el dropdown cerró
 
   // TODO: SIGNAL
   showOptions = signal<boolean>(false); // Mostrar opciones
@@ -61,6 +62,7 @@ export class Select {
     const panel = this.optionsRef()?.nativeElement;
     if ( panel && !panel.contains(event.target as Node) ) {
       this.showOptions.set(false);
+      this.closed.emit(); // Avisamos que cerramos click afuera del select
     }
   }
 
@@ -68,11 +70,15 @@ export class Select {
 
   toggle ( event: Event ): void {
     event.stopPropagation();
-    this.showOptions.set( !this.showOptions() );
+    const next = !this.showOptions();
+    this.showOptions.set(next);
+
+    if ( !next ) this.closed.emit(); // avisamos que cerramos con el mismo botón
   }
 
   select ( value: string ): void {
     this.valueChange.emit(value);
     this.showOptions.set(false);
+    this.closed.emit(); // avisamos que cerramos seleccionando una opción
   }
 }

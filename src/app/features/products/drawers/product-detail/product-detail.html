@@ -121,6 +121,7 @@
         <div class="product-detail__field-wrapper">
           <input
             [formField]="editForm.nombre"
+            placeholder="Nombre del producto"
             type="text"
             [class.i--warn]="editForm.nombre().invalid() && editForm.nombre().touched()"
             class="product-detail__input none input"
@@ -196,6 +197,7 @@
             <div class="product-detail__field-wrapper">
               <input
                 [formField]="editForm.marca"
+                placeholder="Marca del producto"
                 type="text"
                 [class.i--warn]="editForm.marca().invalid() && editForm.marca().touched()"
                 class="product-detail__input none input"
@@ -224,6 +226,7 @@
           } @else {
             <input
               [formField]="editForm.modelo"
+              placeholder="Modelo del producto"
               type="text"
               class="product-detail__input none input"
             >
@@ -242,6 +245,7 @@
             <div class="product-detail__field-wrapper">
               <input
                 [formField]="editForm.precio"
+                placeholder="Precio del producto"
                 type="number"
                 [class.i--warn]="editForm.precio().invalid() && editForm.precio().touched()"
                 class="product-detail__input none  input"
@@ -270,6 +274,7 @@
             <div class="product-detail__field-wrapper">
               <input
                 [formField]="editForm.descuento"
+                placeholder="Descuento del producto"
                 type="number"
                 [class.i--warn]="editForm.descuento().invalid() && editForm.descuento().touched()"
                 class="product-detail__input none input"
@@ -369,6 +374,7 @@
         } @else {
           <textarea
             [formField]="editForm.descripcion"
+            placeholder="Descripción del producto"
             class="product-detail__input none input"
           ></textarea>
         }
