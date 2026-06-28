@@ -1,0 +1,476 @@
+// ================================
+// DETALLE DEL PRODUCTO
+// ================================
+.variant-detail {
+  position: relative;
+  height: fit-content;
+  min-height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: 1024px) {
+    max-height: calc(100vh - 7rem);
+  }
+
+  // ===============================
+  // GLOBAL
+  // ================================
+  &__btn {
+    position: absolute;
+    right: 0;
+
+    display: flex;
+    justify-content: space-between;
+    align-self: center;
+
+    padding: 0.9rem;
+    font-size: 1.4rem;
+
+    @media (min-width: 480px) {
+      padding: 0.9rem 1.8rem;
+    }
+
+    &-1 {
+      right: 5rem;
+
+
+      gap: 0.5rem;
+
+      @media (min-width: 480px) {
+        right: 11rem;
+      }
+
+      fa-icon {
+        color: var(--color-blanco-1) !important;
+      }
+    }
+
+    span {
+      display: none;
+      visibility: hidden;
+
+      @media (min-width: 480px) {
+        display: block;
+        visibility: visible;
+      }
+    }
+
+    fa-icon {
+      transition: 0.5s ease;
+
+      @media (min-width: 480px) {
+        display: none;
+        visibility: hidden;
+      }
+    }
+
+    &:hover {
+      fa-icon {
+        color: var(--color-blanco-1) !important;
+      }
+    }
+  }
+
+  // ================================
+  // BARRA SUPERIOR
+  // ================================
+  &__top {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    display: flex;
+    justify-content: space-between;
+
+    z-index: 2;
+
+    padding: 1.5rem 1.5rem;
+    background-color: var(--color-blanco-1);
+    border-bottom: 0.2rem solid var(--color-blanco-8);
+
+    fa-icon {
+      font-size: 1.6rem;
+      color: var(--color-blanco-6);
+    }
+
+    span {
+      font-size: 1.6rem;
+    }
+  }
+
+  // Cerrar
+  &__close {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  // Herramientas: Editar y más opciones
+  &__tools {
+    display: flex;
+    gap: 2rem;
+
+    position: relative;
+  }
+
+  // Menú de opciones
+  &__options-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    position: absolute;
+    top: 100%;
+    right: 0;
+
+    margin: 1rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: var(--color-blanco-1);
+    box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.1);
+
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.9) translateY(-0.5rem);
+    transform-origin: top right;
+
+    transition: opacity 0.2s ease, transform 0.2s ease;
+
+    z-index: 1;
+
+    &.active {
+      opacity: 1;
+      pointer-events: all;
+      transform: scale(1) translateY(0);
+    }
+
+    button {
+      display: flex;
+      justify-content: flex-start;
+      gap: 0.8rem;
+
+      padding: 1rem 1.4rem;
+      width: 100%;
+
+      fa-icon {
+        color: inherit;
+      }
+    }
+  }
+
+  form {
+    position: relative;
+
+    > h4 {
+      margin-bottom: 2rem;
+
+      @media (min-width: 1024px) {
+        margin-top: 2rem;
+        margin-bottom: 2.5rem;
+      }
+    }
+  }
+
+  // Overlay de carga
+  &__form-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+
+    border-radius: 1rem;
+
+    fa-icon {
+      font-size: 3rem;
+      color: var(--color-primario);
+    }
+
+    span {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--color-primario);
+    }
+  }
+
+  // ================================
+  // CONTENIDO DE LA VARIANTE
+  // ================================
+  &__content {
+    padding: 1.5rem 1.2rem;
+
+    @media (min-width: 768px) {
+      padding: 1.5rem 1.8rem;
+    }
+  }
+
+  // Campos principales
+  &__fields-main {
+    display: grid;
+    grid-template-areas: 'title' 'sku' 'image' 'state' 'price' 'stock';
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, auto);
+
+    @media (min-width: 1024px) {
+      grid-template-areas: 'image title'
+                        'image sku'
+                        'image state'
+                        'image price'
+                        'image stock';
+      grid-template-columns: auto 1fr;
+      grid-template-rows: auto auto auto auto 1fr;
+
+      border-bottom: 0.2rem solid var(--color-blanco-8);
+      padding-bottom: 1rem;
+    }
+
+    > img {
+      grid-area: image;
+
+      max-width: 20rem;
+      margin: auto;
+    }
+
+    h2 {
+      grid-area: title;
+
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  // Sku
+  &__sku {
+    grid-area: sku;
+
+    margin-bottom: 2rem;
+    font-size: 1.4rem;
+  }
+
+  // Estado
+  &__state {
+    grid-area: state;
+  }
+
+  // Precio
+  &__price {
+    grid-area: price;
+  }
+
+  // Stock
+  &__stock {
+    grid-area: stock;
+  }
+
+  &__state,
+  &__price,
+  &__stock {
+    margin-bottom: 2rem;
+
+    @media (min-width: 1024px) {
+      align-self: flex-start;
+
+      grid-template-columns: 15rem 1fr !important;
+    }
+  }
+
+  // Campos
+  &__state,
+  &__price,
+  &__stock,
+  &__size,
+  &__color,
+  &__ability {
+    display: grid;
+    grid-template-columns: minmax(15rem, 1fr) 1fr;
+    align-items: center;
+
+    font-size: 1.4rem;
+
+    > span {
+      font-weight: 600;
+    }
+  }
+
+  // Campos secundarios
+  &__fields-secondary {
+    display: grid;
+    gap: 2rem;
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.5rem;
+    }
+  }
+
+  // Labels
+  &__state-label,
+  &__price-label,
+  &__stock-label,
+  &__size-label,
+  &__color-label,
+  &__ability-label {
+    color: var(--color-blanco-6);
+  }
+
+  // ================================
+  // HISTORIAL
+  // ================================
+  &__history {
+    flex: 1;
+
+    margin-top: 2.5rem;
+    border-top: 0.2rem solid var(--color-blanco-8);
+
+    background-color: var(--color-blanco-7);
+
+    padding: 2rem 1.2rem 1.5rem;
+
+    @media (min-width: 768px) {
+      padding: 2rem 1.8rem 1.5rem;
+      height: 100%;
+    }
+
+    @media (min-width: 1024px) {
+      height: calc(100vh - 50rem);
+    }
+  }
+
+  // Titulo
+  &__history-title {
+    margin-bottom: 2rem;
+  }
+
+  // Timeline
+  &__history-timeline {
+    display: flex;
+    flex-direction: column;
+
+    overflow-y: scroll;
+    max-height: 45rem;
+
+    @media (min-width: 768px) {
+      max-height: calc(100vh - 79rem);
+    }
+
+    @media (min-width: 1024px) {
+      max-height: calc(100vh - 60rem);
+    }
+
+    // Scrollbar oculto pero funcional
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+      display: none;
+    }
+  }
+
+  // Entradas
+  &__history-item {
+    position: relative;
+
+    display: flex;
+    gap: 1.2rem;
+
+    padding: 1.8rem 0;
+
+    border-bottom: 0.1rem solid var(--color-blanco-8);
+
+    // La línea vertical que conecta cada punto con el siguiente
+    &::before {
+      content: '';
+      position: absolute;
+      top: 2.6rem;
+      left: 1.1rem;
+
+      width: 2px;
+      height: calc(100% - 0.5rem);
+      background-color: var(--color-blanco-4);
+    }
+
+    &:last-child {
+
+      &::before {
+        display: none; // el último punto no necesita línea hacia abajo
+      }
+    }
+  }
+
+  &__history-icon {
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 2.4rem;
+    height: 2.4rem;
+    min-width: 2.4rem;
+
+    border-radius: 50%;
+    background-color: var(--color-blanco-3);
+
+    fa-icon {
+      font-size: 1.1rem;
+      color: var(--color-blanco-7);
+    }
+  }
+
+  // Colores del punto según el tipo de evento
+  &__history-item--info &__history-icon {
+    background-color: var(--history-info-soft);
+    fa-icon { color: var(--history-info-base); }
+  }
+
+  &__history-item--positivo &__history-icon {
+    background-color: var(--history-positivo-soft);
+    fa-icon { color: var(--history-positivo-base); }
+  }
+
+  &__history-item--negativo &__history-icon {
+    background-color: var(--history-negativo-soft);
+    fa-icon { color: var(--history-negativo-base); }
+  }
+
+  &__history-item--neutral &__history-icon {
+    background-color: var(--history-neutral-soft);
+    fa-icon { color: var(--history-neutral-base); }
+  }
+
+  // Información
+  &__history-body {
+    flex: 1;
+  }
+
+  &__history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+  }
+
+  &__history-label {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--color-primario);
+  }
+
+  &__history-date {
+    font-size: 1.1rem;
+    color: var(--color-blanco-6);
+    white-space: nowrap;
+  }
+
+  &__history-desc {
+    font-size: 1.2rem;
+    color: var(--color-blanco-6);
+    margin-top: 0.2rem;
+  }
+}

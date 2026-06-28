@@ -1,1 +1,330 @@
-<p>variant-detail works!</p>
+<!-- ================================
+  DETALLE DE LA VARIANTE
+================================ -->
+<div class="variant-detail">
+  <!-- ================================
+    BARRA SUPERIOR
+  ================================ -->
+  <div class="variant-detail__top">
+    <!-- Cerrar -->
+    <button
+      type="button"
+      class="variant-detail__close none btn b--hidden"
+    >
+      <fa-icon [icon]="faArrowRightFromBracket"></fa-icon>
+      <span>Cerrar</span>
+    </button>
+
+    <!-- Herramientas: Editar y más opciones -->
+    <div class="variant-detail__tools">
+      <!-- Editar -->
+      <button
+        type="button"
+        class="variant-detail__edit none btn b--hidden"
+      >
+        <fa-icon [icon]="faPenToSquare"></fa-icon>
+        <span class="sr-only">Editar</span>
+      </button>
+
+      <!-- Más opciones -->
+      <button
+        type="button"
+        class="variant-detail__options none btn b--hidden"
+      >
+        <fa-icon [icon]="faEllipsis"></fa-icon>
+        <span class="sr-only">Más opciones</span>
+      </button>
+
+      <!-- Guardar -->
+      <button
+        type="submit"
+        form="variantEditForm"
+        class="variant-detail__btn variant-detail__btn-1 none btn b--primary"
+      >
+        <fa-icon [icon]="faFloppyDisk"></fa-icon>
+        <span>Guardar</span>
+      </button>
+
+      <!-- Cancelar -->
+      <button
+        type="button"
+        class="variant-detail__btn variant-detail__btn-2 none btn b--gray"
+      >
+        <fa-icon [icon]="faClose"></fa-icon>
+        <span>Cancelar</span>
+      </button>
+    </div>
+    <!-- END: Herramientas -->
+
+    <!-- Menú de opciones -->
+    <div
+      class="variant-detail__options-menu"
+    >
+
+      <!-- Descargar CSV -->
+      <button type="button" class="none btn b--white-primary">
+        <fa-icon [icon]="faFileArrowDown"></fa-icon>
+        <span>Descargar CSV</span>
+      </button>
+
+      <!-- Imprimir etiqueta -->
+      <button
+        type="button"
+        class="none btn b--white-primary"
+      >
+        <fa-icon [icon]="faBarcode"></fa-icon>
+        <span>Imprimir etiqueta</span>
+      </button>
+
+      <!-- Archivar -->
+      <button
+        type="button"
+        class="none btn b--white-primary"
+      >
+        <fa-icon [icon]="faBoxArchive"></fa-icon>
+        <span>Archivar</span>
+      </button>
+
+    </div>
+    <!-- END: Menú de opciones -->
+  </div>
+  <!-- END: BARRA SUPERIOR -->
+
+  <!-- ================================
+    CONTENIDO DE LA VARIANTE
+  ================================ -->
+  <div class="variant-detail__content">
+    <form
+      id="variantEditForm"
+      novalidate
+    >
+      @if ( false ) {
+        <!-- Overlay de carga -->
+        <div class="variant-detail__form-overlay">
+          <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
+          <span>Guardando, espere por favor...</span>
+        </div>
+      }
+
+      <!-- Campos principales -->
+      <div class="variant-detail__fields-main">
+        <img src="./img/iphone15.png" alt="Imagen de la variante">
+
+        <!-- Nombre de la variante -->
+        <h2>Nombre de la variante</h2>
+
+        <!-- SKU de la variante-->
+        <div class="variant-detail__sku">
+          <span>SKU-157</span>
+        </div>
+
+        <!-- Estado -->
+        <div class="variant-detail__state">
+          <div class="variant-detail__state-label">
+            <span>Estado</span>
+          </div>
+
+          <div class="variant-detail__state-value">
+            <span [class]="`badge badge--disponible`">
+              Disponible
+            </span>
+          </div>
+        </div>
+
+        <!-- Precio adicional de la variante-->
+        <div class="variant-detail__price">
+          <div class="variant-detail__price-label">
+            <span>Precio adicional</span>
+          </div>
+
+          <span>S/ 9000</span>
+        </div>
+
+        <!-- Stock de la variante-->
+        <div class="variant-detail__stock">
+          <div class="variant-detail__stock-label">
+            <span>Stock</span>
+          </div>
+
+          <span>80</span>
+        </div>
+      </div>
+
+      <h4>Valores secundarios</h4>
+
+      <!-- Campos secundarios -->
+      <div class="variant-detail__fields-secondary">
+
+        <!-- Talla de la variante-->
+        <div class="variant-detail__size">
+          <div class="variant-detail__size-label">
+            <span>Talla</span>
+          </div>
+
+          <span>M</span>
+        </div>
+
+        <!-- Color de la variante-->
+        <div class="variant-detail__color">
+          <div class="variant-detail__color-label">
+            <span>Color</span>
+          </div>
+
+          <span>Rojo</span>
+        </div>
+
+        <!-- Capacidad de la variante-->
+        <div class="variant-detail__ability">
+          <div class="variant-detail__ability-label">
+            <span>Capacidad</span>
+          </div>
+
+          <span>10kg</span>
+        </div>
+      </div>
+
+
+
+    </form>
+  </div>
+  <!-- END: CONTENIDO DE LA VARIANTE -->
+
+  <!-- ================================
+    HISTORIAL
+  ================================ -->
+  <div class="variant-detail__history">
+    <!-- Titulo -->
+    <div class="variant-detail__history-title">
+      <h4>Historial de actividad</h4>
+    </div>
+
+    <!-- Timeline -->
+    <div class="variant-detail__history-timeline">
+
+      <!-- Entrada: Stock -->
+      <div class="variant-detail__history-item variant-detail__history-item--info">
+        <div class="variant-detail__history-icon">
+          <fa-icon [icon]="faBoxesStacked"></fa-icon>
+        </div>
+
+        <!-- Información  -->
+        <div class="variant-detail__history-body">
+          <div class="variant-detail__history-header">
+            <span class="variant-detail__history-label">Stock actualizado</span>
+            <span class="variant-detail__history-date">Hace 5 minutos</span>
+          </div>
+
+          <p class="variant-detail__history-desc">De 30 a 25 unidades</p>
+        </div>
+      </div>
+
+
+      <!-- Entrada: Precio -->
+      <div class="variant-detail__history-item variant-detail__history-item--info">
+        <div class="variant-detail__history-icon">
+          <fa-icon [icon]="faTag"></fa-icon>
+        </div>
+
+        <!-- Información  -->
+        <div class="variant-detail__history-body">
+          <div class="variant-detail__history-header">
+            <span class="variant-detail__history-label">Precio actualizado</span>
+            <span class="variant-detail__history-date">Ayer, 3:40 p.m.</span>
+          </div>
+
+          <p class="variant-detail__history-desc">De S/ 80 a S/ 90</p>
+        </div>
+      </div>
+
+      <!-- Entrada: Estado -->
+      <div class="variant-detail__history-item variant-detail__history-item--negativo">
+        <div class="variant-detail__history-icon">
+          <fa-icon [icon]="faBoxArchive"></fa-icon>
+        </div>
+
+        <!-- Información  -->
+        <div class="variant-detail__history-body">
+          <div class="variant-detail__history-header">
+            <span class="variant-detail__history-label">Estado cambiado</span>
+            <span class="variant-detail__history-date">20 jun, 10:15 a.m.</span>
+          </div>
+
+          <p class="variant-detail__history-desc">De "Disponible" a "Descontinuado"</p>
+        </div>
+      </div>
+
+      <!-- Entrada: Creación -->
+      <div class="variant-detail__history-item variant-detail__history-item--neutral">
+        <div class="variant-detail__history-icon">
+          <fa-icon [icon]="faPlus"></fa-icon>
+        </div>
+
+        <!-- Información  -->
+        <div class="variant-detail__history-body">
+          <div class="variant-detail__history-header">
+            <span class="variant-detail__history-label">Variante creada</span>
+            <span class="variant-detail__history-date">10 ene, 3:00 a.m.</span>
+          </div>
+
+          <p class="variant-detail__history-desc">Stock inicial: 50 unidades</p>
+        </div>
+      </div>
+
+       <!-- Entrada: Creación -->
+      <div class="variant-detail__history-item variant-detail__history-item--neutral">
+        <div class="variant-detail__history-icon">
+          <fa-icon [icon]="faPlus"></fa-icon>
+        </div>
+
+        <!-- Información  -->
+        <div class="variant-detail__history-body">
+          <div class="variant-detail__history-header">
+            <span class="variant-detail__history-label">Variante creada</span>
+            <span class="variant-detail__history-date">10 ene, 3:00 a.m.</span>
+          </div>
+
+          <p class="variant-detail__history-desc">Stock inicial: 50 unidades</p>
+        </div>
+      </div>
+
+       <!-- Entrada: Creación -->
+      <div class="variant-detail__history-item variant-detail__history-item--neutral">
+        <div class="variant-detail__history-icon">
+          <fa-icon [icon]="faPlus"></fa-icon>
+        </div>
+
+        <!-- Información  -->
+        <div class="variant-detail__history-body">
+          <div class="variant-detail__history-header">
+            <span class="variant-detail__history-label">Variante creada</span>
+            <span class="variant-detail__history-date">10 ene, 3:00 a.m.</span>
+          </div>
+
+          <p class="variant-detail__history-desc">Stock inicial: 50 unidades</p>
+        </div>
+      </div>
+
+       <!-- Entrada: Creación -->
+      <div class="variant-detail__history-item variant-detail__history-item--neutral">
+        <div class="variant-detail__history-icon">
+          <fa-icon [icon]="faPlus"></fa-icon>
+        </div>
+
+        <!-- Información  -->
+        <div class="variant-detail__history-body">
+          <div class="variant-detail__history-header">
+            <span class="variant-detail__history-label">Variante creada</span>
+            <span class="variant-detail__history-date">10 ene, 3:00 a.m.</span>
+          </div>
+
+          <p class="variant-detail__history-desc">Stock inicial: 50 unidades</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <!-- END: HISTORIAL -->
+
+</div>
+<!-- END: DETALLE DE LA VARIANTE -->

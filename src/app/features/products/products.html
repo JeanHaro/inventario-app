@@ -233,7 +233,7 @@
 ================================ -->
 <div
   [class.active]="showProductForm()"
-  class="drawers drawers--product-form active"
+  class="drawers drawers--product-form"
 >
   @if ( showProductForm() ) {
     <product-form
@@ -243,3 +243,11 @@
   }
 </div>
 
+<!-- ================================
+  DRAWER: VARIANT DETAIL
+================================ -->
+<div
+  class="drawers drawers--variant-detail active"
+>
+  <variant-detail />
+</div>

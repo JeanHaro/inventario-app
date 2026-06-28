@@ -85,6 +85,19 @@
   --color-warning:       #D97706;
   --color-warning-hover: #B45309;
 
+    // HISTORIAL
+  --history-info-base: #2563EB;
+  --history-info-soft:  #DBEAFE;
+
+  --history-positivo-base: #059669;
+  --history-positivo-soft:  #D1FAE5;
+
+  --history-negativo-base: #E24B4A;
+  --history-negativo-soft:  #FEE2E2;
+
+  --history-neutral-base: #6B7280;
+  --history-neutral-soft:  #E5E7EB;
+
   // COLLAPSED
   --collapsed-height: 200rem; // MODIFICAR SI HAY ALGUN PRODUCTO CON MUCHAS VARIANTES QUE PASA EL LIMITE DEL ALTO
 }
