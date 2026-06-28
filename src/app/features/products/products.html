@@ -260,6 +260,7 @@
   @if ( selectedVariant() !== null ) {
     <variant-detail
       [variant]="selectedVariant()!"
+      [productName]="selectedProduct()!.nombre"
       (closeModal)="closeVariantDetail()"
     />
   }

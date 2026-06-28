@@ -18,52 +18,60 @@
 
     <!-- Herramientas: Editar y más opciones -->
     <div class="variant-detail__tools">
-      <!-- Editar -->
-      <button
-        type="button"
-        class="variant-detail__edit none btn b--hidden"
-      >
-        <fa-icon [icon]="faPenToSquare"></fa-icon>
-        <span class="sr-only">Editar</span>
-      </button>
+      @if ( true ) {
+        <!-- Editar -->
+        <button
+          type="button"
+          class="variant-detail__edit none btn b--hidden"
+        >
+          <fa-icon [icon]="faPenToSquare"></fa-icon>
+          <span class="sr-only">Editar</span>
+        </button>
 
-      <!-- Más opciones -->
-      <button
-        type="button"
-        class="variant-detail__options none btn b--hidden"
-      >
-        <fa-icon [icon]="faEllipsis"></fa-icon>
-        <span class="sr-only">Más opciones</span>
-      </button>
+        <!-- Más opciones -->
+        <button
+          type="button"
+          (click)="toggleOptionsMenu($event)"
+          class="variant-detail__options none btn b--hidden"
+        >
+          <fa-icon [icon]="faEllipsis"></fa-icon>
+          <span class="sr-only">Más opciones</span>
+        </button>
+      } @else {
+        <!-- Guardar -->
+        <button
+          type="submit"
+          form="variantEditForm"
+          class="variant-detail__btn variant-detail__btn-1 none btn b--primary"
+        >
+          <fa-icon [icon]="faFloppyDisk"></fa-icon>
+          <span>Guardar</span>
+        </button>
 
-      <!-- Guardar -->
-      <button
-        type="submit"
-        form="variantEditForm"
-        class="variant-detail__btn variant-detail__btn-1 none btn b--primary"
-      >
-        <fa-icon [icon]="faFloppyDisk"></fa-icon>
-        <span>Guardar</span>
-      </button>
-
-      <!-- Cancelar -->
-      <button
-        type="button"
-        class="variant-detail__btn variant-detail__btn-2 none btn b--gray"
-      >
-        <fa-icon [icon]="faClose"></fa-icon>
-        <span>Cancelar</span>
-      </button>
+        <!-- Cancelar -->
+        <button
+          type="button"
+          class="variant-detail__btn variant-detail__btn-2 none btn b--gray"
+        >
+          <fa-icon [icon]="faClose"></fa-icon>
+          <span>Cancelar</span>
+        </button>
+      }
     </div>
     <!-- END: Herramientas -->
 
     <!-- Menú de opciones -->
     <div
+      #optionsMenuRef
+      [class.active]="showOptionsMenu()"
       class="variant-detail__options-menu"
     >
 
       <!-- Descargar CSV -->
-      <button type="button" class="none btn b--white-primary">
+      <button
+        type="button"
+        class="none btn b--white-primary"
+      >
         <fa-icon [icon]="faFileArrowDown"></fa-icon>
         <span>Descargar CSV</span>
       </button>
@@ -109,14 +117,18 @@
 
       <!-- Campos principales -->
       <div class="variant-detail__fields-main">
-        <img src="./img/iphone15.png" alt="Imagen de la variante">
+        @if ( variant().imagen?.length ) {
+          <img [src]="variant().imagen" [alt]="variant().nombre ?? 'Imagen de la variante'">
+        } @else {
+          <img src="./img/iphone15.png" alt="Imagen por defecto">
+        }
 
         <!-- Nombre de la variante -->
-        <h2>Nombre de la variante</h2>
+        <h2>{{ variant().nombre ?? productName() }}</h2>
 
         <!-- SKU de la variante-->
         <div class="variant-detail__sku">
-          <span>SKU-157</span>
+          <span>{{ variant().sku ?? 'sin-sku' }}</span>
         </div>
 
         <!-- Estado -->
@@ -126,8 +138,8 @@
           </div>
 
           <div class="variant-detail__state-value">
-            <span [class]="`badge badge--disponible`">
-              Disponible
+            <span [class]="`badge badge--${ variant().estado }`">
+              {{ variant().estado }}
             </span>
           </div>
         </div>
@@ -138,7 +150,7 @@
             <span>Precio adicional</span>
           </div>
 
-          <span>S/ 9000</span>
+          <span>{{ variant().precioAdicional ?? 0 | compactNumber: 'precio' }}</span>
         </div>
 
         <!-- Stock de la variante-->
@@ -147,7 +159,7 @@
             <span>Stock</span>
           </div>
 
-          <span>80</span>
+          <span>{{ variant().stock | compactNumber: 'stock' }}</span>
         </div>
       </div>
 
@@ -162,7 +174,7 @@
             <span>Talla</span>
           </div>
 
-          <span>M</span>
+          <span>{{ variant().talla ?? 'No tiene' }}</span>
         </div>
 
         <!-- Color de la variante-->
@@ -171,7 +183,7 @@
             <span>Color</span>
           </div>
 
-          <span>Rojo</span>
+          <span>{{ variant().color ?? 'No tiene' }}</span>
         </div>
 
         <!-- Capacidad de la variante-->
@@ -180,7 +192,7 @@
             <span>Capacidad</span>
           </div>
 
-          <span>10kg</span>
+          <span>{{ variant().capacidad ?? 'No tiene' }}</span>
         </div>
       </div>
 
