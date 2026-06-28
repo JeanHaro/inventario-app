@@ -107,6 +107,7 @@
 
           <!-- Ver variante -->
           <button
+            (click)="viewVariant.emit(variante.id)"
             class="product-detail__action-btn product-detail__action-btn--see btn b--hidden none"
           >
             <fa-icon [icon]="faEye"></fa-icon>

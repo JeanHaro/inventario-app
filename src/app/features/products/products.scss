@@ -142,7 +142,7 @@
 }
 
 // ================================
-// MODALS
+// DRAWERS
 // ================================ -->
 .drawers {
   position: fixed;
@@ -163,6 +163,10 @@
   transition: all 0.8s ease;
   z-index: 9;
 
+  @media (min-width: 1024px) {
+    max-width: 70rem;
+  }
+
   // Scrollbar oculto pero funcional
   &::-webkit-scrollbar {
     width: 8px;
@@ -175,8 +179,29 @@
     box-shadow: -15px 0px 15px 3px rgba(0,0,0,0.1);
   }
 
-  @media (min-width: 1024px) {
-    max-width: 70rem;
+  // PRODUCT DETAIL
+  &--product-detail {
+    transition: transform 0.35s ease,
+                opacity 0.35s ease;
+
+    // Se aplica cuando variant-detail está abierto encima
+    &.is-covered {
+      transform: scale(0.96) translateX(-1rem);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    // Cuando variant-detail se abre desde la tabla
+    &.no-anim {
+      transition: none;
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  // VARIANT DETAIL
+  &--variant-detail {
+    z-index: 20;
   }
 }
 

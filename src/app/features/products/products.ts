@@ -22,7 +22,6 @@ import {
   faBoxArchive,
   faBoxOpen,
   faXmark,
-  faClockRotateLeft,
   faBarcode,
   faFloppyDisk,
 } from '@fortawesome/free-solid-svg-icons';
@@ -62,11 +61,11 @@ export class Products implements OnInit {
   readonly faBoxArchive: IconDefinition = faBoxArchive;
   readonly faBoxOpen: IconDefinition = faBoxOpen;
   readonly faXmark: IconDefinition = faXmark;
-  readonly faClockRotateLeft: IconDefinition = faClockRotateLeft;
   readonly faBarcode: IconDefinition = faBarcode;
   readonly faFloppyDisk: IconDefinition = faFloppyDisk;
 
   // TODO: SIGNALS
+  openedVariantStandalone = signal<boolean>(false); // Recuerda si variant-detail se abrio desde la tabla
   products = signal<Product[]>([]);
   variant = signal<Variant | null>(null);
   selectedProducts = signal<Set<number>>(new Set());
@@ -92,9 +91,14 @@ export class Products implements OnInit {
   // TODO: EFFECTS
   // Limpia la selección automáticamente cada vez que se abre cualquier drawer
   private readonly clearSelectionOnDrawerOpen = effect(() => {
-    // Vemos que esta seleccionado el producto o el productForm está en true
-    if ( this.selectedProduct() !== null || this.showProductForm() ) {
+    const algunDrawerAbierto = this.selectedProduct() !== null ||
+                              this.showProductForm() ||
+                              this.selectedVariant() !== null;
+
+    // Si hay algún drawer abierto
+    if ( algunDrawerAbierto ) {
       this.clearSelection();
+      this.variantPanel.set(null);
     }
   });
 
@@ -169,6 +173,18 @@ export class Products implements OnInit {
   readonly showProductForm = computed<boolean>(() =>
     this.queryParams().get('modo') === 'crear'
   );
+
+  // ===================================================== PARAMS: VER VARIANTE
+
+  // La variante seleccionada se deriva del producto seleccionado más la URL
+  readonly selectedVariant = computed<Variant | null>(() => {
+    const producto = this.selectedProduct();
+    const varianteId = this.queryParams().get('varianteId');
+
+    if ( !producto || !varianteId ) return null;
+
+    return producto.variantes.find(variante => variante.id === Number(varianteId)) ?? null;
+  })
 
   // =======================================================================
 
@@ -425,7 +441,37 @@ export class Products implements OnInit {
   closeAllDrawers(): void {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { id: null, modo: null },
+      queryParams: { id: null, modo: null, varianteId: null },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  // ================================================= DRAWER VER/EDITAR VARIANTE
+
+  // Abrir drawer Detalle variante
+  openVariantDetail ( productoId: number, varianteId: number ): void {
+    // Si el producto no estaba abierto antes, la variant-detail es standalone
+    this.openedVariantStandalone.set(this.selectedProduct() === null);
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { id: productoId, varianteId },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  // Cerrar drawer Detalle variante
+  closeVariantDetail(): void {
+    const queryParams: Record<string, any> = { varianteId: null };
+
+    // Solo cerramos el producto también si se abrió desde la tabla
+    if ( this.openedVariantStandalone() ) {
+      queryParams['id'] = null;
+    }
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
       queryParamsHandling: 'merge'
     });
   }

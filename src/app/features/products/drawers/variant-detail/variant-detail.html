@@ -9,6 +9,7 @@
     <!-- Cerrar -->
     <button
       type="button"
+      (click)="closeModal.emit()"
       class="variant-detail__close none btn b--hidden"
     >
       <fa-icon [icon]="faArrowRightFromBracket"></fa-icon>
@@ -195,6 +196,7 @@
   <div class="variant-detail__history">
     <!-- Titulo -->
     <div class="variant-detail__history-title">
+      <fa-icon [icon]="faClockRotateLeft"></fa-icon>
       <h4>Historial de actividad</h4>
     </div>
 

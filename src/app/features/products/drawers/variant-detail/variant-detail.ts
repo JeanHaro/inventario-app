@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 // FontAwesome
 import {
@@ -6,6 +6,7 @@ import {
   faBarcode,
   faBoxArchive,
   faBoxesStacked,
+  faClockRotateLeft,
   faClose,
   faEllipsis,
   faFileArrowDown,
@@ -16,6 +17,9 @@ import {
   faTag,
   IconDefinition
 } from '@fortawesome/free-solid-svg-icons';
+
+// Interfaces
+import { Variant } from '../../models/products.model';
 
 @Component({
   selector: 'variant-detail',
@@ -37,4 +41,9 @@ export class VariantDetail {
   readonly faBoxesStacked: IconDefinition = faBoxesStacked;
   readonly faTag: IconDefinition = faTag;
   readonly faPlus: IconDefinition = faPlus;
+  readonly faClockRotateLeft: IconDefinition = faClockRotateLeft;
+
+  // TODO: INPUT Y OUTPUT
+  readonly variant = input.required<Variant>();
+  readonly closeModal = output<void>();
 }

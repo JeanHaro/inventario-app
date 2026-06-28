@@ -40,6 +40,7 @@ import {
   Category,
   ProductState,
   Product,
+  VariantRef,
 } from '../../models/products.model';
 import { SelectOption } from '../../../../shared/components/select/models/select.model';
 
@@ -75,6 +76,7 @@ export class ProductDetail implements OnInit {
   readonly editModeChanged = output<boolean>(); // PARAMS: EDITAR PRODUCTO
   readonly closeModal = output<void>();
   readonly productUpdated = output<Product>(); // Avisamos que el producto se actualizo
+  readonly viewVariant = output<VariantRef>();
 
   // TODO: PROPIEDADES
   readonly stateOptions: SelectOption[] = [

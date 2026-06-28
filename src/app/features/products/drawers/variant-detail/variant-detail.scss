@@ -342,6 +342,10 @@
 
   // Titulo
   &__history-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
     margin-bottom: 2rem;
   }
 

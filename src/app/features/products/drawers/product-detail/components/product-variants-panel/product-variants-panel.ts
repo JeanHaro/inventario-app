@@ -1,5 +1,5 @@
 
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, input, output, signal } from '@angular/core';
 
 // FontAwesome
 import {
@@ -36,8 +36,9 @@ export class ProductVariantsPanel {
   readonly faPenToSquare: IconDefinition = faPenToSquare;
   readonly faEye: IconDefinition = faEye;
 
-  // TODO: INPUT, recibe el nombre completo
+  // TODO: INPUT Y OUTPUT
   readonly product = input.required<Product>();
+  readonly viewVariant = output<number>();
 
   // TODO: PROPIEDADES
   // Opciones de los selects

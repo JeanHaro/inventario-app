@@ -31,7 +31,7 @@
         [selectedProducts]="selectedProducts()"
         [(variantPanel)]="variantPanel"
         (selectionToggled)="toggleSelection($event)"
-        (todasToggled)="selectAll()"
+        (allToggled)="selectAll()"
         (productKebab)="toggleProductKebab($event)"
         (variantKebab)="getVariant($event)"
         (selectionCleared)="clearSelection()"
@@ -114,15 +114,15 @@
       class="products__kebab products__kebab-variant"
     >
       <!-- Ver detalles -->
-      <button class="products__btn products__btn--see btn b--terciary none">
+      <button
+        (click)="openVariantDetail(
+          variantPanel()!.productoId,
+          variant()!.id
+        )"
+        class="products__btn products__btn--see btn b--terciary none"
+      >
         <fa-icon [icon]="faEye"></fa-icon>
         <span>Ver detalles</span>
-      </button>
-
-      <!-- Historial -->
-      <button class="products__btn products__btn--record btn b--terciary none">
-        <fa-icon [icon]="faClockRotateLeft"></fa-icon>
-        <span>Historial</span>
       </button>
 
       <!-- Imprimir etiqueta -->
@@ -207,7 +207,11 @@
 <div
   (click)="closeAllDrawers()"
   class="drawers__overlay"
-  [class.active]="selectedProduct() !== null || showProductForm()"
+  [class.active]="
+    selectedProduct() !== null ||
+    showProductForm() ||
+    selectedVariant() !== null
+  "
 ></div>
 
 <!-- ================================
@@ -215,6 +219,8 @@
 ================================ -->
 <div
   [class.active]="selectedProduct() !== null"
+  [class.is-covered]="selectedVariant() !== null"
+  [class.no-anim]="openedVariantStandalone() && selectedVariant() !== null"
   class="drawers drawers--product-detail"
 >
   @if ( selectedProduct() !== null ) {
@@ -224,6 +230,7 @@
       (closeModal)="closeProductDetail()"
       (productUpdated)="updateProductInList($event)"
       (editModeChanged)="syncEditMode($event)"
+      (viewVariant)="openVariantDetail($event.productoId, $event.varianteId)"
     />
   }
 </div>
@@ -247,7 +254,13 @@
   DRAWER: VARIANT DETAIL
 ================================ -->
 <div
-  class="drawers drawers--variant-detail active"
+  [class.active]="selectedVariant() !== null"
+  class="drawers drawers--variant-detail"
 >
-  <variant-detail />
+  @if ( selectedVariant() !== null ) {
+    <variant-detail
+      [variant]="selectedVariant()!"
+      (closeModal)="closeVariantDetail()"
+    />
+  }
 </div>

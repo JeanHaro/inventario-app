@@ -425,6 +425,10 @@
         @if ( activeTab() === 'variantes' ) {
           <product-variants-panel
             [product]="product()"
+            (viewVariant)="viewVariant.emit({
+              productoId: product().id,
+              varianteId: $event
+            })"
           />
         }
         <!-- END: VISTA: Variantes -->
