@@ -1,6 +1,17 @@
 {
   "name": "inventario-app",
   "version": "0.0.0",
+  "description": "Sistema de gestión de inventario construido con Angular 22 (Signals, Signal Forms) y Express/TypeScript.",
+  "author": "Jean Haro",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JeanHaro/inventario-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JeanHaro/inventario-app/issues"
+  },
+  "homepage": "https://github.com/JeanHaro/inventario-app#readme",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
