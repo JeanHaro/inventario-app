@@ -429,6 +429,10 @@
               productoId: product().id,
               varianteId: $event
             })"
+            (editVariant)="editVariant.emit({
+              productoId: product().id,
+              varianteId: $event
+            })"
           />
         }
         <!-- END: VISTA: Variantes -->

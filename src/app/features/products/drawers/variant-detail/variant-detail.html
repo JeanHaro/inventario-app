@@ -93,10 +93,11 @@
       <!-- Archivar -->
       <button
         type="button"
+        (click)="toggleVariantArchive()"
         class="none btn b--white-primary"
       >
-        <fa-icon [icon]="faBoxArchive"></fa-icon>
-        <span>Archivar</span>
+        <fa-icon [icon]="variantIsArchived() ? faBoxOpen : faBoxArchive"></fa-icon>
+        <span>{{ variantIsArchived() ? 'Desarchivar' : 'Archivar' }}</span>
       </button>
 
     </div>
@@ -126,52 +127,54 @@
       <div class="variant-detail__fields-main">
 
         <!-- Imagen -->
-        <div
-          class="variant-detail__image-wrapper"
-          [class.editable]="editMode()"
-          (click)="openImageSelector()"
-        >
-          @if ( variant().imagen?.length ) {
-            <img
-              [src]="variant().imagen"
-              [alt]="variant().nombre ?? 'Imagen de la variante'"
-              width="256"
-              height="256"
-            >
-          } @else {
-            <img
-              src="./img/iphone15.png"
-              alt="Imagen por defecto"
-              width="256"
-              height="256"
-            >
-          }
+        <div class="variant-detail__image-column">
+          <div
+            class="variant-detail__image-wrapper"
+            [class.editable]="editMode()"
+            (click)="openImageSelector()"
+          >
+            @if ( variant().imagen?.length ) {
+              <img
+                [src]="variant().imagen"
+                [alt]="variant().nombre ?? 'Imagen de la variante'"
+                width="256"
+                height="256"
+              >
+            } @else {
+              <img
+                src="./img/iphone15.png"
+                alt="Imagen por defecto"
+                width="256"
+                height="256"
+              >
+            }
 
-          @if ( editMode() ) {
-            <div class="variant-detail__image-overlay">
-              @if ( uploadingImage() ) {
-                <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
-              } @else {
-                <fa-icon [icon]="faCamera"></fa-icon>
-                <span>Cambiar imagen</span>
-              }
+            @if ( editMode() ) {
+              <div class="variant-detail__image-overlay">
+                @if ( uploadingImage() ) {
+                  <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
+                } @else {
+                  <fa-icon [icon]="faCamera"></fa-icon>
+                  <span>Cambiar imagen</span>
+                }
+              </div>
+            }
+
+            <input
+              #imageInputRef
+              type="file"
+              accept="image/*"
+              hidden
+              (change)="onImageSelected($event)"
+            >
+          </div>
+
+          @if ( imageError() && editMode() ) {
+            <div class="variant-detail__field-error">
+              <span>{{ imageError() }}</span>
             </div>
           }
-
-          <input
-            #imageInputRef
-            type="file"
-            accept="image/*"
-            hidden
-            (change)="onImageSelected($event)"
-          >
         </div>
-
-        @if ( imageError() ) {
-          <div class="variant-detail__field-error">
-            <span>{{ imageError() }}</span>
-          </div>
-        }
 
         <!-- Bloque informativo -->
         <div class="variant-detail__main-info">

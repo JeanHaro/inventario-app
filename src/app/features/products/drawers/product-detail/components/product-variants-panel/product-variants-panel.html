@@ -107,7 +107,10 @@
         <div class="product-detail__variant-action">
 
           <!-- Editar variante -->
-          <button class="product-detail__action-btn product-detail__action-btn--edit btn b--hidden none">
+          <button
+            (click)="editVariant.emit(variante.id)"
+            class="product-detail__action-btn product-detail__action-btn--edit btn b--hidden none"
+          >
             <fa-icon [icon]="faPenToSquare"></fa-icon>
             <span class="sr-only">Editar variante</span>
           </button>

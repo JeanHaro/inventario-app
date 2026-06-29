@@ -36,6 +36,7 @@
         (variantKebab)="getVariant($event)"
         (selectionCleared)="clearSelection()"
         (editProduct)="editProduct($event)"
+        (editVariant)="editVariant($event.productoId, $event.varianteId)"
       />
 
     </div>
@@ -231,6 +232,7 @@
       (productUpdated)="updateProductInList($event)"
       (editModeChanged)="syncEditMode($event)"
       (viewVariant)="openVariantDetail($event.productoId, $event.varianteId)"
+      (editVariant)="editVariant($event.productoId, $event.varianteId)"
     />
   }
 </div>
@@ -262,8 +264,10 @@
       [variant]="selectedVariant()!"
       [productName]="variantOwnerProduct()!.nombre"
       [productId]="variantOwnerProduct()!.id"
+      [startInEditMode]="startVariantInEditMode()"
       (closeModal)="closeVariantDetail()"
       (variantUpdated)="updateProductInList($event)"
+      (editModeChanged)="syncVariantEditMode($event)"
     />
   }
 </div>

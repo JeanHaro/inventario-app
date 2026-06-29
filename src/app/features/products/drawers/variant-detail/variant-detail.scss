@@ -244,6 +244,8 @@
 
     span {
       display: block;
+      overflow-wrap: break-word; 
+      word-break: break-word;
     }
   }
 
@@ -263,6 +265,17 @@
     }
   }
 
+  &__image-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+
+    @media (min-width: 1024px) {
+      flex-shrink: 0;
+      width: 16rem;
+    }
+  }
+
   // Imagen
   &__image-wrapper {
     position: relative;
@@ -272,11 +285,6 @@
     border-radius: 0.8rem;
     overflow: hidden;
     margin: 0 auto;
-
-    @media (min-width: 1024px) {
-      margin: 0;
-      flex-shrink: 0;
-    }
 
     img {
       width: 100%;

@@ -77,6 +77,7 @@ export class ProductDetail implements OnInit {
   readonly closeModal = output<void>();
   readonly productUpdated = output<Product>(); // Avisamos que el producto se actualizo
   readonly viewVariant = output<VariantRef>();
+  readonly editVariant = output<VariantRef>();
 
   // TODO: PROPIEDADES
   readonly stateOptions: SelectOption[] = [

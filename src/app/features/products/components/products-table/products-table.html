@@ -309,7 +309,13 @@
               <div class="products__td products__action">
 
                 <!-- Editar variante -->
-                <button class="products__action-btn products__action-btn--edit btn b--hidden none">
+                <button
+                  (click)="editVariant.emit({
+                    productoId: producto.id,
+                    varianteId: variante.id
+                  })"
+                  class="products__action-btn products__action-btn--edit btn b--hidden none"
+                >
                   <fa-icon [icon]="faPenToSquare"></fa-icon>
                   <span class="sr-only">Editar variante</span>
                 </button>

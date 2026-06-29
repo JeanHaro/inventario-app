@@ -1,9 +1,11 @@
 import {
   Component,
+  computed,
   ElementRef,
   HostListener,
   inject,
   input,
+  OnInit,
   output,
   signal,
   viewChild
@@ -17,6 +19,7 @@ import {
   faBarcode,
   faBoxArchive,
   faBoxesStacked,
+  faBoxOpen,
   faCamera,
   faClockRotateLeft,
   faClose,
@@ -47,7 +50,7 @@ import { SelectOption } from '../../../../shared/components/select/models/select
   templateUrl: './variant-detail.html',
   styleUrl: './variant-detail.scss',
 })
-export class VariantDetail {
+export class VariantDetail implements OnInit {
   // TODO: INYECCIONES
   private readonly inventarioService = inject(InventarioService);
 
@@ -70,6 +73,7 @@ export class VariantDetail {
   readonly faPlus: IconDefinition = faPlus;
   readonly faClockRotateLeft: IconDefinition = faClockRotateLeft;
   readonly faCamera: IconDefinition = faCamera;
+  readonly faBoxOpen: IconDefinition = faBoxOpen;
 
   // TODO: INPUT Y OUTPUT
   readonly variant = input.required<Variant>();
@@ -77,6 +81,8 @@ export class VariantDetail {
   readonly productId = input.required<number>();
   readonly closeModal = output<void>();
   readonly variantUpdated = output<Product>(); // Avisamos al padre que actualizamos la variante
+  readonly startInEditMode = input<boolean>(false);
+  readonly editModeChanged = output<boolean>();
 
   // TODO: PROPIEDADES
   readonly variantStateOptions: SelectOption[] = [
@@ -150,6 +156,14 @@ export class VariantDetail {
   private readonly VALID_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
   private readonly MAX_SIZE_MB = 5;
 
+  // TODO: COMPUTED
+  // ========================================================== ARCHIVAR
+
+  // Verificamos que el producto esta archivado
+  readonly variantIsArchived = computed<boolean>(() =>
+    this.variant().estado === 'descontinuado'
+  );
+
   // TODO: HOSTLISTENER
   // ====================================================== MOSTRAR OPCIONES
 
@@ -165,13 +179,26 @@ export class VariantDetail {
     }
   }
 
+  // TODO: HOOKS
+  ngOnInit(): void {
+    if ( this.startInEditMode() ) {
+      this.startEditing();
+    }
+  }
+
   // TODO: MÉTODOS PRIVADOS
+  // ========================================================= IMAGEN
+  private truncarNombre ( nombre: string, maxLength: number = 20 ): string {
+    if ( nombre.length <= maxLength ) return nombre;
+    return nombre.slice(0, maxLength) + '...';
+  }
+
   private validateFile ( file: File, input: HTMLInputElement ): boolean {
     this.imageError.set(null); // Limpiamos los errores
 
     // 1. Validamos el formato
     if ( !this.VALID_TYPES.includes(file.type) ) {
-      this.imageError.set(`"${file.name}" no es un formato válido.`);
+      this.imageError.set(`"${this.truncarNombre(file.name)}" no es un formato válido.`);
       input.value = '';
 
       return false;
@@ -180,13 +207,20 @@ export class VariantDetail {
     const sizeMB = file.size / ( 1024 * 1024 );
     // 2. Validamos el tamaño del archivo
     if ( sizeMB > this.MAX_SIZE_MB ) {
-      this.imageError.set(`"${file.name}" pasa ${sizeMB.toFixed(1)}MB. El máximo permitido es ${this.MAX_SIZE_MB}MB.`);
+      this.imageError.set(`"${this.truncarNombre(file.name)}" pesa ${sizeMB.toFixed(1)}MB. El máximo permitido es ${this.MAX_SIZE_MB}MB.`);
       input.value = '';
 
       return false;
     }
 
     return true;
+  }
+
+  // ========================================================== ARCHIVAR
+
+  // Decide a que estado pasar al desarchivar, segun el stock real de las variantes
+  private resolveVariantUnarchiveState(): VariantState {
+    return this.variant().stock > 0 ? 'disponible' : 'sin_stock';
   }
 
   // TODO: MÉTODOS PÚBLICOS
@@ -196,6 +230,26 @@ export class VariantDetail {
   toggleOptionsMenu ( event: Event ): void {
     event.stopPropagation();
     this.showOptionsMenu.set(!this.showOptionsMenu());
+  }
+
+  // ========================================================== ARCHIVAR
+
+  // Archivar / Desarchivar el producto
+  toggleVariantArchive(): void {
+    const nuevoEstado: VariantState = this.variantIsArchived()
+      ? this.resolveVariantUnarchiveState()
+      : 'descontinuado';
+
+    this.inventarioService.updateVariant(
+      this.productId().toString(),
+      this.variant().id.toString(),
+      { estado: nuevoEstado }
+    ).subscribe({
+      next: ( resp ) => {
+        this.variantUpdated.emit(resp);
+        this.showOptionsMenu.set(false);
+      }
+    });
   }
 
   // ========================================================= EDICIÓN
@@ -217,6 +271,7 @@ export class VariantDetail {
 
     this.showOptionsMenu.set(false);
     this.editMode.set(true);
+    this.editModeChanged.emit(true);
   }
 
   // Actualizar estado
@@ -227,6 +282,8 @@ export class VariantDetail {
   // Cancelar modo edición
   cancelEditing(): void {
     this.editMode.set(false);
+    this.editModeChanged.emit(false);
+    this.imageError.set(null);
   }
 
   // Guardar datos editados
@@ -249,7 +306,9 @@ export class VariantDetail {
       next: ( resp ) => {
         this.variantUpdated.emit(resp);
         this.editMode.set(false);
+        this.editModeChanged.emit(false);
         this.saving.set(false);
+        this.imageError.set(null);
       },
       error: () => {
         this.saving.set(false);

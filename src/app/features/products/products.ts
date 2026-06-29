@@ -192,6 +192,11 @@ export class Products implements OnInit {
     return producto.variantes.find( v => v.id === Number(varianteId) ) ?? null;
   });
 
+  // ===================================================== PARAMS: EDITAR VARIANTE
+  readonly startVariantInEditMode = computed<boolean>(() =>
+    this.queryParams().get('varModo') === 'editar'
+  );
+
   // =======================================================================
 
   // TODO: rxResource
@@ -447,7 +452,13 @@ export class Products implements OnInit {
   closeAllDrawers(): void {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { id: null, modo: null, varianteId: null, productoId: null },
+      queryParams: {
+        id: null,
+        modo: null,
+        productoId: null,
+        varianteId: null,
+        varModo: null
+      },
       queryParamsHandling: 'merge'
     });
   }
@@ -467,7 +478,7 @@ export class Products implements OnInit {
   closeVariantDetail(): void {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { productoId: null, varianteId: null },
+      queryParams: { productoId: null, varianteId: null, varModo: null },
       queryParamsHandling: 'merge'
     });
   }
@@ -503,6 +514,27 @@ export class Products implements OnInit {
       queryParamsHandling: 'merge'
     });
   }
+
+  // ====================================================== PARAMS: EDITAR VARIANTE
+
+  // Abre directo en modo edición  desde la tabla o product-detail
+  editVariant ( productoId: number, varianteId: number ): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { productoId, varianteId, varModo: 'editar' },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  // Sincroniza la URL cuando el modo cambia desde dentro del drawer
+  syncVariantEditMode ( activo: boolean ): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { varModo: activo ? 'editar' : null },
+      queryParamsHandling: 'merge'
+    });
+  }
+
 
   // ========================================================== CREAR PRODUCTO
 
