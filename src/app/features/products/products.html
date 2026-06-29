@@ -261,7 +261,9 @@
     <variant-detail
       [variant]="selectedVariant()!"
       [productName]="selectedProduct()!.nombre"
+      [productId]="selectedProduct()!.id"
       (closeModal)="closeVariantDetail()"
+      (variantUpdated)="updateProductInList($event)"
     />
   }
 </div>

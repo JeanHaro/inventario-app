@@ -323,7 +323,7 @@ export class InventarioService {
     const url = `${this.apiUrl}/products/${productId}/variantes/${variantId}`;
 
     return this.http.patch<Product>(url, variante).pipe(
-
+      delay(1000),
       catchError( ( error: HttpErrorResponse ) => {
         const mensaje = error.error?.error ?? 'Error desconocido';
         console.error(`[${error.status}]`, mensaje);
@@ -394,7 +394,7 @@ export class InventarioService {
       `${this.apiUrl}/products/${productId}/variantes/${variantId}/imagen`,
       imagen
     ).pipe(
-
+      delay(1000),
       catchError( ( error: HttpErrorResponse ) => {
         const mensaje = error.error?.error ?? 'Error desconocido';
         console.error(`[${error.status}]`, mensaje);

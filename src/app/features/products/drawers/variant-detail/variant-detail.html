@@ -2,6 +2,7 @@
   DETALLE DE LA VARIANTE
 ================================ -->
 <div class="variant-detail">
+
   <!-- ================================
     BARRA SUPERIOR
   ================================ -->
@@ -18,10 +19,11 @@
 
     <!-- Herramientas: Editar y más opciones -->
     <div class="variant-detail__tools">
-      @if ( true ) {
+      @if ( !editMode() ) {
         <!-- Editar -->
         <button
           type="button"
+          (click)="startEditing()"
           class="variant-detail__edit none btn b--hidden"
         >
           <fa-icon [icon]="faPenToSquare"></fa-icon>
@@ -42,6 +44,7 @@
         <button
           type="submit"
           form="variantEditForm"
+          [disabled]="saving() || editForm().invalid()"
           class="variant-detail__btn variant-detail__btn-1 none btn b--primary"
         >
           <fa-icon [icon]="faFloppyDisk"></fa-icon>
@@ -51,6 +54,8 @@
         <!-- Cancelar -->
         <button
           type="button"
+          (click)="cancelEditing()"
+          [disabled]="saving()"
           class="variant-detail__btn variant-detail__btn-2 none btn b--gray"
         >
           <fa-icon [icon]="faClose"></fa-icon>
@@ -105,9 +110,11 @@
   <div class="variant-detail__content">
     <form
       id="variantEditForm"
+      [class.is-saving]="saving()"
+      (ngSubmit)="saveEditing()"
       novalidate
     >
-      @if ( false ) {
+      @if ( saving() ) {
         <!-- Overlay de carga -->
         <div class="variant-detail__form-overlay">
           <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
@@ -117,49 +124,191 @@
 
       <!-- Campos principales -->
       <div class="variant-detail__fields-main">
-        @if ( variant().imagen?.length ) {
-          <img [src]="variant().imagen" [alt]="variant().nombre ?? 'Imagen de la variante'">
-        } @else {
-          <img src="./img/iphone15.png" alt="Imagen por defecto">
+
+        <!-- Imagen -->
+        <div
+          class="variant-detail__image-wrapper"
+          [class.editable]="editMode()"
+          (click)="openImageSelector()"
+        >
+          @if ( variant().imagen?.length ) {
+            <img
+              [src]="variant().imagen"
+              [alt]="variant().nombre ?? 'Imagen de la variante'"
+              width="256"
+              height="256"
+            >
+          } @else {
+            <img src="./img/iphone15.png" alt="Imagen por defecto">
+          }
+
+          @if ( editMode() ) {
+            <div class="variant-detail__image-overlay">
+              @if ( uploadingImage() ) {
+                <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
+              } @else {
+                <fa-icon [icon]="faCamera"></fa-icon>
+                <span>Cambiar imagen</span>
+              }
+            </div>
+          }
+
+          <input
+            #imageInputRef
+            type="file"
+            accept="image/*"
+            hidden
+            (change)="onImageSelected($event)"
+          >
+        </div>
+
+        @if ( imageError() ) {
+          <div class="variant-detail__field-error">
+            <span>{{ imageError() }}</span>
+          </div>
         }
 
-        <!-- Nombre de la variante -->
-        <h2>{{ variant().nombre ?? productName() }}</h2>
+        <!-- Bloque informativo -->
+        <div class="variant-detail__main-info">
+          <!-- Nombre de la variante -->
+          @if ( !editMode() ) {
+            <h2>{{ variant().nombre ?? productName() }}</h2>
+          } @else {
+            <div class="variant-detail__field-wrapper">
+              <input
+                [formField]="editForm.nombre"
+                placeholder="Nombre de la variante"
+                type="text"
+                [class.i--warn]="editForm.nombre().invalid() && editForm.nombre().touched()"
+                class="variant-detail__input none input"
+              >
 
-        <!-- SKU de la variante-->
-        <div class="variant-detail__sku">
-          <span>{{ variant().sku ?? 'sin-sku' }}</span>
-        </div>
+              @if ( editForm.nombre().invalid() && editForm.nombre().touched() ) {
+                <div class="variant-detail__field-error">
+                  @for ( error of editForm.nombre().errors(); track error.kind ) {
+                    <span>{{ error.message }}</span>
+                  }
+                </div>
+              }
+            </div>
+          }
 
-        <!-- Estado -->
-        <div class="variant-detail__state">
-          <div class="variant-detail__state-label">
-            <span>Estado</span>
+          <!-- SKU de la variante-->
+          @if ( !editMode() ) {
+            <div class="variant-detail__sku">
+              <span>{{ variant().sku ?? 'sin-sku' }}</span>
+            </div>
+          } @else {
+            <div class="variant-detail__field-wrapper">
+              <input
+                [formField]="editForm.sku"
+                placeholder="SKU de la variante"
+                type="text"
+                [class.i--warn]="editForm.sku().invalid() && editForm.sku().touched()"
+                class="variant-detail__input none input"
+              >
+
+              @if ( editForm.sku().invalid() && editForm.sku().touched() ) {
+                <div class="variant-detail__field-error">
+                  @for ( error of editForm.sku().errors(); track error.kind ) {
+                    <span>{{ error.message }}</span>
+                  }
+                </div>
+              }
+            </div>
+          }
+
+
+          <!-- Estado -->
+          <div class="variant-detail__state">
+            <div class="variant-detail__state-label">
+              <span>Estado</span>
+            </div>
+
+            @if ( !editMode() ) {
+              <div class="variant-detail__state-value">
+                <span [class]="`badge badge--${ variant().estado }`">
+                  {{ variant().estado }}
+                </span>
+              </div>
+            } @else {
+              <div class="variant-detail__field-wrapper">
+                <shared-select
+                  [options]="variantStateOptions"
+                  [value]="editModel().estado"
+                  [invalid]="editForm.estado().invalid() && editForm.estado().touched()"
+                  (valueChange)="updateState($event)"
+                  (closed)="editForm.estado().markAsTouched()"
+                />
+
+                @if ( editForm.estado().invalid() && editForm.estado().touched() ) {
+                  <div class="variant-detail__field-error">
+                    @for ( error of editForm.estado().errors(); track error.kind ) {
+                      <span>{{ error.message }}</span>
+                    }
+                  </div>
+                }
+              </div>
+            }
           </div>
 
-          <div class="variant-detail__state-value">
-            <span [class]="`badge badge--${ variant().estado }`">
-              {{ variant().estado }}
-            </span>
+          <!-- Precio adicional de la variante-->
+          <div class="variant-detail__price">
+            <div class="variant-detail__price-label">
+              <span>Precio adicional</span>
+            </div>
+
+            @if ( !editMode() ) {
+              <span>
+                {{ variant().precioAdicional ?? 0 | compactNumber: 'precio' }}
+              </span>
+            } @else {
+              <div class="variant-detail__field-wrapper">
+                <input
+                  [formField]="editForm.precioAdicional"
+                  type="number"
+                  [class.i--warn]="editForm.precioAdicional().invalid() && editForm.precioAdicional().touched()"
+                  class="variant-detail__input none input"
+                >
+
+                @if ( editForm.precioAdicional().invalid() && editForm.precioAdicional().touched() ) {
+                  <div class="variant-detail__field-error">
+                    @for ( error of editForm.precioAdicional().errors(); track error.kind ) {
+                      <span>{{ error.message }}</span>
+                    }
+                  </div>
+                }
+              </div>
+            }
           </div>
-        </div>
 
-        <!-- Precio adicional de la variante-->
-        <div class="variant-detail__price">
-          <div class="variant-detail__price-label">
-            <span>Precio adicional</span>
+          <!-- Stock de la variante-->
+          <div class="variant-detail__stock">
+            <div class="variant-detail__stock-label">
+              <span>Stock</span>
+            </div>
+
+            @if ( !editMode() ) {
+              <span>{{ variant().stock | compactNumber: 'stock' }}</span>
+            } @else {
+              <div class="variant-detail__field-wrapper">
+                <input
+                  [formField]="editForm.stock"
+                  type="number"
+                  [class.i--warn]="editForm.stock().invalid() && editForm.stock().touched()"
+                  class="variant-detail__input none input"
+                >
+
+                @if ( editForm.stock().invalid() && editForm.stock().touched() ) {
+                  <div class="variant-detail__field-error">
+                    @for ( error of editForm.stock().errors(); track error.kind ) {
+                      <span>{{ error.message }}</span>
+                    }
+                  </div>
+                }
+              </div>
+            }
           </div>
-
-          <span>{{ variant().precioAdicional ?? 0 | compactNumber: 'precio' }}</span>
-        </div>
-
-        <!-- Stock de la variante-->
-        <div class="variant-detail__stock">
-          <div class="variant-detail__stock-label">
-            <span>Stock</span>
-          </div>
-
-          <span>{{ variant().stock | compactNumber: 'stock' }}</span>
         </div>
       </div>
 
@@ -174,7 +323,16 @@
             <span>Talla</span>
           </div>
 
-          <span>{{ variant().talla ?? 'No tiene' }}</span>
+          @if ( !editMode() ) {
+            <span>{{ variant().talla || 'No tiene' }}</span>
+          } @else {
+            <input
+              [formField]="editForm.talla"
+              placeholder="Talla"
+              type="text"
+              class="variant-detail__input none input"
+            >
+          }
         </div>
 
         <!-- Color de la variante-->
@@ -183,7 +341,16 @@
             <span>Color</span>
           </div>
 
-          <span>{{ variant().color ?? 'No tiene' }}</span>
+          @if ( !editMode() ) {
+            <span>{{ variant().color ?? 'No tiene' }}</span>
+          } @else {
+            <input
+              [formField]="editForm.color"
+              placeholder="Color"
+              type="text"
+              class="variant-detail__input none input"
+            >
+          }
         </div>
 
         <!-- Capacidad de la variante-->
@@ -192,11 +359,18 @@
             <span>Capacidad</span>
           </div>
 
-          <span>{{ variant().capacidad ?? 'No tiene' }}</span>
+          @if ( !editMode() ) {
+            <span>{{ variant().capacidad ?? 'No tiene' }}</span>
+          } @else {
+            <input
+              [formField]="editForm.capacidad"
+              placeholder="Capacidad"
+              type="text"
+              class="variant-detail__input none input"
+            >
+          }
         </div>
       </div>
-
-
 
     </form>
   </div>

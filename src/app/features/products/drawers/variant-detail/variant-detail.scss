@@ -1,5 +1,5 @@
 // ================================
-// DETALLE DEL PRODUCTO
+// DETALLE DE LA VARIANTE
 // ================================
 .variant-detail {
   position: relative;
@@ -13,7 +13,7 @@
     max-height: calc(100vh - 7rem);
   }
 
-  // ===============================
+  // ================================
   // GLOBAL
   // ================================
   &__btn {
@@ -33,8 +33,6 @@
 
     &-1 {
       right: 5rem;
-
-
       gap: 0.5rem;
 
       @media (min-width: 480px) {
@@ -70,6 +68,13 @@
         color: var(--color-blanco-1) !important;
       }
     }
+  }
+
+  &__input {
+    border-bottom: 2px solid var(--color-blanco-8);
+    background-color: var(--color-blanco-2);
+
+    font-size: 1.4rem;
   }
 
   // ================================
@@ -128,7 +133,7 @@
     padding: 1rem;
     border-radius: 0.5rem;
     background-color: var(--color-blanco-1);
-    box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.1);
+    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
 
     opacity: 0;
     pointer-events: none;
@@ -162,11 +167,21 @@
   form {
     position: relative;
 
+    &.is-saving {
+      .variant-detail__fields-main,
+      .variant-detail__fields-secondary,
+      h4 {
+        filter: blur(3px);
+        pointer-events: none;
+        user-select: none;
+      }
+    }
+
     > h4 {
+      margin-top: 2rem;
       margin-bottom: 2rem;
 
       @media (min-width: 1024px) {
-        margin-top: 2rem;
         margin-bottom: 2.5rem;
       }
     }
@@ -209,91 +224,122 @@
     }
   }
 
+  // Contenedor de inputs con errores
+  &__field-wrapper {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    width: 100%;
+  }
+
+  // Error
+  &__field-error {
+    position: relative;
+
+    font-size: 1.2rem;
+    color: var(--notif-critical-base);
+
+    span {
+      display: block;
+    }
+  }
+
   // Campos principales
   &__fields-main {
-    display: grid;
-    grid-template-areas: 'title' 'sku' 'image' 'state' 'price' 'stock';
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(4, auto);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 
     @media (min-width: 1024px) {
-      grid-template-areas: 'image title'
-                        'image sku'
-                        'image state'
-                        'image price'
-                        'image stock';
-      grid-template-columns: auto 1fr;
-      grid-template-rows: auto auto auto auto 1fr;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 2.5rem;
 
       border-bottom: 0.2rem solid var(--color-blanco-8);
-      padding-bottom: 1rem;
-    }
-
-    > img {
-      grid-area: image;
-
-      max-width: 20rem;
-      margin: auto;
-    }
-
-    h2 {
-      grid-area: title;
-
-      margin-bottom: 0.5rem;
+      padding-bottom: 2rem;
     }
   }
 
-  // Sku
-  &__sku {
-    grid-area: sku;
-
-    margin-bottom: 2rem;
-    font-size: 1.4rem;
-  }
-
-  // Estado
-  &__state {
-    grid-area: state;
-  }
-
-  // Precio
-  &__price {
-    grid-area: price;
-  }
-
-  // Stock
-  &__stock {
-    grid-area: stock;
-  }
-
-  &__state,
-  &__price,
-  &__stock {
-    margin-bottom: 2rem;
+  // Imagen
+  &__image-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 16rem;
+    aspect-ratio: 1 / 1;
+    border-radius: 0.8rem;
+    overflow: hidden;
+    margin: 0 auto;
 
     @media (min-width: 1024px) {
-      align-self: flex-start;
+      margin: 0;
+      flex-shrink: 0;
+    }
 
-      grid-template-columns: 15rem 1fr !important;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &.editable {
+      cursor: pointer;
     }
   }
 
-  // Campos
-  &__state,
-  &__price,
-  &__stock,
-  &__size,
-  &__color,
-  &__ability {
-    display: grid;
-    grid-template-columns: minmax(15rem, 1fr) 1fr;
-    align-items: center;
+  &__image-overlay {
+    position: absolute;
+    inset: 0;
 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    background-color: rgba(0, 0, 0, 0.55);
+    color: var(--color-blanco-1);
+
+    opacity: 0;
+    transition: opacity 0.25s ease;
+
+    fa-icon {
+      font-size: 1.8rem;
+    }
+
+    span {
+      font-size: 1.2rem;
+    }
+  }
+
+  &__image-wrapper.editable:hover &__image-overlay {
+    opacity: 1;
+  }
+
+  // Bloque de información (nombre, sku, estado, precio, stock)
+  &__main-info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  &__name {
+    h2 {
+      margin: 0;
+    }
+  }
+
+  &__sku {
     font-size: 1.4rem;
 
-    > span {
-      font-weight: 600;
-    }
+    margin-bottom: 2rem;
+  }
+
+  &__state,
+  &__price {
+    margin-bottom: 2rem;
   }
 
   // Campos secundarios
@@ -304,6 +350,29 @@
     @media (min-width: 1024px) {
       grid-template-columns: repeat(2, 1fr);
       gap: 2.5rem;
+    }
+  }
+
+  // Campos — mismo patrón para todos, principales y secundarios
+  &__state,
+  &__price,
+  &__stock,
+  &__size,
+  &__color,
+  &__ability {
+    display: grid;
+    grid-template-columns: minmax(15rem, 1fr) 1fr;
+    align-items: center;
+    gap: 1rem;
+
+    font-size: 1.4rem;
+
+    @media (min-width: 1024px) {
+      grid-template-columns: 14rem 1fr;
+    }
+
+    > span {
+      font-weight: 600;
     }
   }
 
@@ -340,7 +409,6 @@
     }
   }
 
-  // Titulo
   &__history-title {
     display: flex;
     align-items: center;
@@ -349,7 +417,6 @@
     margin-bottom: 2rem;
   }
 
-  // Timeline
   &__history-timeline {
     display: flex;
     flex-direction: column;
@@ -365,7 +432,6 @@
       max-height: calc(100vh - 60rem);
     }
 
-    // Scrollbar oculto pero funcional
     &::-webkit-scrollbar {
       width: 8px;
       height: 8px;
@@ -373,7 +439,6 @@
     }
   }
 
-  // Entradas
   &__history-item {
     position: relative;
 
@@ -384,7 +449,6 @@
 
     border-bottom: 0.1rem solid var(--color-blanco-8);
 
-    // La línea vertical que conecta cada punto con el siguiente
     &::before {
       content: '';
       position: absolute;
@@ -397,9 +461,8 @@
     }
 
     &:last-child {
-
       &::before {
-        display: none; // el último punto no necesita línea hacia abajo
+        display: none;
       }
     }
   }
@@ -425,7 +488,6 @@
     }
   }
 
-  // Colores del punto según el tipo de evento
   &__history-item--info &__history-icon {
     background-color: var(--history-info-soft);
     fa-icon { color: var(--history-info-base); }
@@ -446,7 +508,6 @@
     fa-icon { color: var(--history-neutral-base); }
   }
 
-  // Información
   &__history-body {
     flex: 1;
   }
@@ -457,7 +518,6 @@
     align-items: baseline;
     flex-wrap: wrap;
     gap: 1rem;
-
   }
 
   &__history-label {

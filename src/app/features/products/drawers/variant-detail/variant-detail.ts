@@ -1,4 +1,15 @@
-import { Component, ElementRef, HostListener, input, output, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  inject,
+  input,
+  output,
+  signal,
+  viewChild
+} from '@angular/core';
+
+import { form, min, required, validate } from '@angular/forms/signals';
 
 // FontAwesome
 import {
@@ -6,6 +17,7 @@ import {
   faBarcode,
   faBoxArchive,
   faBoxesStacked,
+  faCamera,
   faClockRotateLeft,
   faClose,
   faEllipsis,
@@ -19,7 +31,15 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 // Interfaces
-import { Variant } from '../../models/products.model';
+import {
+  Product,
+  Variant,
+  VariantState
+} from '../../models/products.model';
+
+// Servicios
+import { InventarioService } from '../../services/inventario';
+import { SelectOption } from '../../../../shared/components/select/models/select.model';
 
 @Component({
   selector: 'variant-detail',
@@ -28,8 +48,12 @@ import { Variant } from '../../models/products.model';
   styleUrl: './variant-detail.scss',
 })
 export class VariantDetail {
+  // TODO: INYECCIONES
+  private readonly inventarioService = inject(InventarioService);
+
   // TODO: VIEWCHILD
   readonly optionsMenuRef = viewChild<ElementRef<HTMLElement>>('optionsMenuRef');
+  readonly imageInputRef = viewChild<ElementRef<HTMLInputElement>>('imageInputRef');
 
   // TODO: ICONOS
   readonly faArrowRightFromBracket: IconDefinition = faArrowRightFromBracket;
@@ -45,14 +69,86 @@ export class VariantDetail {
   readonly faTag: IconDefinition = faTag;
   readonly faPlus: IconDefinition = faPlus;
   readonly faClockRotateLeft: IconDefinition = faClockRotateLeft;
+  readonly faCamera: IconDefinition = faCamera;
 
   // TODO: INPUT Y OUTPUT
   readonly variant = input.required<Variant>();
   readonly productName = input.required<string>();
+  readonly productId = input.required<number>();
   readonly closeModal = output<void>();
+  readonly variantUpdated = output<Product>(); // Avisamos al padre que actualizamos la variante
+
+  // TODO: PROPIEDADES
+  readonly variantStateOptions: SelectOption[] = [
+  {
+    value: 'disponible',
+    label: 'Disponible',
+    badgeClass: 'badge--disponible'
+  },
+  {
+    value: 'sin_stock',
+    label: 'Sin stock',
+    badgeClass: 'badge--sin_stock'
+  },
+  {
+    value: 'reservado',
+    label: 'Reservado',
+    badgeClass: 'badge--reservado'
+  },
+  {
+    value: 'descontinuado',
+    label: 'Descontinuado',
+    badgeClass: 'badge--descontinuado'
+  },
+];
 
   // TODO: SIGNALS
   showOptionsMenu = signal<boolean>(false);
+
+  // ====================================================== EDICIÓN
+  editMode = signal<boolean>(false);
+  saving = signal<boolean>(false);
+
+  editModel = signal({
+    nombre: '',
+    sku: '',
+    precioAdicional: 0,
+    stock: 0,
+    estado: '' as VariantState,
+    talla: '',
+    color: '',
+    capacidad: ''
+  });
+
+  editForm = form(this.editModel, ( schemaPath ) => {
+    required( schemaPath.precioAdicional, { message: 'El precio es obligatorio' } );
+    required( schemaPath.stock, { message: 'El stock es obligatorio' } );
+    min( schemaPath.precioAdicional, 0, { message: 'El precio no puede ser negativo' } );
+    min( schemaPath.stock, 0, { message: 'El stock no puede ser negativo' } );
+
+    validate( schemaPath.nombre, ({ value }) => {
+      if ( value().trim().length === 0 ) {
+        return { kind: 'whitespace', message: 'El nombre es obligatorio' };
+      }
+
+      return null;
+    });
+
+    validate( schemaPath.sku, ({ value }) => {
+      if ( value().trim().length === 0 ) {
+        return { kind: 'whitespace', message: 'El SKU es obligatorio' }
+      }
+
+      return null;
+    });
+  });
+
+  // ========================================================= IMAGEN
+  uploadingImage = signal<boolean>(false);
+  imageError = signal<string | null>(null);
+
+  private readonly VALID_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+  private readonly MAX_SIZE_MB = 5;
 
   // TODO: HOSTLISTENER
   // ====================================================== MOSTRAR OPCIONES
@@ -69,6 +165,30 @@ export class VariantDetail {
     }
   }
 
+  // TODO: MÉTODOS PRIVADOS
+  private validateFile ( file: File, input: HTMLInputElement ): boolean {
+    this.imageError.set(null); // Limpiamos los errores
+
+    // 1. Validamos el formato
+    if ( !this.VALID_TYPES.includes(file.type) ) {
+      this.imageError.set(`"${file.name}" no es un formato válido.`);
+      input.value = '';
+
+      return false;
+    }
+
+    const sizeMB = file.size / ( 1024 * 1024 );
+    // 2. Validamos el tamaño del archivo
+    if ( sizeMB > this.MAX_SIZE_MB ) {
+      this.imageError.set(`"${file.name}" pasa ${sizeMB.toFixed(1)}MB. El máximo permitido es ${this.MAX_SIZE_MB}MB.`);
+      input.value = '';
+
+      return false;
+    }
+
+    return true;
+  }
+
   // TODO: MÉTODOS PÚBLICOS
   // ====================================================== MOSTRAR OPCIONES
 
@@ -76,5 +196,105 @@ export class VariantDetail {
   toggleOptionsMenu ( event: Event ): void {
     event.stopPropagation();
     this.showOptionsMenu.set(!this.showOptionsMenu());
+  }
+
+  // ========================================================= EDICIÓN
+
+  // Activar modo edición
+  startEditing(): void {
+    const v = this.variant();
+
+    this.editModel.set({
+      nombre: v.nombre ?? '',
+      sku: v.sku ?? '',
+      precioAdicional: v.precioAdicional ?? 0,
+      stock: v.stock,
+      estado: v.estado,
+      talla: v.talla ?? '',
+      color: v.color ?? '',
+      capacidad: v.capacidad ?? ''
+    });
+
+    this.showOptionsMenu.set(false);
+    this.editMode.set(true);
+  }
+
+  // Actualizar estado
+  updateState ( valor: string ): void {
+    this.editModel.update( m => ({ ...m, estado: valor as VariantState }));
+  }
+
+  // Cancelar modo edición
+  cancelEditing(): void {
+    this.editMode.set(false);
+  }
+
+  // Guardar datos editados
+  saveEditing(): void {
+    if ( !this.editForm().valid() ) return;
+
+    this.saving.set(true);
+
+    const valores = this.editModel();
+
+    this.inventarioService.updateVariant(
+      this.productId().toString(),
+      this.variant().id.toString(),
+      {
+        ...valores,
+        nombre: valores.nombre.trim(),
+        sku: valores.sku.trim()
+      }
+    ).subscribe({
+      next: ( resp ) => {
+        this.variantUpdated.emit(resp);
+        this.editMode.set(false);
+        this.saving.set(false);
+      },
+      error: () => {
+        this.saving.set(false);
+      }
+    })
+  }
+
+  // ========================================================= IMAGEN
+
+  // Abrir input file
+  openImageSelector(): void {
+    if ( !this.editMode() ) return; // Solo se puede cambiar en modo edición
+    this.imageInputRef()?.nativeElement.click();
+  }
+
+  // Seleccionamos la imagen
+  onImageSelected ( event: Event ): void {
+    const input = event.target as HTMLInputElement;
+    if ( !input.files || input.files.length === 0 ) return;
+
+    const file = input.files[0];
+    const validation = this.validateFile(file, input);
+
+    if ( validation ) {
+      const formData = new FormData();
+      formData.append('imagen', file);
+
+      this.uploadingImage.set(true);
+
+      this.inventarioService.uploadVariantImage(
+        this.productId().toString(),
+        this.variant().id.toString(),
+        formData
+      ).subscribe({
+        next: ( resp ) => {
+          this.variantUpdated.emit(resp.producto);
+          this.uploadingImage.set(false);
+          input.value = '';
+        },
+        error: ( err ) => {
+          this.imageError.set( err.message ?? 'Ocurrió un error al subir la imagen.' );
+          this.uploadingImage.set(false);
+          input.value = '';
+        }
+      })
+    }
   }
 }
