@@ -220,7 +220,7 @@
 <div
   [class.active]="selectedProduct() !== null"
   [class.is-covered]="selectedVariant() !== null"
-  [class.no-anim]="openedVariantStandalone() && selectedVariant() !== null"
+  [class.no-anim]="selectedProduct() === null && selectedVariant() !== null"
   class="drawers drawers--product-detail"
 >
   @if ( selectedProduct() !== null ) {
@@ -260,8 +260,8 @@
   @if ( selectedVariant() !== null ) {
     <variant-detail
       [variant]="selectedVariant()!"
-      [productName]="selectedProduct()!.nombre"
-      [productId]="selectedProduct()!.id"
+      [productName]="variantOwnerProduct()!.nombre"
+      [productId]="variantOwnerProduct()!.id"
       (closeModal)="closeVariantDetail()"
       (variantUpdated)="updateProductInList($event)"
     />

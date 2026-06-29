@@ -2,7 +2,7 @@
   // ================================
   // VISTA: Variantes
   // ================================
-  
+
   // Herramientas de variantes: filtro y orden
   &__variants-toolbar {
     display: grid;
@@ -165,7 +165,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 14rem;
+      width: 14rem;
     }
 
     &-sku {
@@ -174,7 +174,7 @@
 
     // Estado
     &-state {
-      max-width: 12rem;
+      width: 12rem;
       font-size: 1.3rem;
       color: var(--color-negro-3);
 
@@ -186,17 +186,13 @@
 
     // Stock
     &-stock {
-      max-width: 5rem;
+      width: 5rem;
     }
 
     // Precio
     &-price {
-      max-width: 20rem;
+      width: 5rem;
       margin-right: 2rem;
-
-      @media (min-width: 768px) {
-        max-width: 15rem;
-      }
     }
 
     // Acciones de variante

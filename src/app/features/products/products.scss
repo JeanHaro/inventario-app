@@ -164,7 +164,8 @@
   z-index: 9;
 
   @media (min-width: 1024px) {
-    max-width: 70rem;
+    transform: translate(75rem, 0rem);
+    max-width: 75rem;
   }
 
   // Scrollbar oculto pero funcional

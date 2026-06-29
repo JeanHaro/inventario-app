@@ -259,9 +259,19 @@
               <!-- TD: Imagen -->
               <div class="products__td products__img">
                 @if ( variante.imagen?.length ) {
-                  <img [src]="variante.imagen" [alt]="variante.nombre ?? 'Imagen de variante'">
+                  <img
+                    [src]="variante.imagen"
+                    [alt]="variante.nombre ?? 'Imagen de variante'"
+                    width="80"
+                    height="80"
+                  >
                 } @else {
-                  <img src="./img/iphone15.png" alt="Imagen por defecto">
+                  <img
+                    src="./img/iphone15.png"
+                    alt="Imagen por defecto"
+                    width="80"
+                    height="80"
+                  >
                 }
               </div>
 

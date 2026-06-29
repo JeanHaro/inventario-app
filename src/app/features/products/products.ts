@@ -65,7 +65,6 @@ export class Products implements OnInit {
   readonly faFloppyDisk: IconDefinition = faFloppyDisk;
 
   // TODO: SIGNALS
-  openedVariantStandalone = signal<boolean>(false); // Recuerda si variant-detail se abrio desde la tabla
   products = signal<Product[]>([]);
   variant = signal<Variant | null>(null);
   selectedProducts = signal<Set<number>>(new Set());
@@ -175,16 +174,23 @@ export class Products implements OnInit {
   );
 
   // ===================================================== PARAMS: VER VARIANTE
+  // El producto al que pertenece la variante — vía su propio parámetro, sin mezclarse con "id"
+  readonly variantOwnerProduct = computed<Product | null>(() => {
+    const productoId = this.queryParams().get('productoId');
+    if ( !productoId ) return null;
 
-  // La variante seleccionada se deriva del producto seleccionado más la URL
+    return this.products().find( p => p.id === Number(productoId) ) ?? null;
+  });
+
+  // La variante seleccionada
   readonly selectedVariant = computed<Variant | null>(() => {
-    const producto = this.selectedProduct();
+    const producto = this.variantOwnerProduct();
     const varianteId = this.queryParams().get('varianteId');
 
     if ( !producto || !varianteId ) return null;
 
-    return producto.variantes.find(variante => variante.id === Number(varianteId)) ?? null;
-  })
+    return producto.variantes.find( v => v.id === Number(varianteId) ) ?? null;
+  });
 
   // =======================================================================
 
@@ -441,7 +447,7 @@ export class Products implements OnInit {
   closeAllDrawers(): void {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { id: null, modo: null, varianteId: null },
+      queryParams: { id: null, modo: null, varianteId: null, productoId: null },
       queryParamsHandling: 'merge'
     });
   }
@@ -450,28 +456,18 @@ export class Products implements OnInit {
 
   // Abrir drawer Detalle variante
   openVariantDetail ( productoId: number, varianteId: number ): void {
-    // Si el producto no estaba abierto antes, la variant-detail es standalone
-    this.openedVariantStandalone.set(this.selectedProduct() === null);
-
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { id: productoId, varianteId },
+      queryParams: { productoId, varianteId },
       queryParamsHandling: 'merge'
     });
   }
 
   // Cerrar drawer Detalle variante
   closeVariantDetail(): void {
-    const queryParams: Record<string, any> = { varianteId: null };
-
-    // Solo cerramos el producto también si se abrió desde la tabla
-    if ( this.openedVariantStandalone() ) {
-      queryParams['id'] = null;
-    }
-
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams,
+      queryParams: { productoId: null, varianteId: null },
       queryParamsHandling: 'merge'
     });
   }
