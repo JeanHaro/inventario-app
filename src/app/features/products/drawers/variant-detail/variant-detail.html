@@ -212,7 +212,7 @@
                 [formField]="editForm.sku"
                 placeholder="SKU de la variante"
                 type="text"
-                [class.i--warn]="editForm.sku().invalid() && editForm.sku().touched()"
+                [class.i--warn]="editForm.sku().invalid() && editForm.sku().touched() || skuServerError()"
                 class="variant-detail__input none input"
               >
 
@@ -221,6 +221,12 @@
                   @for ( error of editForm.sku().errors(); track error.kind ) {
                     <span>{{ error.message }}</span>
                   }
+                </div>
+              }
+
+              @if ( skuServerError() ) {
+                <div class="variant-detail__field-error">
+                  <span>{{ skuServerError() }}</span>
                 </div>
               }
             </div>

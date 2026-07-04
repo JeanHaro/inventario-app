@@ -1,6 +1,7 @@
 import {
   Component,
   computed,
+  effect,
   ElementRef,
   HostListener,
   inject,
@@ -8,6 +9,7 @@ import {
   OnInit,
   output,
   signal,
+  untracked,
   viewChild
 } from '@angular/core';
 
@@ -114,6 +116,7 @@ export class VariantDetail implements OnInit {
   // ====================================================== EDICIÓN
   editMode = signal<boolean>(false);
   saving = signal<boolean>(false);
+  rawServerError = signal<string | null>(null); // mensaje crudo que llega del backend
 
   editModel = signal({
     nombre: '',
@@ -163,6 +166,34 @@ export class VariantDetail implements OnInit {
   readonly variantIsArchived = computed<boolean>(() =>
     this.variant().estado === 'descontinuado'
   );
+
+  // ========================================================= EDICIÓN
+
+  // Solo se muestra si el mensaje del servidor menciona el SKU
+  readonly skuServerError = computed<string | null>(() => {
+    const msg = this.rawServerError();
+    if ( msg && msg.toLowerCase().includes('sku') ) return msg;
+    return null;
+  });
+
+  // Cualquier otro error del servidor que NO sea sobre el SKU
+  readonly generalServerError = computed<string | null>(() => {
+    const msg = this.rawServerError();
+    if ( msg && !msg.toLowerCase().includes('sku') ) return msg;
+    return null;
+  });
+
+  // TODO: EFFECTS
+  // Si el usuario modifica el SKU mientras hay un error de servidor, lo limpiamos
+  private readonly clearSkuServerError = effect(() => {
+    this.editForm.sku().value(); // se suscribe a los cambios del valor
+
+    untracked(() => {
+    if ( this.rawServerError() !== null ) {
+      this.rawServerError.set(null);
+    }
+  });
+  }, { allowSignalWrites: true });
 
   // TODO: HOSTLISTENER
   // ====================================================== MOSTRAR OPCIONES
@@ -284,6 +315,7 @@ export class VariantDetail implements OnInit {
     this.editMode.set(false);
     this.editModeChanged.emit(false);
     this.imageError.set(null);
+    this.rawServerError.set(null);
   }
 
   // Guardar datos editados
@@ -291,6 +323,7 @@ export class VariantDetail implements OnInit {
     if ( !this.editForm().valid() ) return;
 
     this.saving.set(true);
+    this.rawServerError.set(null);
 
     const valores = this.editModel();
 
@@ -309,9 +342,11 @@ export class VariantDetail implements OnInit {
         this.editModeChanged.emit(false);
         this.saving.set(false);
         this.imageError.set(null);
+        this.rawServerError.set(null);
       },
-      error: () => {
+      error: ( err ) => {
         this.saving.set(false);
+        this.rawServerError.set( err.message ?? 'Ocurrió un error al guardar' );
       }
     })
   }
