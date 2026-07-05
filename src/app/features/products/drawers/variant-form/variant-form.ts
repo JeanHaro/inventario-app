@@ -1,6 +1,7 @@
 import {
   Component,
   computed,
+  DestroyRef,
   effect,
   ElementRef,
   inject,
@@ -37,6 +38,7 @@ import { SelectOption } from '../../../../shared/components/select/models/select
 export class VariantForm {
   // TODO: INYECCIONES
   private readonly inventarioService = inject(InventarioService);
+  private readonly destroyRef = inject(DestroyRef);
 
   // TODO: VIEWCHILD
   readonly imageInputRef = viewChild<ElementRef<HTMLInputElement>>('imageInputRef');
@@ -130,6 +132,7 @@ export class VariantForm {
   });
 
   // ========================================================= IMAGEN
+  private currentPreviewUrl: string | null = null; // guarda la URL activa para poder revocarla
   selectedImage = signal<File | null>(null);
   imageError = signal<String | null>(null);
 
@@ -137,9 +140,11 @@ export class VariantForm {
 
   // Preview local — no se sube hasta que se crea la variante
   readonly imagePreviewUrl = computed<string | null>(() => {
-    const file = this.selectedImage();
-    return file ? URL.createObjectURL(file) : null;
+    this.selectedImage(); // dependencia — se recalcula cuando cambia la imagen
+    return this.currentPreviewUrl;
   });
+
+  // ============================================================ SKU
 
   // Solo se muestra en la zona del SKU si el mensaje del backend menciona el SKU
   readonly skuServerError = computed<string | null>(() => {
@@ -156,6 +161,24 @@ export class VariantForm {
   });
 
   // TODO: EFFECTS
+  // ======================================================== IMAGEN
+
+  // Genera la preview y libera la URL anterior antes de crear una nueva
+  private readonly managePreviewUrl = effect(() => {
+    const file = this.selectedImage();
+
+    // Libera la URL anterior si existía
+    if ( this.currentPreviewUrl ) {
+      URL.revokeObjectURL(this.currentPreviewUrl);
+      this.currentPreviewUrl = null;
+    }
+
+    if ( file ) {
+      this.currentPreviewUrl = URL.createObjectURL(file);
+    }
+  });
+
+  // ======================================================== SKU
 
   // Si el usuario modifica el SKU mientras hay un error de servidor, lo limpiamos
   private readonly clearSkuServerError = effect(() => {
@@ -166,7 +189,19 @@ export class VariantForm {
         this.rawServerError.set(null);
       }
     });
-  }, { allowSignalWrites: true });
+  });
+
+  // TODO: HOOKS
+
+  constructor() {
+    // Liberamos la última URL activa al destruir el componente
+    this.destroyRef.onDestroy(() => {
+      if ( this.currentPreviewUrl ) {
+        URL.revokeObjectURL(this.currentPreviewUrl);
+      }
+    });
+  }
+
 
   // TODO: MÉTODOS PRIVADOS
   // ========================================================= IMAGEN

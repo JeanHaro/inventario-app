@@ -30,7 +30,7 @@
     <fa-icon [icon]="faCheckCircle"></fa-icon>
     <span>Disponibles</span>
     <span class="products__filters-amount">
-      @if ( countsByState().disponible! > 100) {
+      @if ( (countsByState().disponible ?? 0) > 100) {
         +99
       } @else {
         {{ countsByState().disponible ?? 0 }}
@@ -48,7 +48,7 @@
     <fa-icon [icon]="faCircleXmark"></fa-icon>
     <span>Agotados</span>
     <span class="products__filters-amount">
-      @if ( countsByState().agotado! > 100) {
+      @if ( (countsByState().agotado ?? 0) > 100) {
         +99
       } @else {
         {{ countsByState().agotado ?? 0 }}
@@ -66,7 +66,7 @@
     <fa-icon [icon]="faBookmark"></fa-icon>
     <span>Reservados</span>
     <span class="products__filters-amount">
-      @if ( countsByState().reservado! > 100) {
+      @if ( (countsByState().reservado ?? 0) > 100) {
         +99
       } @else {
         {{ countsByState().reservado ?? 0 }}
@@ -84,7 +84,7 @@
     <fa-icon [icon]="faCalendarDays"></fa-icon>
     <span>Proximamente</span>
     <span class="products__filters-amount">
-      @if ( countsByState().proximamente! > 100) {
+      @if ( (countsByState().proximamente ?? 0) > 100) {
         +99
       } @else {
         {{ countsByState().proximamente ?? 0 }}
@@ -102,7 +102,7 @@
     <fa-icon [icon]="faBan"></fa-icon>
     <span>Descontinuados</span>
     <span class="products__filters-amount">
-      @if ( countsByState().descontinuado! > 100) {
+      @if ( (countsByState().descontinuado ?? 0) > 100) {
         +99
       } @else {
         {{ countsByState().descontinuado ?? 0 }}
@@ -120,7 +120,7 @@
     <fa-icon [icon]="faCirclePause"></fa-icon>
     <span>Pausados</span>
     <span class="products__filters-amount">
-      @if ( countsByState().pausado! > 100) {
+      @if ( (countsByState().pausado ?? 0) > 100) {
         +99
       } @else {
         {{ countsByState().pausado ?? 0 }}

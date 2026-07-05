@@ -54,7 +54,7 @@ export class ProductImagesPanel {
     'image/gif'
   ];
   private readonly MAX_SIZE_MB = 5;
-  private readonly MAX_IMAGENES = 10;
+  private readonly MAX_IMAGES = 10;
 
   // TODO: SIGNALS
   uploading = signal<boolean>(false);
@@ -65,11 +65,11 @@ export class ProductImagesPanel {
   // Validamos el archivo
   private validateFile ( files: File[], input: HTMLInputElement ): boolean {
     // 1. Validamos cantidad máxima
-    const espacioDisponible = this.MAX_IMAGENES - this.images().length;
+    const espacioDisponible = this.MAX_IMAGES - this.images().length;
 
     if ( files.length > espacioDisponible ) {
       this.errorMessage.set(
-        `Solo puedes subir ${espacioDisponible} imagen(es) más. Ya tienes ${this.images().length} de ${this.MAX_IMAGENES} permitidas.`
+        `Solo puedes subir ${espacioDisponible} imagen(es) más. Ya tienes ${this.images().length} de ${this.MAX_IMAGES} permitidas.`
       );
 
       input.value = '';

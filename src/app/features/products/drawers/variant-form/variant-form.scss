@@ -49,6 +49,7 @@
     }
   }
 
+  // Cerrar
   &__close {
     display: flex;
     gap: 0.5rem;
@@ -84,6 +85,7 @@
     }
   }
 
+  // Overlay de carga
   &__form-overlay {
     position: absolute;
     inset: 0;
@@ -120,11 +122,13 @@
     }
   }
 
+  // Label
   &__field-label {
     color: var(--color-blanco-6);
     margin-bottom: 1rem;
   }
 
+  // Contenedor de inputs con errores
   &__field-wrapper {
     position: relative;
     display: flex;
@@ -134,6 +138,7 @@
     margin-bottom: 2rem;
   }
 
+  // Error
   &__field-error {
     position: absolute;
     top: 102%;
@@ -174,6 +179,7 @@
     }
   }
 
+  // Imagen
   &__image-wrapper {
     position: relative;
     width: 100%;
@@ -240,6 +246,7 @@
     opacity: 1;
   }
 
+  // Bloque informativo (nombre, sku, estado, precio, stock)
   &__main-info {
     display: flex;
     flex-direction: column;

@@ -32,8 +32,16 @@ export class InventarioService {
   // TODO: PROPIEDADES
   private apiUrl = environment.apiUrl;
 
+  // TODO: MÉTODOS PRIVADOS
 
-  // TODO: MÉTODOS
+  // Errors
+  private handleError = ( error: HttpErrorResponse ) => {
+    const mensaje = error.error?.error ?? 'Error desconocido';
+    console.error(`[${error.status}]`, mensaje);
+    return throwError(() => new Error(mensaje));
+  }
+
+  // TODO: MÉTODOS PÚBLICOS
 
   // Obtener todos los productos
   getProducts(): Observable<Product[]> {
@@ -42,12 +50,7 @@ export class InventarioService {
 
       tap( productos => console.log(`${productos.length} productos cargados`) ),
 
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      catchError( this.handleError )
 
     );
   }
@@ -59,12 +62,7 @@ export class InventarioService {
 
       tap( producto => console.log(`Producto cargado con id ${producto.id}`) ),
 
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      catchError( this.handleError )
 
     );
   }
@@ -76,12 +74,7 @@ export class InventarioService {
 
     return this.http.get<Product[]>(`${this.apiUrl}/products`, { params }).pipe(
 
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      catchError( this.handleError )
 
     );
   }
@@ -93,12 +86,7 @@ export class InventarioService {
 
     return this.http.get<Product[]>(`${this.apiUrl}/products`, { params }).pipe(
 
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      catchError( this.handleError )
 
     );
   }
@@ -110,12 +98,7 @@ export class InventarioService {
 
     return this.http.get<Product[]>(`${this.apiUrl}/products`, { params }).pipe(
 
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      catchError( this.handleError )
 
     );
   }
@@ -127,12 +110,7 @@ export class InventarioService {
 
     return this.http.get<Product[]>(`${this.apiUrl}/products`, { params }).pipe(
 
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      catchError( this.handleError )
 
     );
   }
@@ -144,12 +122,7 @@ export class InventarioService {
 
     return this.http.get<Product[]>(`${this.apiUrl}/products`, { params }).pipe(
 
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      catchError( this.handleError )
 
     );
   }
@@ -161,12 +134,7 @@ export class InventarioService {
 
     return this.http.get<Product[]>(`${this.apiUrl}/products`, { params }).pipe(
 
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      catchError( this.handleError )
 
     );
   }
@@ -178,12 +146,7 @@ export class InventarioService {
       `${this.apiUrl}/products/${id}/precio`
     ).pipe(
 
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      catchError( this.handleError )
 
     );
   }
@@ -197,12 +160,7 @@ export class InventarioService {
       `${this.apiUrl}/products/${productId}/precio`, { params }
     ).pipe(
 
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      catchError( this.handleError )
 
     );
   }
@@ -214,12 +172,7 @@ export class InventarioService {
       `${this.apiUrl}/products/${id}/variantes_agotadas`
     ).pipe(
 
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      catchError( this.handleError )
 
     );
   }
@@ -231,12 +184,7 @@ export class InventarioService {
       `${this.apiUrl}/products/${id}/variantes_bajas`
     ).pipe(
 
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      catchError( this.handleError )
 
     );
   }
@@ -245,13 +193,8 @@ export class InventarioService {
   createProduct ( producto: Omit<Product, 'id' | 'creadoEn' | 'actualizadoEn'> ): Observable<Product> {
 
     return this.http.post<Product>(`${this.apiUrl}/products`, producto).pipe(
-      delay(1000),
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      delay(1000), // Para el overlay
+      catchError( this.handleError )
 
     );
   }
@@ -265,13 +208,8 @@ export class InventarioService {
     const url = `${this.apiUrl}/products/${id}`;
 
     return this.http.patch<Product>(url, producto).pipe(
-      delay(1000),
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      delay(1000), // para el overlay
+      catchError( this.handleError )
 
     );
   }
@@ -282,13 +220,8 @@ export class InventarioService {
     const url = `${this.apiUrl}/products/${id}`;
 
     return this.http.delete<DeleteResponse>(url).pipe(
-
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      delay(1000), // Para el overlay
+      catchError( this.handleError )
 
     );
   }
@@ -302,13 +235,8 @@ export class InventarioService {
     return this.http.post<Product>(
       `${this.apiUrl}/products/${productId}/variantes`, variante
     ).pipe(
-
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      delay(1000), // Para el overlay
+      catchError( this.handleError )
 
     );
   }
@@ -323,13 +251,8 @@ export class InventarioService {
     const url = `${this.apiUrl}/products/${productId}/variantes/${variantId}`;
 
     return this.http.patch<Product>(url, variante).pipe(
-      delay(1000),
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      delay(1000), // Para el overlay
+      catchError( this.handleError )
 
     );
   }
@@ -341,12 +264,7 @@ export class InventarioService {
 
     return this.http.delete<Product>(url).pipe(
 
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      catchError( this.handleError )
 
     );
   }
@@ -357,13 +275,8 @@ export class InventarioService {
     return this.http.post<ProductImagesResponse>(
       `${this.apiUrl}/products/${id}/imagenes`, imagen
     ).pipe(
-
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      delay(1000),
+      catchError( this.handleError )
 
     );
   }
@@ -377,12 +290,7 @@ export class InventarioService {
       `${this.apiUrl}/products/${id}/imagenes`, { params }
     ).pipe(
 
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      catchError( this.handleError )
 
     );
   }
@@ -395,12 +303,7 @@ export class InventarioService {
       imagen
     ).pipe(
       delay(1000),
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      catchError( this.handleError )
 
     );
   }
@@ -412,12 +315,7 @@ export class InventarioService {
       `${this.apiUrl}/products/${productId}/variantes/${variantId}/imagen`
     ).pipe(
 
-      catchError( ( error: HttpErrorResponse ) => {
-        const mensaje = error.error?.error ?? 'Error desconocido';
-        console.error(`[${error.status}]`, mensaje);
-
-        return throwError(() => new Error(mensaje));
-      })
+      catchError( this.handleError )
 
     );
   }

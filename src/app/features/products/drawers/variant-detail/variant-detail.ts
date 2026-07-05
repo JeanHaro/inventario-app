@@ -193,7 +193,7 @@ export class VariantDetail implements OnInit {
       this.rawServerError.set(null);
     }
   });
-  }, { allowSignalWrites: true });
+  });
 
   // TODO: HOSTLISTENER
   // ====================================================== MOSTRAR OPCIONES
