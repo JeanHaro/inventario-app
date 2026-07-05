@@ -40,6 +40,7 @@ export class ProductVariantsPanel {
   readonly product = input.required<Product>();
   readonly viewVariant = output<number>();
   readonly editVariant = output<number>(); // solo el id del producto
+  readonly addVariant = output<void>(); // el id del product
 
   // TODO: PROPIEDADES
   // Opciones de los selects

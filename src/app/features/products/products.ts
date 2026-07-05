@@ -92,7 +92,8 @@ export class Products implements OnInit {
   private readonly clearSelectionOnDrawerOpen = effect(() => {
     const algunDrawerAbierto = this.selectedProduct() !== null ||
                               this.showProductForm() ||
-                              this.selectedVariant() !== null;
+                              this.selectedVariant() !== null ||
+                              this.showVariantForm();
 
     // Si hay algún drawer abierto
     if ( algunDrawerAbierto ) {
@@ -195,6 +196,11 @@ export class Products implements OnInit {
   // ===================================================== PARAMS: EDITAR VARIANTE
   readonly startVariantInEditMode = computed<boolean>(() =>
     this.queryParams().get('varModo') === 'editar'
+  );
+
+  // ====================================================== PARAMS: CREAR VARIANTE
+  readonly showVariantForm = computed<boolean>(() =>
+    this.queryParams().get('varForm') === 'crear'
   );
 
   // =======================================================================
@@ -457,7 +463,8 @@ export class Products implements OnInit {
         modo: null,
         productoId: null,
         varianteId: null,
-        varModo: null
+        varModo: null,
+        varForm: null
       },
       queryParamsHandling: 'merge'
     });
@@ -479,6 +486,45 @@ export class Products implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { productoId: null, varianteId: null, varModo: null },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  // ================================================= DRAWER CREAR VARIANTE
+
+  // Abrir formulario de creación de variante desde la tabla o desde product-detail
+  openVariantForm ( productoId: number ): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { productoId, varForm: 'crear' },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  // Cerrar formulario sin crear nada, no toca "id", igual que closeVariantDetail
+  closeVariantForm(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { productoId: null, varForm: null },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  // La variante se creó — abre su detalle directamente
+  onVariantCreated ( producto: Product, productoId: number ): void {
+    this.products.update( productos =>
+      productos.map( p => p.id === producto.id ? producto : p )
+    );
+
+    const nuevaVariante = producto.variantes[producto.variantes.length - 1];
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        varForm: null,
+        productoId,
+        varianteId: nuevaVariante.id
+      },
       queryParamsHandling: 'merge'
     });
   }

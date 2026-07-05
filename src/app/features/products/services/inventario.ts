@@ -296,7 +296,7 @@ export class InventarioService {
   // Crear variantes
   createVariant (
     productId: string,
-    variante: Omit<Variant, 'id'>
+    variante: FormData
   ): Observable<Product> {
 
     return this.http.post<Product>(

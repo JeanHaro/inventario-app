@@ -215,7 +215,10 @@
             </button>
 
             <!-- Agregar variante -->
-            <button class="products__action-btn products__action-btn--add btn b--hidden none">
+            <button
+              (click)="addVariant.emit(producto.id)"
+              class="products__action-btn products__action-btn--add btn b--hidden none"
+            >
               <fa-icon [icon]="faLayerGroup"></fa-icon>
               <span class="sr-only">Agregar nueva variante</span>
             </button>

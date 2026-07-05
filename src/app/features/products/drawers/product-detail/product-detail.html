@@ -433,6 +433,7 @@
               productoId: product().id,
               varianteId: $event
             })"
+            (addVariant)="addVariant.emit(product().id)"
           />
         }
         <!-- END: VISTA: Variantes -->

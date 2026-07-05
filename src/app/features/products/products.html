@@ -37,6 +37,7 @@
         (selectionCleared)="clearSelection()"
         (editProduct)="editProduct($event)"
         (editVariant)="editVariant($event.productoId, $event.varianteId)"
+        (addVariant)="openVariantForm($event)"
       />
 
     </div>
@@ -211,7 +212,8 @@
   [class.active]="
     selectedProduct() !== null ||
     showProductForm() ||
-    selectedVariant() !== null
+    selectedVariant() !== null ||
+    showVariantForm()
   "
 ></div>
 
@@ -220,8 +222,8 @@
 ================================ -->
 <div
   [class.active]="selectedProduct() !== null"
-  [class.is-covered]="selectedVariant() !== null"
-  [class.no-anim]="selectedProduct() === null && selectedVariant() !== null"
+  [class.is-covered]="selectedVariant() !== null || showVariantForm()"
+  [class.no-anim]="selectedProduct() === null && ( selectedVariant() !== null || showVariantForm())"
   class="drawers drawers--product-detail"
 >
   @if ( selectedProduct() !== null ) {
@@ -233,6 +235,7 @@
       (editModeChanged)="syncEditMode($event)"
       (viewVariant)="openVariantDetail($event.productoId, $event.varianteId)"
       (editVariant)="editVariant($event.productoId, $event.varianteId)"
+      (addVariant)="openVariantForm($event)"
     />
   }
 </div>
@@ -276,7 +279,15 @@
   DRAWER: VARIANT FORM
 ================================ -->
 <div
+  [class.active]="showVariantForm()"
   class="drawers drawers--variant-form"
 >
-  <variant-form />
+  @if ( showVariantForm() ) {
+    <variant-form
+      [productId]="variantOwnerProduct()!.id"
+      [productName]="variantOwnerProduct()!.nombre"
+      (closeModal)="closeVariantForm()"
+      (variantCreated)="onVariantCreated($event, variantOwnerProduct()!.id)"
+    />
+  }
 </div>

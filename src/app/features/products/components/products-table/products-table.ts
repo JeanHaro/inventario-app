@@ -69,7 +69,8 @@ export class ProductsTable {
   readonly variantKebab = output<VariantRef>();
   readonly selectionCleared = output<void>();
   readonly editProduct = output<number>(); // PARAMS: EDITAR PRODUCTO
-  readonly editVariant = output<VariantRef>();
+  readonly editVariant = output<VariantRef>(); // EDITAR VARIANTE
+  readonly addVariant = output<number>(); // CREAR VARIANTE
 
   // TODO: COMPUTED
   // =================================================== SELECCIONAR CHECKBOX

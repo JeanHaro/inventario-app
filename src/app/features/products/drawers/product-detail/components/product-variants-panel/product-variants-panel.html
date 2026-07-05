@@ -37,7 +37,10 @@
     <!-- END: Ordenar por -->
 
     <!-- Agregar variante -->
-    <div class="product-detail__add">
+    <div
+      (click)="addVariant.emit()"
+      class="product-detail__add"
+    >
       <button
         class="none btn b--primary"
       >

@@ -1,1 +1,256 @@
-<p>variant-form works!</p>
+<!-- ================================
+  FORMULARIO: CREAR VARIANTE
+================================ -->
+<div class="variant-form">
+
+  <!-- ================================
+    BARRA SUPERIOR
+  ================================ -->
+  <div class="variant-form__top">
+    <!-- Cerrar -->
+    <button
+      type="button"
+      (click)="closeModal.emit()"
+      class="variant-form__close none btn b--hidden"
+    >
+      <fa-icon [icon]="faArrowRightFromBracket"></fa-icon>
+      <span>Cerrar</span>
+    </button>
+
+    <h3>Crear variante</h3>
+  </div>
+  <!-- END: BARRA SUPERIOR -->
+
+  <form
+    novalidate
+    (ngSubmit)="createVariant()"
+    [class.is-saving]="saving()"
+  >
+
+    <!-- Overlay de carga -->
+    @if ( saving() ) {
+      <div class="variant-form__form-overlay">
+        <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
+        <span>Creando variante, espere por favor...</span>
+      </div>
+    }
+
+    @if ( generalServerError() ) {
+      <div class="variant-form__field-error variant-form__general-error">
+        <span>{{ generalServerError() }}</span>
+      </div>
+    }
+
+    <!-- Campos principales -->
+    <div class="variant-form__fields-main">
+
+      <!-- Imagen (opcional) -->
+      <div class="variant-form__image-column">
+        <div
+          class="variant-form__image-wrapper"
+          (click)="openImageSelector()"
+        >
+          @if ( imagePreviewUrl() ) {
+            <img [src]="imagePreviewUrl()" alt="Imagen de la variante" width="256" height="256">
+          } @else {
+            <div class="variant-form__image-placeholder">
+              <fa-icon [icon]="faCamera"></fa-icon>
+              <span>Sin imagen</span>
+            </div>
+          }
+
+          <div class="variant-form__image-overlay">
+            <fa-icon [icon]="faCamera"></fa-icon>
+            <span>{{ imagePreviewUrl() ? 'Cambiar imagen' : 'Agregar imagen' }}</span>
+          </div>
+
+          <input
+            #imageInputRef
+            type="file"
+            accept="image/*"
+            hidden
+            (change)="onImageSelected($event)"
+          >
+        </div>
+
+        @if ( imageError() ) {
+          <div class="variant-form__field-error">
+            <span>{{ imageError() }}</span>
+          </div>
+        }
+      </div>
+
+      <!-- Bloque informativo -->
+      <div class="variant-form__main-info">
+
+        <!-- Nombre -->
+        <div class="variant-form__field-wrapper">
+          <input
+            [formField]="editForm.nombre"
+            placeholder="Nombre de la variante"
+            type="text"
+            [class.i--warn]="editForm.nombre().invalid() && editForm.nombre().touched()"
+            class="variant-form__input none input"
+          >
+
+          @if ( editForm.nombre().invalid() && editForm.nombre().touched() ) {
+            <div class="variant-form__field-error">
+              @for ( error of editForm.nombre().errors(); track error.kind ) {
+                <span>{{ error.message }}</span>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- SKU -->
+        <div class="variant-form__field-wrapper">
+          <input
+            [formField]="editForm.sku"
+            placeholder="SKU de la variante"
+            type="text"
+            [class.i--warn]="(editForm.sku().invalid() && editForm.sku().touched()) || skuServerError()"
+            class="variant-form__input none input"
+          >
+
+          @if ( editForm.sku().invalid() && editForm.sku().touched() ) {
+            <div class="variant-form__field-error">
+              @for ( error of editForm.sku().errors(); track error.kind ) {
+                <span>{{ error.message }}</span>
+              }
+            </div>
+          }
+
+          @if ( skuServerError() ) {
+            <div class="variant-form__field-error">
+              <span>{{ skuServerError() }}</span>
+            </div>
+          }
+        </div>
+
+        <!-- Estado -->
+        <div class="variant-form__field-group">
+          <div class="variant-form__field-label">
+            <span>Estado</span>
+          </div>
+
+          <div class="variant-form__field-wrapper">
+            <shared-select
+              [options]="variantStateOptions"
+              [value]="editModel().estado"
+              [invalid]="editForm.estado().invalid() && editForm.estado().touched()"
+              (valueChange)="updateState($event)"
+              (closed)="editForm.estado().markAsTouched()"
+            />
+
+            @if ( editForm.estado().invalid() && editForm.estado().touched() ) {
+              <div class="variant-form__field-error">
+                @for ( error of editForm.estado().errors(); track error.kind ) {
+                  <span>{{ error.message }}</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Precio adicional -->
+        <div class="variant-form__field-group">
+          <div class="variant-form__field-label">
+            <span>Precio adicional</span>
+          </div>
+
+          <div class="variant-form__field-wrapper">
+            <input
+              [formField]="editForm.precioAdicional"
+              placeholder="Precio adicional"
+              type="number"
+              [class.i--warn]="editForm.precioAdicional().invalid() && editForm.precioAdicional().touched()"
+              class="variant-form__input none input"
+            >
+
+            @if ( editForm.precioAdicional().invalid() && editForm.precioAdicional().touched() ) {
+              <div class="variant-form__field-error">
+                @for ( error of editForm.precioAdicional().errors(); track error.kind ) {
+                  <span>{{ error.message }}</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Stock -->
+        <div class="variant-form__field-group">
+          <div class="variant-form__field-label">
+            <span>Stock inicial</span>
+          </div>
+
+          <div class="variant-form__field-wrapper">
+            <input
+              [formField]="editForm.stock"
+              placeholder="Stock inicial"
+              type="number"
+              [class.i--warn]="editForm.stock().invalid() && editForm.stock().touched()"
+              class="variant-form__input none input"
+            >
+
+            @if ( editForm.stock().invalid() && editForm.stock().touched() ) {
+              <div class="variant-form__field-error">
+                @for ( error of editForm.stock().errors(); track error.kind ) {
+                  <span>{{ error.message }}</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <h4>Valores secundarios</h4>
+
+    <!-- Campos secundarios -->
+    <div class="variant-form__fields-secondary">
+      <input
+        [formField]="editForm.talla"
+        placeholder="Talla"
+        type="text"
+        class="variant-form__input none input"
+      >
+
+      <input
+        [formField]="editForm.color"
+        placeholder="Color"
+        type="text"
+        class="variant-form__input none input"
+      >
+
+      <input
+        [formField]="editForm.capacidad"
+        placeholder="Capacidad"
+        type="text"
+        class="variant-form__input none input"
+      >
+    </div>
+
+    <!-- Botones -->
+    <div class="variant-form__buttons">
+      <button
+        type="submit"
+        [disabled]="saving() || editForm().invalid()"
+        class="variant-form__btn none btn b--primary"
+      >
+        <span>Crear variante</span>
+      </button>
+
+      <button
+        type="button"
+        (click)="closeModal.emit()"
+        [disabled]="saving()"
+        class="variant-form__btn none btn b--gray"
+      >
+        <span>Cancelar</span>
+      </button>
+    </div>
+
+  </form>
+
+</div>
