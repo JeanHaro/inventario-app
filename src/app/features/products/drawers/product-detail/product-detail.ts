@@ -107,6 +107,11 @@ export class ProductDetail implements OnInit {
       label: 'Próximamente',
       badgeClass: 'badge--proximamente'
     },
+    {
+      value: 'pausado',
+      label: 'Pausado',
+      badgeClass: 'badge--pausado'
+    }
   ];
 
   readonly categoryOptions: SelectOption[] = [
