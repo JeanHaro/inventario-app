@@ -147,14 +147,6 @@
     }
   }
 
-  &__general-error {
-    background-color: var(--notif-critical-soft);
-    border: 1px solid var(--notif-critical-border);
-    border-radius: 0.5rem;
-    padding: 0.8rem 1rem;
-    margin-bottom: 2rem;
-  }
-
   // Campos principales
   &__fields-main {
     display: flex;
