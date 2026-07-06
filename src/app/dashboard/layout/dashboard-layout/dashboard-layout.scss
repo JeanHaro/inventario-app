@@ -58,6 +58,7 @@
   // MAIN (Contenido)
   // ================================
   .main-content {
+    min-width: 0;
     width: 100%;
     background-color: var(--color-blanco-7);
     border-top-left-radius: 1rem;
@@ -71,12 +72,6 @@
     &::after {
       content: '';
       opacity: 0;
-    }
-
-    @media (min-width: 768px) {
-      &.active {
-        width: calc(100vw - 25rem);
-      }
     }
 
     @media (max-width: 767px) {
