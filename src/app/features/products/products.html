@@ -62,10 +62,16 @@
       <!-- Archivar -->
       <button
         (click)="archiveOrUnarchiveProducts()"
+        [disabled]="archivingProducts()"
         class="products__btn products__btn--store btn b--terciary none"
       >
-        <fa-icon [icon]="allArchived() ? faBoxOpen : faBoxArchive"></fa-icon>
-        <span>{{ allArchived() ? 'Desarchivar' : 'Archivar' }}</span>
+        @if ( archivingProducts() ) {
+          <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
+          <span>{{ allArchived() ? 'Desarchivando...' : 'Archivando...' }}</span>
+        } @else {
+          <fa-icon [icon]="allArchived() ? faBoxOpen : faBoxArchive"></fa-icon>
+          <span>{{ allArchived() ? 'Desarchivar' : 'Archivar' }}</span>
+        }
       </button>
 
       <!-- Cerrar -->
@@ -91,10 +97,16 @@
       <!-- Archivar -->
       <button
         (click)="archiveOrUnarchiveProducts()"
+        [disabled]="archivingProducts()"
         class="products__btn products__btn--store btn b--terciary none"
       >
-        <fa-icon [icon]="allArchived() ? faBoxOpen : faBoxArchive"></fa-icon>
-        <span>{{ allArchived() ? 'Desarchivar' : 'Archivar' }}</span>
+        @if ( archivingProducts() ) {
+          <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
+          <span>{{ allArchived() ? 'Desarchivando...' : 'Archivando...' }}</span>
+        } @else {
+          <fa-icon [icon]="allArchived() ? faBoxOpen : faBoxArchive"></fa-icon>
+          <span>{{ allArchived() ? 'Desarchivar' : 'Archivar' }}</span>
+        }
       </button>
 
       <!-- Cerrar -->
@@ -136,9 +148,13 @@
       <!-- Archivar -->
       <button
         (click)="archiveOrUnarchiveVariant()"
+        [disabled]="archivingVariant()"
         class="products__btn products__btn--store btn b--terciary none"
       >
-        @if ( variantIsArchived() ) {
+        @if ( archivingVariant() ) {
+          <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
+          <span>{{ variantIsArchived() ? 'Desarchivando...' : 'Archivando...' }}</span>
+        } @else if ( variantIsArchived() ) {
           <fa-icon [icon]="faBoxOpen"></fa-icon>
           <span>Desarchivar</span>
         } @else {
@@ -182,10 +198,16 @@
       <!-- Guardar -->
       <button
         (click)="updateStock(stockValue.value)"
+        [disabled]="updatingStock()"
         class="products__btn btn b--terciary none"
       >
-        <fa-icon [icon]="faFloppyDisk"></fa-icon>
-        <span>Guardar</span>
+        @if ( updatingStock() ) {
+          <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
+          <span>Guardando...</span>
+        } @else {
+          <fa-icon [icon]="faFloppyDisk"></fa-icon>
+          <span>Guardar</span>
+        }
       </button>
 
       <!-- Cerrar -->

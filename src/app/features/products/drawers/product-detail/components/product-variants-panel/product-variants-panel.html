@@ -62,13 +62,13 @@
           @if ( variante.imagen?.length ) {
             <img
               [src]="variante.imagen"
-              [alt]="variante.nombre ?? 'Imagen de variante'"
+              [alt]="variante.nombre"
               width="80"
               height="80"
             >
           } @else {
             <img
-              src="./img/iphone15.png"
+              src="./img/not-found.jpg"
               alt="Imagen por defecto"
               width="80"
               height="80"
@@ -79,10 +79,10 @@
         <!-- Nombre y SKU -->
         <div class="product-detail__variant-information">
           <span class="product-detail__variant-name">
-            {{ product().nombre }} {{ variante.nombre ?? '' }}
+            {{ product().nombre }} {{ variante.nombre }}
           </span>
           <span class="product-detail__variant-sku">
-            {{ variante.sku ?? 'sin-sku' }}
+            {{ variante.sku }}
           </span>
         </div>
 
@@ -103,7 +103,7 @@
         <!-- Precio adicional -->
         <div class="product-detail__variant-price">
           <span>Precio</span>
-          <span>{{ variante.precioAdicional ?? 0 | compactNumber: 'precio' }}</span>
+          <span>{{ variante.precioAdicional | compactNumber: 'precio' }}</span>
         </div>
 
         <!-- Acciones de variante -->

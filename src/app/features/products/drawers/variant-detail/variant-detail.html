@@ -94,10 +94,16 @@
       <button
         type="button"
         (click)="toggleVariantArchive()"
+        [disabled]="archiving()"
         class="none btn b--white-primary"
       >
-        <fa-icon [icon]="variantIsArchived() ? faBoxOpen : faBoxArchive"></fa-icon>
-        <span>{{ variantIsArchived() ? 'Desarchivar' : 'Archivar' }}</span>
+        @if ( archiving() ) {
+          <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
+          <span>{{ variantIsArchived() ? 'Desarchivando...' : 'Archivando...' }}</span>
+        } @else {
+          <fa-icon [icon]="variantIsArchived() ? faBoxOpen : faBoxArchive"></fa-icon>
+          <span>{{ variantIsArchived() ? 'Desarchivar' : 'Archivar' }}</span>
+        }
       </button>
 
     </div>
@@ -136,13 +142,13 @@
             @if ( variant().imagen?.length ) {
               <img
                 [src]="variant().imagen"
-                [alt]="variant().nombre ?? 'Imagen de la variante'"
+                [alt]="variant().nombre"
                 width="256"
                 height="256"
               >
             } @else {
               <img
-                src="./img/iphone15.png"
+                src="./img/not-found.jpg"
                 alt="Imagen por defecto"
                 width="256"
                 height="256"
@@ -180,7 +186,9 @@
         <div class="variant-detail__main-info">
           <!-- Nombre de la variante -->
           @if ( !editMode() ) {
-            <h2>{{ variant().nombre ?? productName() }}</h2>
+            <h2>
+              {{ productName() + ' ' + variant().nombre }}
+            </h2>
           } @else {
             <div class="variant-detail__field-wrapper">
               <input
@@ -204,7 +212,7 @@
           <!-- SKU de la variante-->
           @if ( !editMode() ) {
             <div class="variant-detail__sku">
-              <span>{{ variant().sku ?? 'sin-sku' }}</span>
+              <span>{{ variant().sku }}</span>
             </div>
           } @else {
             <div class="variant-detail__field-wrapper">
@@ -274,7 +282,7 @@
 
             @if ( !editMode() ) {
               <span>
-                {{ variant().precioAdicional ?? 0 | compactNumber: 'precio' }}
+                {{ variant().precioAdicional | compactNumber: 'precio' }}
               </span>
             } @else {
               <div class="variant-detail__field-wrapper">
@@ -356,7 +364,7 @@
           </div>
 
           @if ( !editMode() ) {
-            <span>{{ variant().color ?? 'No tiene' }}</span>
+            <span>{{ variant().color || 'No tiene' }}</span>
           } @else {
             <input
               [formField]="editForm.color"
@@ -374,7 +382,7 @@
           </div>
 
           @if ( !editMode() ) {
-            <span>{{ variant().capacidad ?? 'No tiene' }}</span>
+            <span>{{ variant().capacidad || 'No tiene' }}</span>
           } @else {
             <input
               [formField]="editForm.capacidad"
@@ -472,7 +480,7 @@
         </div>
       </div>
 
-       <!-- Entrada: Creación -->
+      <!-- Entrada: Creación -->
       <div class="variant-detail__history-item variant-detail__history-item--neutral">
         <div class="variant-detail__history-icon">
           <fa-icon [icon]="faPlus"></fa-icon>
@@ -489,7 +497,7 @@
         </div>
       </div>
 
-       <!-- Entrada: Creación -->
+      <!-- Entrada: Creación -->
       <div class="variant-detail__history-item variant-detail__history-item--neutral">
         <div class="variant-detail__history-icon">
           <fa-icon [icon]="faPlus"></fa-icon>

@@ -84,10 +84,18 @@
       <button
         type="button"
         (click)="toggleProductArchive()"
+        [disabled]="archiving()"
         class="none btn b--white-primary"
       >
-        <fa-icon [icon]="productIsArchived() ? faBoxOpen : faBoxArchive"></fa-icon>
-        <span>{{ productIsArchived() ? 'Desarchivar' : 'Archivar' }}</span>
+        @if ( archiving() ) {
+          <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
+          <span>
+            {{ productIsArchived() ? 'Desarchivando...' : 'Archivando...' }}
+          </span>
+        } @else {
+          <fa-icon [icon]="productIsArchived() ? faBoxOpen : faBoxArchive"></fa-icon>
+          <span>{{ productIsArchived() ? 'Desarchivar' : 'Archivar' }}</span>
+        }
       </button>
 
     </div>
@@ -370,7 +378,7 @@
         </div>
 
         @if ( !editMode() ) {
-          <span>{{ product().descripcion }}</span>
+          <span>{{ product().descripcion || 'No tiene' }}</span>
         } @else {
           <textarea
             [formField]="editForm.descripcion"

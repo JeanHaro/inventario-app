@@ -207,6 +207,7 @@ export class ProductDetail implements OnInit {
 
   editMode = signal<boolean>(false); // ======= Modo edición para el formulario
   saving = signal<boolean>(false);
+  archiving = signal<boolean>(false);
 
   // Se llena al activar edición
   editModel = signal({
@@ -351,6 +352,8 @@ export class ProductDetail implements OnInit {
 
   // Archivar / Desarchivar el producto
   toggleProductArchive(): void {
+    this.archiving.set(true);
+
     const nuevoEstado: ProductState = this.productIsArchived()
                   ? this.resolveUnarchiveState()
                   : 'descontinuado';
@@ -362,7 +365,9 @@ export class ProductDetail implements OnInit {
       next: (resp) => {
         this.productUpdated.emit(resp); // avisamos al padre
         this.showOptionsMenu.set(false); // Cerramos el menu
-      }
+        this.archiving.set(false);
+      },
+      error: () => this.archiving.set(false)
     });
   }
 

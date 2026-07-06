@@ -170,7 +170,11 @@
 
           <!-- TD: Marca / Modelo -->
           <div class="products__td products__brand-model">
-            <span>{{ producto.marca ?? '-' }} / {{ producto.modelo ?? '-' }}</span>
+            <span>
+              {{ producto.marca }}
+              @if( producto.modelo?.trim()?.length ) {
+                / {{ producto.modelo }}
+              }</span>
           </div>
 
           <!-- TD: Precio base -->
@@ -264,13 +268,13 @@
                 @if ( variante.imagen?.length ) {
                   <img
                     [src]="variante.imagen"
-                    [alt]="variante.nombre ?? 'Imagen de variante'"
+                    [alt]="variante.nombre"
                     width="80"
                     height="80"
                   >
                 } @else {
                   <img
-                    src="./img/iphone15.png"
+                    src="./img/not-found.jpg"
                     alt="Imagen por defecto"
                     width="80"
                     height="80"
@@ -281,10 +285,14 @@
               <!-- TD: Nombre y SKU -->
               <div class="products__td products__information">
                 <span class="products__information-name">
-                  {{ producto.nombre }} {{ variante.nombre ?? '' }}
+                  @if ( (producto.nombre + ' ' + variante.nombre).length > 52 ) {
+                    {{ producto.nombre + ' ' + variante.nombre | slice:0:52 }}...
+                  } @else {
+                    {{ producto.nombre + ' ' + variante.nombre }}
+                  }
                 </span>
                 <span class="products__information-sku">
-                  {{ variante.sku ?? 'sin-sku' }}
+                  {{ variante.sku }}
                 </span>
               </div>
 
@@ -305,7 +313,7 @@
               <!-- TD: Precio adicional -->
               <div class="products__td products__price">
                 <span>Precio</span>
-                <span>{{ variante.precioAdicional ?? 0 | compactNumber: 'precio' }}</span>
+                <span>{{ variante.precioAdicional | compactNumber: 'precio' }}</span>
               </div>
 
               <!-- TD: Acciones de variante -->
@@ -356,6 +364,11 @@
       </div>
       <!-- END: PRODUCTO -->
 
+    } @empty {
+      <!-- NO HAY DATOS -->
+      <div class="products__body-nodata">
+        <span>No hay productos</span>
+      </div>
     }
 
   </div>

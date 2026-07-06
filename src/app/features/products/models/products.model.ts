@@ -64,14 +64,14 @@ export interface VariantRef {
 // Interface para las variantes
 export interface Variant {
   id: number;
-  nombre?: string;            // ej: "128GB", "Pack x3", "Talla grande"
+  nombre: string;            // ej: "128GB", "Pack x3", "Talla grande"
   talla?: string;             // ej: "M", "L", "XL", "42", "N/A"
   color?: string;             // ej: "Negro", "Blanco", "N/A"
   capacidad?: string;         // ej: "10kg", "256GB", "2L"
   stock: number;
   estado: VariantState;
-  sku?: string;               // código único: "XIA14-NEG-128"
-  precioAdicional?: number;   // precio extra sobre el base (ej: +50 por la variante Pro Max)
+  sku: string;               // código único: "XIA14-NEG-128"
+  precioAdicional: number;   // precio extra sobre el base (ej: +50 por la variante Pro Max)
   imagen?: string;
 }
 
@@ -80,7 +80,7 @@ export interface Product {
   id: number;
   nombre: string;
   descripcion?: string;
-  marca?: string;         // ej: "Apple", "Samsung", "Mabe"
+  marca: string;         // ej: "Apple", "Samsung", "Mabe"
   modelo?: string;        // ej: "iPhone 15", "Lavadora LT12"
   precio: number;         // precio base
   descuento?: number;     // porcentaje 0-100

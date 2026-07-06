@@ -117,6 +117,7 @@ export class VariantDetail implements OnInit {
   editMode = signal<boolean>(false);
   saving = signal<boolean>(false);
   rawServerError = signal<string | null>(null); // mensaje crudo que llega del backend
+  archiving = signal<boolean>(false);
 
   editModel = signal({
     nombre: '',
@@ -267,6 +268,8 @@ export class VariantDetail implements OnInit {
 
   // Archivar / Desarchivar el producto
   toggleVariantArchive(): void {
+    this.archiving.set(true);
+
     const nuevoEstado: VariantState = this.variantIsArchived()
       ? this.resolveVariantUnarchiveState()
       : 'descontinuado';
@@ -279,7 +282,9 @@ export class VariantDetail implements OnInit {
       next: ( resp ) => {
         this.variantUpdated.emit(resp);
         this.showOptionsMenu.set(false);
-      }
+        this.archiving.set(false);
+      },
+      error: () => this.archiving.set(false)
     });
   }
 

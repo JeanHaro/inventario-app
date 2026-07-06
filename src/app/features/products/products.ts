@@ -24,6 +24,7 @@ import {
   faXmark,
   faBarcode,
   faFloppyDisk,
+  faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -63,6 +64,7 @@ export class Products implements OnInit {
   readonly faXmark: IconDefinition = faXmark;
   readonly faBarcode: IconDefinition = faBarcode;
   readonly faFloppyDisk: IconDefinition = faFloppyDisk;
+  readonly faSpinner: IconDefinition = faSpinner;
 
   // TODO: SIGNALS
   products = signal<Product[]>([]);
@@ -71,6 +73,10 @@ export class Products implements OnInit {
   selectedState = signal<ProductState | 'Todas'>('Todas');
   variantPanel  = signal<VariantPanel | null>(null);
   searchQuery = signal<string>('');
+
+  archivingProducts = signal<boolean>(false);
+  archivingVariant = signal<boolean>(false);
+  updatingStock = signal<boolean>(false);
 
   // TODO: toSignal
   // ====================================================== PARAMS: EDITAR PRODUCTO
@@ -266,6 +272,10 @@ export class Products implements OnInit {
 
     this.variant.set(null);
     this.variantPanel.set(null);
+
+    // Cancelar los loadings
+    this.archivingVariant.set(false);
+    this.updatingStock.set(false);
   }
 
   // TODO: MÉTODOS PÚBLICOS
@@ -330,6 +340,8 @@ export class Products implements OnInit {
     const productos = this.productsToArchive();
     if ( productos.length === 0 ) return;
 
+    this.archivingProducts.set(true);
+
     // Cada producto puede tener un estado distinto al desarchivar
     const peticiones = productos.map(
       producto => {
@@ -357,8 +369,10 @@ export class Products implements OnInit {
           );
         });
 
+        this.archivingProducts.set(false);
         this.clearSelection(); // Cierra kebabs
-      }
+      },
+      error: () => this.archivingProducts.set(false)
     })
   }
 
@@ -377,6 +391,8 @@ export class Products implements OnInit {
     if ( !this.variantPanel() ) return;
     if ( !this.variant() ) return;
 
+    this.updatingStock.set(true);
+
     const productId = this.variantPanel()!.productoId;
     const variantId = this.variant()!.id;
 
@@ -385,7 +401,8 @@ export class Products implements OnInit {
       variantId.toString(),
       { stock: Number(value) }
     ).subscribe({
-      next: ( resp ) => this.syncResponse(resp)
+      next: ( resp ) => this.syncResponse(resp),
+      error: () => this.updatingStock.set(false)
     })
   }
 
@@ -393,6 +410,8 @@ export class Products implements OnInit {
   archiveOrUnarchiveVariant() {
     if ( !this.variantPanel() ) return;
     if ( !this.variant() ) return;
+
+    this.archivingVariant.set(true);
 
     const productId = this.variantPanel()!.productoId;
     const variantId = this.variant()!.id;
@@ -404,6 +423,7 @@ export class Products implements OnInit {
       { estado: nuevoEstado }
     ).subscribe({
       next: ( resp ) => this.syncResponse(resp),
+      error: () => this.archivingVariant.set(false)
     })
   }
 
