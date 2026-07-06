@@ -47,7 +47,7 @@ export class InventarioService {
   getProducts(): Observable<Product[]> {
 
     return this.http.get<Product[]>(`${this.apiUrl}/products`).pipe(
-
+      delay(1500),
       tap( productos => console.log(`${productos.length} productos cargados`) ),
 
       catchError( this.handleError )

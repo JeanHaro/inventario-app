@@ -1,0 +1,53 @@
+<!-- ================================
+  SKELETON: TABLE
+================================ -->
+<div class="skeleton-table">
+
+  <!-- Header simulado -->
+  <div class="skeleton-table__head">
+    @for ( col of columnDefs(); track $index ) {
+      <div
+        class="skeleton-table__cell"
+        [style.width]="col.width"
+      >
+        <!-- TH -->
+        <div class="skeleton-table__box skeleton-table__box--header"></div>
+      </div>
+    }
+  </div>
+
+  <!-- ================================
+    FILAS
+  ================================ -->
+  @for ( row of rowsArray; track $index ) {
+    <div class="skeleton-table__row">
+      @for ( col of columnDefs(); track $index ) {
+        <!-- TD -->
+        <div
+          class="skeleton-table__cell"
+          [style.width]="col.width"
+        >
+          @switch ( col.shape ) {
+            @case ( 'pill' ) {
+              <!-- Badge -->
+              <div class="skeleton-table__box skeleton-table__box--pill"></div>
+            }
+            @case ( 'icons' ) {
+              <!-- Contenedor de acciones -->
+              <div class="skeleton-table__icons">
+                <div class="skeleton-table__box skeleton-table__box--icon"></div>
+                <div class="skeleton-table__box skeleton-table__box--icon"></div>
+                <div class="skeleton-table__box skeleton-table__box--icon"></div>
+                <div class="skeleton-table__box skeleton-table__box--icon"></div>
+              </div>
+            }
+            @default {
+              <div class="skeleton-table__box"></div>
+            }
+          }
+        </div>
+      }
+    </div>
+  }
+
+</div>

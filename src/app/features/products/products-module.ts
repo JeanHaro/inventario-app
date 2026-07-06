@@ -25,12 +25,14 @@ import { VariantForm } from './drawers/variant-form/variant-form';
 
 // Componentes - Shared
 import { Select } from '../../shared/components/select/select';
+import { SkeletonTable } from '../../shared/components/skeleton-table/skeleton-table';
 
 // Rutas
 import { productsRoutes } from './products.routes';
 
 // Pipes
 import { CompactNumberPipe } from '../../shared/pipes/compact-number/compact-number.pipe';
+
 
 
 @NgModule({
@@ -55,6 +57,7 @@ import { CompactNumberPipe } from '../../shared/pipes/compact-number/compact-num
     FontAwesomeModule,
     // Shared
     Select,
+    SkeletonTable,
     CompactNumberPipe,
 
     // Rutas

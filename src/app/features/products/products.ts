@@ -5,7 +5,6 @@ import {
   computed,
   effect,
   inject,
-  OnInit,
   signal
 } from '@angular/core';
 
@@ -50,7 +49,7 @@ import { InventarioService } from './services/inventario';
   templateUrl: './products.html',
   styleUrl: './products.scss',
 })
-export class Products implements OnInit {
+export class Products {
 
   // TODO: INYECCIONES
   private readonly router = inject(Router);
@@ -67,7 +66,6 @@ export class Products implements OnInit {
   readonly faSpinner: IconDefinition = faSpinner;
 
   // TODO: SIGNALS
-  products = signal<Product[]>([]);
   variant = signal<Variant | null>(null);
   selectedProducts = signal<Set<number>>(new Set());
   selectedState = signal<ProductState | 'Todas'>('Todas');
@@ -87,12 +85,6 @@ export class Products implements OnInit {
     { initialValue: this.route.snapshot.queryParamMap }
   );
 
-  ngOnInit(): void {
-    this.inventarioService.getProducts().subscribe({
-      next: ( resp ) => this.products.set(resp),
-    });
-  }
-
   // TODO: EFFECTS
   // Limpia la selección automáticamente cada vez que se abre cualquier drawer
   private readonly clearSelectionOnDrawerOpen = effect(() => {
@@ -109,6 +101,12 @@ export class Products implements OnInit {
   });
 
   // TODO: COMPUTED
+  // ====================================================== OBTENER PRODUCTO
+  readonly products = computed<Product[]>(() =>
+    this.productsResource.value() ?? []
+  );
+
+
   // ================================================== CAMBIAR ESTADO POR FILTRO
 
   // Filtrar los productos por estado
@@ -117,7 +115,7 @@ export class Products implements OnInit {
 
     // Si hay busqueda activa, usar el resource
     if ( query ) {
-      const resultados = this.productResource.value() ?? [];
+      const resultados = this.searchProductsResource.value() ?? [];
 
       // Con esto retornamos solo los productos de cada estado
       if ( this.selectedState() === 'Todas' ) return resultados;
@@ -212,8 +210,17 @@ export class Products implements OnInit {
   // =======================================================================
 
   // TODO: rxResource
+  // ====================================================== OBTENER PRODUCTO
+
+  // Obtener productos
+  productsResource = rxResource({
+    stream: () => this.inventarioService.getProducts()
+  });
+
+  // ====================================================== BUSCAR PRODUCTO
+
   // Buscar producto
-  productResource = rxResource({
+  searchProductsResource = rxResource({
     params: () => ({ query: this.searchQuery() }),
     stream: ({ params }) => {
       // of - permite regresar un observable basado en lo que nosotros mandamos a invocar
@@ -266,8 +273,8 @@ export class Products implements OnInit {
 
   // Sincroniza la respuesta de la API con el signal local (producto)
   private syncResponse ( resp: Product ): void {
-    this.products.update( productos =>
-      productos.map( producto => producto.id === resp.id ? resp : producto )
+    this.productsResource.update( productos =>
+      (productos ?? []).map( producto => producto.id === resp.id ? resp : producto )
     );
 
     this.variant.set(null);
@@ -360,8 +367,8 @@ export class Products implements OnInit {
     forkJoin(peticiones).subscribe({
       next: ( productosActualizados ) => {
         productosActualizados.forEach( productoActualizado => {
-          this.products.update( productos =>
-            productos.map( producto =>
+          this.productsResource.update( productos =>
+            (productos ?? []).map( producto =>
               producto.id === productoActualizado.id
                         ? productoActualizado
                         : producto
@@ -532,8 +539,8 @@ export class Products implements OnInit {
 
   // La variante se creó — abre su detalle directamente
   onVariantCreated ( producto: Product, productoId: number ): void {
-    this.products.update( productos =>
-      productos.map( p => p.id === producto.id ? producto : p )
+    this.productsResource.update( productos =>
+      (productos ?? []).map( p => p.id === producto.id ? producto : p )
     );
 
     const nuevaVariante = producto.variantes[producto.variantes.length - 1];
@@ -553,8 +560,8 @@ export class Products implements OnInit {
 
   // Actualiza el producto en el signal local y mantiene sincronizado el drawer
   updateProductInList ( producto: Product ): void {
-    this.products.update( productos =>
-      productos.map( p => p.id === producto.id ? producto : p )
+    this.productsResource.update( productos =>
+      (productos ?? []).map( p => p.id === producto.id ? producto : p )
     );
   }
 
@@ -606,7 +613,7 @@ export class Products implements OnInit {
 
   // Recibe el producto recién creado, lo agrega a la lista, y abre su detalle
   onProductCreated ( producto: Product ): void {
-    this.products.update( products => [ ...products, producto ] );
+    this.productsResource.update( products => [ ...(products ?? []), producto ] );
 
     this.router.navigate([], {
       relativeTo: this.route,

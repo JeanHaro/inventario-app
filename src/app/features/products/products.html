@@ -25,20 +25,25 @@
         (addProduct)="openProductForm()"
       />
 
-      <!-- TABLA -->
-      <products-table
-        [products]="productsByState()"
-        [selectedProducts]="selectedProducts()"
-        [(variantPanel)]="variantPanel"
-        (selectionToggled)="toggleSelection($event)"
-        (allToggled)="selectAll()"
-        (productKebab)="toggleProductKebab($event)"
-        (variantKebab)="getVariant($event)"
-        (selectionCleared)="clearSelection()"
-        (editProduct)="editProduct($event)"
-        (editVariant)="editVariant($event.productoId, $event.varianteId)"
-        (addVariant)="openVariantForm($event)"
-      />
+      @if ( productsResource.isLoading() ) {
+        <!-- SKELETON -->
+        <shared-skeleton-table />
+      } @else {
+        <!-- TABLA -->
+        <products-table
+          [products]="productsByState()"
+          [selectedProducts]="selectedProducts()"
+          [(variantPanel)]="variantPanel"
+          (selectionToggled)="toggleSelection($event)"
+          (allToggled)="selectAll()"
+          (productKebab)="toggleProductKebab($event)"
+          (variantKebab)="getVariant($event)"
+          (selectionCleared)="clearSelection()"
+          (editProduct)="editProduct($event)"
+          (editVariant)="editVariant($event.productoId, $event.varianteId)"
+          (addVariant)="openVariantForm($event)"
+        />
+      }
 
     </div>
     <!-- END: CONTENIDO -->

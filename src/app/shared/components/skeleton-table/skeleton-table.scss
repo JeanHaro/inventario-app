@@ -1,0 +1,115 @@
+// ================================
+// SKELETON: TABLE
+// ================================
+.skeleton-table {
+  position: relative;
+
+  margin: 0 1rem;
+
+  overflow-x: scroll;
+
+  display: flex;
+  flex-direction: column;
+
+  background-color: var(--color-blanco-1);
+  border-radius: 0.5rem;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    display: none;
+  }
+
+  // ================================
+  // HEADER
+  // ================================
+  &__head {
+    position: sticky;
+    top: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    width: fit-content;
+    min-width: 100%;
+
+    background-color: var(--color-blanco-8);
+    padding: 1.6rem 0.5rem;
+    border-radius: 0.5rem;
+
+    z-index: 1;
+  }
+
+  // ================================
+  // FILAS
+  // ================================
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    width: fit-content;
+    min-width: 100%;
+
+    padding: 1.6rem 0.5rem;
+    border-bottom: 0.1rem solid var(--color-blanco-3);
+
+    // Filas pares alternadas, igual que .products__body-main:nth-child(2n)
+    &:nth-child(3n) {
+      background-color: var(--color-blanco-2);
+    }
+  }
+
+  // TD
+  &__cell {
+    flex-shrink: 0;
+  }
+
+  // Cajas animadas
+  &__box {
+    height: 1.4rem;
+    border-radius: 0.4rem;
+    width: 100%;
+
+    background: linear-gradient(
+      90deg,
+      var(--color-blanco-3) 25%,
+      var(--color-blanco-4) 50%,
+      var(--color-blanco-3) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-pulse 1.4s ease-in-out infinite;
+
+    // TH
+    &--header {
+      height: 1.1rem;
+      opacity: 0.8;
+    }
+
+    // Badge
+    &--pill {
+      justify-self: center;
+
+      width: 6rem;
+      height: 1.8rem;
+      border-radius: 2rem;
+    }
+  }
+
+  // Contenedor de acciones
+  &__icons {
+    display: flex;
+    justify-content: center;
+
+    gap: 3rem;
+  }
+
+  // Acciones
+  &__box--icon {
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 0.3rem;
+  }
+}
+
