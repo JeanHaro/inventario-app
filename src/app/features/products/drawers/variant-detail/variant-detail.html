@@ -195,7 +195,9 @@
                 [formField]="editForm.nombre"
                 placeholder="Nombre de la variante"
                 type="text"
+                (blur)="editForm.nombre().invalid() && triggerShake('nombre')"
                 [class.i--warn]="editForm.nombre().invalid() && editForm.nombre().touched()"
+                [class.i--shake]="shakingField() === 'nombre'"
                 class="variant-detail__input none input"
               >
 
@@ -220,7 +222,9 @@
                 [formField]="editForm.sku"
                 placeholder="SKU de la variante"
                 type="text"
+                (blur)="editForm.sku().invalid() && triggerShake('sku')"
                 [class.i--warn]="editForm.sku().invalid() && editForm.sku().touched() || skuServerError()"
+                [class.i--shake]="shakingField() === 'sku'"
                 class="variant-detail__input none input"
               >
 
@@ -258,9 +262,7 @@
                 <shared-select
                   [options]="variantStateOptions"
                   [value]="editModel().estado"
-                  [invalid]="editForm.estado().invalid() && editForm.estado().touched()"
                   (valueChange)="updateState($event)"
-                  (closed)="editForm.estado().markAsTouched()"
                 />
 
                 @if ( editForm.estado().invalid() && editForm.estado().touched() ) {
@@ -289,7 +291,9 @@
                 <input
                   [formField]="editForm.precioAdicional"
                   type="number"
+                  (blur)="editForm.precioAdicional().invalid() && triggerShake('precioAdicional')"
                   [class.i--warn]="editForm.precioAdicional().invalid() && editForm.precioAdicional().touched()"
+                  [class.i--shake]="shakingField() === 'precioAdicional'"
                   class="variant-detail__input none input"
                 >
 
@@ -317,7 +321,9 @@
                 <input
                   [formField]="editForm.stock"
                   type="number"
+                  (blur)="editForm.stock().invalid() && triggerShake('stock')"
                   [class.i--warn]="editForm.stock().invalid() && editForm.stock().touched()"
+                  [class.i--shake]="shakingField() === 'stock'"
                   class="variant-detail__input none input"
                 >
 

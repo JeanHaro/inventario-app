@@ -208,6 +208,7 @@ export class ProductDetail implements OnInit {
   editMode = signal<boolean>(false); // ======= Modo edición para el formulario
   saving = signal<boolean>(false);
   archiving = signal<boolean>(false);
+  shakingField = signal<string | null>(null); // Errors
 
   // Se llena al activar edición
   editModel = signal({
@@ -441,5 +442,13 @@ export class ProductDetail implements OnInit {
 
   updateCategory ( valor: string ): void {
     this.editModel.update( m => ({ ...m, categoria: valor as Category }) );
+  }
+
+  // ======================================================== ERRORS
+
+  // Método compartido para cualquier campo
+  triggerShake ( fieldName: string ): void {
+    this.shakingField.set(fieldName);
+    setTimeout(() => this.shakingField.set(null), 400);
   }
 }

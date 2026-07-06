@@ -118,6 +118,7 @@ export class VariantDetail implements OnInit {
   saving = signal<boolean>(false);
   rawServerError = signal<string | null>(null); // mensaje crudo que llega del backend
   archiving = signal<boolean>(false);
+  shakingField = signal<string | null>(null); // Errors
 
   editModel = signal({
     nombre: '',
@@ -395,5 +396,13 @@ export class VariantDetail implements OnInit {
         }
       })
     }
+  }
+
+  // ======================================================== ERRORS
+
+  // Método compartido para cualquier campo
+  triggerShake ( fieldName: string ): void {
+    this.shakingField.set(fieldName);
+    setTimeout(() => this.shakingField.set(null), 400);
   }
 }

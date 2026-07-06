@@ -44,6 +44,16 @@ img {
   animation: spin 0.8s linear infinite;
 }
 
+// Shake - Errors
+.i--shake {
+  animation: shake 0.35s ease-in-out;
+
+  // Desactivamos las animaciones por preferencia de usuario
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
 // Estado cuando esta cargando
 .is-saving {
   pointer-events: none;

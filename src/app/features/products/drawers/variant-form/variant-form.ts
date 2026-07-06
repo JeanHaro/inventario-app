@@ -89,6 +89,7 @@ export class VariantForm {
   // TODO: SIGNALS
   saving = signal<boolean>(false);
   rawServerError = signal<string | null>(null); // Mensaje crudo del backend
+  shakingField = signal<string | null>(null); // Errors
 
   editModel = signal({
     nombre: '',
@@ -293,5 +294,13 @@ export class VariantForm {
         this.rawServerError.set( err.message ?? 'Ocurrió un error al crear la variante' );
       }
     });
+  }
+
+  // ======================================================== ERRORS
+  
+  // Método compartido para cualquier campo
+  triggerShake ( fieldName: string ): void {
+    this.shakingField.set(fieldName);
+    setTimeout(() => this.shakingField.set(null), 400);
   }
 }

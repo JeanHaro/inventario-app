@@ -74,6 +74,14 @@
   }
 }
 
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-0.4rem); }
+  40%      { transform: translateX(0.4rem); }
+  60%      { transform: translateX(-0.3rem); }
+  80%      { transform: translateX(0.3rem); }
+}
+
 // SKELETONS
 @keyframes skeleton-pulse {
   0%   {

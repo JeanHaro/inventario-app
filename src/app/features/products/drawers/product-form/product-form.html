@@ -46,7 +46,9 @@
           [formField]="editForm.nombre"
           placeholder="Ingrese el nombre"
           type="text"
+          (blur)="editForm.nombre().invalid() && triggerShake('nombre')"
           [class.i--warn]="editForm.nombre().invalid() && editForm.nombre().touched()"
+          [class.i--shake]="shakingField() === 'nombre'"
           class="product-form__input none input"
         >
 
@@ -72,9 +74,10 @@
             [options]="stateOptions"
             [value]="editModel().estado"
             [invalid]="editForm.estado().invalid() && editForm.estado().touched()"
+            [class.i--shake]="shakingField() === 'estado'"
             (valueChange)="updateState($event)"
-            (closed)="editForm.estado().markAsTouched()"
-          ></shared-select>
+            (closed)="editForm.estado().markAsTouched(); editForm.estado().invalid() && triggerShake('estado')"
+          />
 
           @if ( editForm.estado().invalid() && editForm.estado().touched() ) {
             <div class="product-form__field-error">
@@ -97,8 +100,9 @@
             [options]="categoryOptions"
             [value]="editModel().categoria"
             [invalid]="editForm.categoria().invalid() && editForm.categoria().touched()"
+            [class.i--shake]="shakingField() === 'categoria'"
             (valueChange)="updateCategory($event)"
-            (closed)="editForm.categoria().markAsTouched()"
+            (closed)="editForm.categoria().markAsTouched(); editForm.categoria().invalid() && triggerShake('categoria')"
           />
 
           @if ( editForm.categoria().invalid() && editForm.categoria().touched() ) {
@@ -122,7 +126,9 @@
             [formField]="editForm.marca"
             placeholder="Marca del producto"
             type="text"
+            (blur)="editForm.marca().invalid() && triggerShake('marca')"
             [class.i--warn]="editForm.marca().invalid() && editForm.marca().touched()"
+            [class.i--shake]="shakingField() === 'marca'"
             class="product-form__input none input"
           >
 
@@ -161,7 +167,9 @@
             [formField]="editForm.precio"
             placeholder="Precio del producto"
             type="number"
+            (blur)="editForm.precio().invalid() && triggerShake('precio')"
             [class.i--warn]="editForm.precio().invalid() && editForm.precio().touched()"
+            [class.i--shake]="shakingField() === 'precio'"
             class="product-form__input none input"
           >
 
@@ -186,7 +194,9 @@
             [formField]="editForm.descuento"
             placeholder="Descuento del producto"
             type="number"
+            (blur)="editForm.descuento().invalid() && triggerShake('descuento')"
             [class.i--warn]="editForm.descuento().invalid() && editForm.descuento().touched()"
+            [class.i--shake]="shakingField() === 'descuento'"
             class="product-form__input none input"
           >
 

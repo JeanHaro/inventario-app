@@ -151,6 +151,7 @@ export class ProductForm {
 
   // TODO: SIGNALS
   saving = signal<boolean>(false);
+  shakingField = signal<string | null>(null); // Errors
 
   // Modelo del nuevo producto - se inicia vacío
   editModel = signal({
@@ -235,5 +236,13 @@ export class ProductForm {
         this.saving.set(false);
       }
     })
+  }
+
+  // ======================================================== ERRORS
+
+  // Método compartido para cualquier campo
+  triggerShake ( fieldName: string ): void {
+    this.shakingField.set(fieldName);
+    setTimeout(() => this.shakingField.set(null), 400);
   }
 }

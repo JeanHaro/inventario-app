@@ -131,7 +131,9 @@
             [formField]="editForm.nombre"
             placeholder="Nombre del producto"
             type="text"
+            (blur)="editForm.nombre().invalid() && triggerShake('nombre')"
             [class.i--warn]="editForm.nombre().invalid() && editForm.nombre().touched()"
+            [class.i--shake]="shakingField() === 'nombre'"
             class="product-detail__input none input"
           >
 
@@ -207,7 +209,9 @@
                 [formField]="editForm.marca"
                 placeholder="Marca del producto"
                 type="text"
+                (blur)="editForm.marca().invalid() && triggerShake('marca')"
                 [class.i--warn]="editForm.marca().invalid() && editForm.marca().touched()"
+                [class.i--shake]="shakingField() === 'marca'"
                 class="product-detail__input none input"
               >
 
@@ -255,7 +259,9 @@
                 [formField]="editForm.precio"
                 placeholder="Precio del producto"
                 type="number"
+                (blur)="editForm.precio().invalid() && triggerShake('precio')"
                 [class.i--warn]="editForm.precio().invalid() && editForm.precio().touched()"
+                [class.i--shake]="shakingField() === 'precio'"
                 class="product-detail__input none  input"
               >
 
@@ -284,7 +290,9 @@
                 [formField]="editForm.descuento"
                 placeholder="Descuento del producto"
                 type="number"
+                (blur)="editForm.descuento().invalid() && triggerShake('descuento')"
                 [class.i--warn]="editForm.descuento().invalid() && editForm.descuento().touched()"
+                [class.i--shake]="shakingField() === 'descuento'"
                 class="product-detail__input none input"
               >
 

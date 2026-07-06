@@ -150,6 +150,18 @@
     span {
       display: block;
     }
+
+    &-image {
+      position: relative;
+
+      font-size: 1.2rem;
+      color: var(--notif-critical-base);
+
+      span {
+        overflow-wrap: break-word;
+        word-break: break-word;
+      }
+    }
   }
 
   // Campos principales
