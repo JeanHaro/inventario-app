@@ -85,9 +85,21 @@
       padding: 0.6rem;
       border: 1px solid var(--color-blanco-8);
 
+      transition: 0.3s ease;
+
       @media (min-width: 768px) {
         font-size: 1.6rem;
         padding: 0.8rem 1.4rem;
+      }
+
+      &.active {
+        background-color: var(--color-primario);
+        border-color: var(--color-primario);
+        color: var(--color-blanco-1);
+
+        fa-icon {
+          color: var(--color-blanco-1);
+        }
       }
     }
 

@@ -20,6 +20,7 @@ import {
 // Interfaces
 import { SelectOption } from '../../shared/components/select/models/select.model';
 type Models = 'anthropic' | 'openai';
+type ActionType = 'producto' | 'variante' | 'datos';
 
 @Component({
   selector: 'app-invy',
@@ -67,6 +68,7 @@ export class Invy {
   chatActive = signal<boolean>(false);
   showHistory = signal<boolean>(false); // history
   messageText = signal<string>(''); // texarea
+  selectedAction = signal<ActionType | null>(null); // acciones
 
   // TODO: MÉTODOS PRIVADOS
   private getGreetingsByTime(): string[] {
@@ -141,5 +143,14 @@ export class Invy {
     // Resetea la altura del textarea tras enviar
     const element = this.textareaRef()?.nativeElement;
     if ( element ) element.style.height = 'auto';
+  }
+
+  // ============================================================= ACCIONES
+
+  // Selecciona una acción - si ya estaba seleccionada, se deselecciona
+  selectAction ( action: ActionType ): void {
+    this.selectedAction.set(
+      this.selectedAction() === action ? null : action
+    );
   }
 }

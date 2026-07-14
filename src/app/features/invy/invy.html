@@ -26,17 +26,32 @@
 
       <!-- ACCIONES -->
       <div class="invy__message-actions">
-        <button class="invy__message-btn btn b--white none">
+        <button
+          type="button"
+          (click)="selectAction('producto')"
+          class="invy__message-btn btn b--white none"
+          [class.active]="selectedAction() === 'producto'"
+        >
           <fa-icon [icon]="faCirclePlus"></fa-icon>
           <span>Producto</span>
         </button>
 
-        <button class="invy__message-btn b--white btn none">
+        <button
+          type="button"
+          (click)="selectAction('variante')"
+          class="invy__message-btn b--white btn none"
+          [class.active]="selectedAction() === 'variante'"
+        >
           <fa-icon [icon]="faCirclePlus"></fa-icon>
           <span>Variante</span>
         </button>
 
-        <button class="invy__message-btn b--white btn none">
+        <button
+          type="button"
+          (click)="selectAction('datos')"
+          class="invy__message-btn b--white btn none"
+          [class.active]="selectedAction() === 'datos'"
+        >
           <fa-icon [icon]="faDatabase"></fa-icon>
           <span>Datos</span>
         </button>
