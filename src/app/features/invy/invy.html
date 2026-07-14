@@ -1,0 +1,404 @@
+<!-- ================================
+  INVY
+================================ -->
+<div class="invy">
+  <div class="invy__left">
+    @if ( !chatActive() ) {
+      <h2>{{ greeting() }}</h2>
+    } @else {
+      <div class="invy__left-title">
+        <h2>Hola</h2>
+        <fa-icon [icon]="faPen"></fa-icon>
+      </div>
+    }
+
+    @if ( chatActive() ) {
+      <router-outlet />
+    }
+
+    <!-- ================================
+      INPUT
+    ================================ -->
+    <div
+      class="invy__message"
+      [class.active]="chatActive()"
+    >
+
+      <!-- ACCIONES -->
+      <div class="invy__message-actions">
+        <button class="invy__message-btn btn b--white none">
+          <fa-icon [icon]="faCirclePlus"></fa-icon>
+          <span>Producto</span>
+        </button>
+
+        <button class="invy__message-btn b--white btn none">
+          <fa-icon [icon]="faCirclePlus"></fa-icon>
+          <span>Variante</span>
+        </button>
+
+        <button class="invy__message-btn b--white btn none">
+          <fa-icon [icon]="faDatabase"></fa-icon>
+          <span>Datos</span>
+        </button>
+      </div>
+
+      <!-- TEXTAREA -->
+      <form
+        class="invy__message-textarea"
+        (ngSubmit)="sendMessage()"
+      >
+        <textarea
+          #textareaRef
+          class="none input"
+          placeholder="Pregúntale algo a Invy..."
+          [(ngModel)]="messageText"
+          [ngModelOptions]="{ standalone: true }"
+          (input)="autoResize()"
+          (keydown.enter)="onEnterPress($event)"
+          rows="1"
+        ></textarea>
+
+        <!-- Herramientas -->
+        <div class="invy__message-tools">
+
+          <div class="invy__message-tools-left">
+            <button
+              type="button"
+              class="invy__tools-btn btn none"
+            >
+              <fa-icon [icon]="faPaperClip"></fa-icon>
+              <span>Subir archivos</span>
+            </button>
+
+            <input
+              #imageTextareaRef
+              type="file"
+              accept="image/*"
+              hidden
+            >
+
+            @if ( !chatActive() ) {
+              <shared-select
+                [options]="modelOptions"
+                [value]="modelField()"
+                (valueChange)="selectModel($event)"
+              />
+            }
+          </div>
+
+          <div class="invy__message-tools-right">
+            <button
+              type="submit"
+              class="invy__tools-btn btn b--primary none"
+            >
+              <fa-icon [icon]="faArrowUp"></fa-icon>
+            </button>
+          </div>
+
+        </div>
+      </form>
+
+    </div>
+    <!-- END: INPUT -->
+
+  </div>
+
+  <!-- ================================
+    OVERLAY MOBILE
+  ================================ -->
+  <div
+    class="invy__overlay"
+    [class.active]="showHistory()"
+    (click)="showHistory.set(false)"
+  ></div>
+
+  <div
+    class="invy__right"
+    [class.active]="showHistory()"
+  >
+
+    <!-- CERRAR -->
+    <button
+      title="Historial"
+      type="button"
+      (click)="toggleHistory()"
+      class="invy__right-btn btn none b--white"
+      [class.active]="showHistory()"
+    >
+      <span class="invy__right-bar"></span>
+      <span class="invy__right-bar"></span>
+    </button>
+
+    <!-- HISTORIAL -->
+    <div class="invy__right-history">
+      <h4>Historial de conversación</h4>
+
+      <!-- ================================
+        CONVERSACIÓN ACTUAL
+      ================================ -->
+      <div class="invy__right-section invy__right-section--current">
+        <span>Actual</span>
+
+        <!-- Listas -->
+        <div class="invy__right-list">
+          <div class="invy__right-list-chat">
+            <a href="#">
+              <span>Historia 1</span>
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+        </div>
+      </div>
+      <!-- END: CONVERSACIÓN ACTUAL -->
+
+      <!-- ================================
+        CONVERSACIONES ANTERIORES
+      ================================ -->
+      <div class="invy__right-section invy__right-section--past">
+        <span>Anteriores</span>
+
+        <!-- Listas -->
+        <div class="invy__right-list">
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 2
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 3
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 4
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+          <div class="invy__right-list-chat">
+            <a href="#">
+              Historia 5
+            </a>
+
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </div>
+
+        </div>
+      </div>
+      <!-- END: CONVERSACIONES ANTERIORES -->
+
+    </div>
+
+  </div>
+</div>
+<!-- END: INVY -->
+

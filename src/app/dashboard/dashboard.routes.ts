@@ -26,6 +26,10 @@ export const DashboardRoutes: Routes = [
         loadChildren: () => import('../features/reports/reports-module').then(m => m.ReportsModule)
       },
       {
+        path: 'invy',
+        loadChildren: () => import('../features/invy/invy-module').then(m => m.InvyModule)
+      },
+      {
         path: 'profile',
         loadChildren: () => import('../features/profile/profile-module').then(m => m.ProfileModule)
       },

@@ -1,0 +1,385 @@
+// ================================
+// INVY
+// ================================
+.invy {
+  position: relative;
+
+  height: 100%;
+  max-width: 140rem;
+  margin: auto;
+
+  @media (min-width: 1440px) {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  &__left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    max-width: 75rem;
+    height: 100%;
+    margin: auto;
+
+    @media (min-width: 320px) {
+      padding: 0 1rem;
+    }
+
+    > h2 {
+      text-align: center;
+    }
+
+    &-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      text-align: left;
+      padding: 2rem 0;
+
+      max-width: 18rem;
+
+      h2 {
+        flex: 1;
+      }
+
+      fa-icon {
+        font-size: 1.4rem;
+      }
+    }
+  }
+
+  // ================================
+  // INPUT
+  // ================================
+  &__message {
+    display: flex;
+    flex-direction: column;
+
+    margin-top: 3rem;
+
+    @media (min-width: 360px) {
+      width: 100%;
+      max-width: 76rem;
+    }
+
+    &.active {
+      position: relative;
+    }
+
+    // ACCIONES
+    &-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    &-btn {
+      display: flex;
+      gap: 0.5rem;
+
+      font-size: 1.4rem;
+
+      padding: 0.6rem;
+      border: 1px solid var(--color-blanco-8);
+
+      @media (min-width: 768px) {
+        font-size: 1.6rem;
+        padding: 0.8rem 1.4rem;
+      }
+    }
+
+    // TEXTAREA
+    &-textarea {
+      position: relative;
+
+      display: flex;
+      flex-direction: column;
+
+      margin-top: 0.5rem;
+      border: 2px solid var(--color-blanco-8);
+      box-shadow: 2px -2px 4px 3px rgba(232, 234, 246, 0.6);
+      border-radius: 0.8rem;
+      background-color: var(--color-blanco-1);
+
+      overflow: hidden;
+
+      > textarea {
+        resize: none;
+        max-height: 20rem;
+        overflow-y: auto;
+        width: 100%;
+
+        padding: 1.4rem 2rem;
+
+        border: none;
+        box-shadow: none;
+
+        // Scrollbar delgado y sin flechas — Firefox
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-blanco-6) transparent;
+
+        // Scrollbar delgado y sin flechas — Chrome, Edge, Safari
+        &::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background-color: var(--color-blanco-6);
+          border-radius: 999px;
+        }
+
+        &::-webkit-scrollbar-button {
+          display: none; // ← esto quita las flechitas de arriba/abajo del scroll
+        }
+      }
+    }
+
+    // Herramientas
+    &-tools {
+      position: static;
+      padding: 0.5rem 1.5rem 1.2rem;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      font-size: 1.4rem;
+
+      @media (min-width: 768px) {
+        font-size: 1.6rem;
+      }
+
+      &-left {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+    }
+
+    .invy__tools-btn {
+      padding: 0.8rem;
+      font-size: 1.4rem;
+      margin-top: 1rem;
+
+      @media (min-width: 768px) {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        font-size: 1.6rem;
+      }
+
+      > span {
+        display: none;
+        visibility: hidden;
+
+        @media (min-width: 768px) {
+          display: block;
+          visibility: visible;
+        }
+      }
+    }
+  }
+
+  // ================================
+  // OVERLAY MOBILE
+  // ================================
+  &__overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    z-index: 8;
+
+    @media (min-width: 1440px) {
+      display: none;
+    }
+
+    &.active {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  &__right {
+    position: absolute;
+    top: 2rem;
+    right: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: transparent;
+    border-radius: 0.5rem;
+    max-width: 25rem;
+    width: 100%;
+    height: fit-content;
+    max-height: calc(100vh - 5rem);
+    padding: 1rem;
+
+    z-index: 5;
+    pointer-events: none;
+
+    transition: background-color 0.3s ease 0.35s;
+
+    @media (min-width: 1440px) {
+      max-width: 30rem;
+    }
+
+    &.active {
+      background-color: var(--color-blanco-1);
+
+      z-index: 9;
+      pointer-events: auto;
+
+      transition: background-color 0.3s ease;
+
+      .invy__right-history {
+        clip-path: circle(150% at 100% 0%);
+
+        transition: clip-path 0.45s ease 0.3s;
+      }
+    }
+
+    // CERRAR
+    &-btn {
+      align-self: flex-end;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      border: 1px solid var(--color-blanco-8);
+      box-shadow: 2px 2px 4px 3px rgba(232, 234, 246, 0.6);
+      width: 4.4rem;
+      min-height: 4.4rem;
+
+      pointer-events: auto;
+
+      &.active {
+        > span {
+          &:first-child {
+            transform: translate(0, 0) rotate(45deg);
+          }
+
+          &:nth-child(2) {
+            transform: translate(0, 0) rotate(135deg);
+          }
+        }
+      }
+
+      > span {
+        position: absolute;
+
+        width: 1.5rem;
+        height: 0.1rem;
+        background-color: var(--color-primario);
+
+        transition: transform 0.5s ease;
+
+        &:first-child {
+          transform: translate(0, 0.3rem) ;
+        }
+
+        &:nth-child(2) {
+          transform: translate(0, -0.3rem) ;
+        }
+      }
+    }
+
+    // HISTORIAL
+    &-history {
+      width: 100%;
+      padding: 2rem 1rem 1rem;
+
+      clip-path: circle(0% at 100% 0%);
+
+      transition: clip-path 0.35s ease;
+    }
+
+    // ================================
+    // CONVERSACIÓN ACTUAL Y ANTERIORES
+    // ================================
+    &-section {
+
+      // CONVERSACIONES ANTERIORES
+      &--past {
+        .invy__right-list {
+          max-height: calc(100vh - 34rem);
+          overflow: hidden;
+          overflow-y: auto;
+        }
+      }
+
+      > span {
+        display: block;
+
+        margin: 1rem 0;
+
+        font-size: 1.4rem;
+        color: var(--color-blanco-5);
+      }
+
+      a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        flex: 1;
+
+        padding: 0.5rem;
+        padding-left: 1rem;
+
+        transition: 0.5s ease;
+      }
+    }
+
+    // Listas
+    &-list {
+      display: flex;
+      flex-direction: column;
+
+      font-size: 1.4rem;
+      gap: 0.5rem;
+
+      &-chat {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        border-radius: 0.5rem;
+
+        &:hover {
+          background-color: var(--color-blanco-8);
+
+          fa-icon {
+            opacity: 1;
+          }
+        }
+
+        fa-icon {
+          padding-right: 0.5rem;
+          opacity: 0;
+
+          cursor: pointer;
+          background-color: transparent;
+          transition: 0.5s ease;
+
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+}

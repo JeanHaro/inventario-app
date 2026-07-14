@@ -53,6 +53,22 @@
         Reportes
       </span>
     </a>
+
+    <!-- ENLACE -->
+    <a
+      routerLink="invy"
+      routerLinkActive="active"
+      class="navigation__link"
+      [class.show]="showSidebar()"
+    >
+      <div class="navigation__link-icon">
+        <fa-icon [icon]="faCommentDots"></fa-icon>
+      </div>
+
+      <span class="navigation__link-text">
+        Invy
+      </span>
+    </a>
   </div>
 
   <!-- PERFIL DE USUARIO -->

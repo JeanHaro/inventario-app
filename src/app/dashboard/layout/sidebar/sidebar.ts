@@ -6,7 +6,8 @@ import {
   faBox,
   faPowerOff,
   faChevronRight,
-  faChartBar
+  faChartBar,
+  faCommentDots
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -22,6 +23,7 @@ export class Sidebar {
   readonly faPowerOff: IconDefinition = faPowerOff;
   readonly faChevronRight: IconDefinition = faChevronRight;
   readonly faChartBar: IconDefinition = faChartBar;
+  readonly faCommentDots: IconDefinition = faCommentDots;
 
   // Propiedades de salida y entrada
   showSidebar = input<boolean>(false);

@@ -1,0 +1,83 @@
+.invy {
+  // ================================
+  // CHAT
+  // ================================
+  &__chat {
+    width: 100%;
+    max-width: 75rem;
+
+    padding-top: 5rem;
+    height: calc(100vh - 33rem);
+    overflow: hidden;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+      display: none;
+    }
+
+    // BOT Y USER
+    &-bot,
+    &-user {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+
+      margin-bottom: 3rem;
+
+      > span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        margin-top: -0.6rem;
+        width: 3rem;
+        height: 3rem;
+        background-color: var(--color-primario);
+        border-radius: 50%;
+
+        color: var(--color-blanco-1);
+      }
+
+      > img {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        margin-top: -0.6rem;
+      }
+    }
+
+    &-content {
+      display: flex;
+      flex-direction: column;
+
+      flex: 1;
+
+      small {
+        margin-bottom: 1rem;
+      }
+    }
+
+    &-message {
+      background-color: var(--color-blanco-1);
+      padding: 1.5rem 2rem;
+      border-radius: 0.5rem;
+      max-width: 50rem;
+
+      &--user {
+        align-self: flex-end;
+      }
+    }
+
+    // USER
+    &-user {
+      flex-direction: row-reverse;
+
+      small {
+        align-self: flex-end;
+      }
+    }
+  }
+}
+

@@ -33,8 +33,6 @@ import { productsRoutes } from './products.routes';
 // Pipes
 import { CompactNumberPipe } from '../../shared/pipes/compact-number/compact-number.pipe';
 
-
-
 @NgModule({
   declarations: [
     Products,
