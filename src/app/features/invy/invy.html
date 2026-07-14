@@ -62,6 +62,31 @@
         class="invy__message-textarea"
         (ngSubmit)="sendMessage()"
       >
+        <!-- Preview de imágenes - arriba del textarea  -->
+        @if ( selectedImages().length > 0 ) {
+          <div class="invy__message-images">
+            @for ( url of imagePreviews(); track $index ) {
+              <div class="invy__message-image">
+                <img [src]="url" alt="Imagen adjunta" width="60" height="60">
+
+                <button
+                  type="button"
+                  (click)="removeImage($index)"
+                  class="invy__message-image-remove btn none"
+                >
+                  <fa-icon [icon]="faXmark"></fa-icon>
+                </button>
+              </div>
+            }
+          </div>
+        }
+
+        @if ( imageError() ) {
+          <div class="invy__message-image-error">
+            <span>{{ imageError() }}</span>
+          </div>
+        }
+
         <textarea
           #textareaRef
           class="none input"
@@ -79,6 +104,7 @@
           <div class="invy__message-tools-left">
             <button
               type="button"
+              (click)="openImageSelector()"
               class="invy__tools-btn btn none"
             >
               <fa-icon [icon]="faPaperClip"></fa-icon>
@@ -89,7 +115,9 @@
               #imageTextareaRef
               type="file"
               accept="image/*"
+              multiple
               hidden
+              (change)="onImagesSelected($event)"
             >
 
             @if ( !chatActive() ) {

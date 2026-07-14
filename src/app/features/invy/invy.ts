@@ -2,7 +2,10 @@ import {
   Component,
   signal,
   viewChild,
-  ElementRef
+  ElementRef,
+  computed,
+  effect,
+  untracked
 } from '@angular/core';
 
 // FontAwesome
@@ -14,7 +17,8 @@ import {
   faPaperclip,
   faSliders,
   IconDefinition,
-  faPen
+  faPen,
+  faXmark
 } from '@fortawesome/free-solid-svg-icons';
 
 // Interfaces
@@ -30,7 +34,9 @@ type ActionType = 'producto' | 'variante' | 'datos';
 })
 export class Invy {
   // TODO: VIEWCHILD
-  readonly textareaRef = viewChild<ElementRef<HTMLTextAreaElement>>('textareaRef');
+  readonly textareaRef = viewChild<ElementRef<HTMLTextAreaElement>>('textareaRef'); // textarea
+  readonly imageTextareaRef = viewChild<ElementRef<HTMLInputElement>>('imageTextareaRef'); // Imágenes
+
 
   // TODO: ICONOS
   readonly faCirclePlus: IconDefinition = faCirclePlus;
@@ -40,6 +46,7 @@ export class Invy {
   readonly faArrowUp: IconDefinition = faArrowUp;
   readonly faTrash: IconDefinition = faTrash;
   readonly faPen: IconDefinition = faPen;
+  readonly faXmark: IconDefinition = faXmark;
 
   // TODO: PROPIEDADES
   readonly modelOptions: SelectOption[] = [
@@ -56,6 +63,9 @@ export class Invy {
       label: 'OpenAI',
     }
   ];
+  private readonly VALID_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+  private readonly MAX_SIZE_MB = 5;
+  private readonly MAX_IMAGES = 5;
 
   // TODO: SIGNALS
   readonly userName = signal<string>('Jean');
@@ -69,6 +79,33 @@ export class Invy {
   showHistory = signal<boolean>(false); // history
   messageText = signal<string>(''); // texarea
   selectedAction = signal<ActionType | null>(null); // acciones
+  selectedImages = signal<File[]>([]); // Imágenes
+  imageError = signal<string | null>(null); // Imágenes
+
+  // TODO: COMPUTED
+
+  // ============================================================== IMÁGENES
+
+  // Genera las URLs de preview solo caundo cambian las imagenes seleccionadas
+  readonly imagePreviews = computed<string[]>(() =>
+    this.selectedImages().map( file => URL.createObjectURL(file) )
+  )
+
+  // TODO: EFFECTS
+
+  // ============================================================== IMÁGENES
+
+  // Libera las URLs de blob anteriores antes de generar las nuevas (evitar memory leaks)
+  private previousUrls: string[] = [];
+
+  private readonly managePreviewUrls = effect(() => {
+    this.selectedImages();
+
+    untracked(() => {
+      this.previousUrls.forEach( url => URL.revokeObjectURL(url) );
+      this.previousUrls = this.imagePreviews();
+    });
+  });
 
   // TODO: MÉTODOS PRIVADOS
   private getGreetingsByTime(): string[] {
@@ -152,5 +189,61 @@ export class Invy {
     this.selectedAction.set(
       this.selectedAction() === action ? null : action
     );
+  }
+
+  // ============================================================== IMÁGENES
+
+  // Abrir el image selector
+  openImageSelector(): void {
+    this.imageTextareaRef()?.nativeElement.click();
+  }
+
+  onImagesSelected ( event: Event ): void {
+    const input = event.target as HTMLInputElement;
+    if ( !input.files || input.files.length === 0 ) return;
+
+    this.imageError.set(null);
+
+    const nuevosArchivos = Array.from(input.files);
+    const espacioDisponible = this.MAX_IMAGES - this.selectedImages().length;
+
+    // Validación de las cantidades
+    if ( nuevosArchivos.length > espacioDisponible ) {
+
+      this.imageError.set(`Solo puedes agregar ${espacioDisponible} imagen(es) más. Máximo ${this.MAX_IMAGES} por mensaje.`);
+
+      input.value = '';
+      return;
+    }
+
+    // Validación de archivos
+    for ( const file of nuevosArchivos ) {
+
+      // Tipo de archivo
+      if ( !this.VALID_TYPES.includes(file.type) ) {
+
+        this.imageError.set(`"${file.name}" no es un formato válido.`);
+
+        input.value = '';
+        return;
+      }
+
+      // Peso deñ archivo
+      const sizeMB = file.size / (1024 * 1024);
+      if ( sizeMB > this.MAX_SIZE_MB ) {
+
+        this.imageError.set(`"${file.name}" pesa ${sizeMB.toFixed(1)}MB. El máximo es ${this.MAX_SIZE_MB}MB.`);
+
+        input.value = '';
+        return;
+      }
+    }
+
+    this.selectedImages.update( actuales => [ ...actuales, ...nuevosArchivos ] );
+    input.value = '';
+  }
+
+  removeImage ( index: number ): void {
+    this.selectedImages.update( actuales => actuales.filter( (_, i) => i !== index) )
   }
 }
