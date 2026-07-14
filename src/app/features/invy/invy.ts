@@ -18,7 +18,9 @@ import {
   faSliders,
   IconDefinition,
   faPen,
-  faXmark
+  faXmark,
+  faRobot,
+  faMicrochip,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Interfaces
@@ -52,15 +54,18 @@ export class Invy {
   readonly modelOptions: SelectOption[] = [
     {
       value: 'defecto',
-      label: 'Defecto'
+      label: 'Opciones',
+      icon: faSliders
     },
     {
       value: 'anthropic',
-      label: 'Anthropic',
+      label: 'Claude',
+      icon: faRobot
     },
     {
       value: 'openai',
       label: 'OpenAI',
+      icon: faMicrochip
     }
   ];
   private readonly VALID_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];

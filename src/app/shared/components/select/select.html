@@ -11,7 +11,19 @@
     class="select__value"
     [class.i--warn]="invalid()"
   >
-    <span>{{ selected()?.label ?? 'Seleccionar ' }}</span>
+    @if ( selected()?.icon ) {
+      <fa-icon
+        [icon]="selected()!.icon!"
+        class="select__value-icon"
+      ></fa-icon>
+      <span>
+        {{ selected()?.label ?? 'Seleccionar ' }}
+      </span>
+    } @else {
+      <span>
+        {{ selected()?.label ?? 'Seleccionar ' }}
+      </span>
+    }
     <fa-icon [icon]="faAngleDown"></fa-icon>
   </div>
 

@@ -6,7 +6,7 @@
   cursor: pointer;
 
   &.active {
-    fa-icon {
+    fa-icon:not(.select__value-icon, .select__option-icon) {
       transform: rotate(180deg);
     }
 
@@ -21,6 +21,7 @@
   &__value {
     display: flex;
     align-items: center;
+    gap: 0.6rem;
 
     width: 100%;
     border-radius: 0.5rem;
@@ -35,6 +36,11 @@
         font-weight: 300;
         color: var(--notif-critical-base);
       }
+    }
+
+    &-icon {
+      font-size: 1.2rem;
+      color: var(--color-blanco-6);
     }
 
     span {
@@ -87,6 +93,10 @@
 
   // Opcion
   &__option {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
     padding: 0.8rem 0.5rem;
     width: 100%;
 
@@ -104,6 +114,11 @@
 
     &.active {
       background-color: var(--color-blanco-4);
+    }
+
+    &-icon {
+      font-size: 1.2rem;
+      color: var(--color-blanco-6);
     }
 
     span {
