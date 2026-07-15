@@ -1,0 +1,82 @@
+<!-- ================================
+  PANEL DE HISTORIAL
+================================ -->
+<div class="invy__right" [class.active]="showHistory()">
+
+  <!-- ABRIR / CERRAR -->
+  <button
+    title="Historial"
+    type="button"
+    (click)="toggleHistory()"
+    class="invy__right-btn btn none b--white"
+    [class.active]="showHistory()"
+  >
+    <span class="invy__right-bar"></span>
+    <span class="invy__right-bar"></span>
+  </button>
+
+  <!-- HISTORIAL -->
+  <div class="invy__right-history">
+    <h4>Historial de conversación</h4>
+
+    <!-- CONVERSACIÓN ACTUAL -->
+    @if ( currentChat(); as chat ) {
+      <div class="invy__right-section invy__right-section--current">
+        <span>Actual</span>
+
+        <!-- Listas -->
+        <div class="invy__right-list">
+          <div class="invy__right-list-chat">
+            <a
+              [routerLink]="['/dashboard/invy', chat.id]"
+              (click)="showHistory.set(false)"
+            >
+              <span>{{ chat.title }}</span>
+            </a>
+
+            <fa-icon
+              [icon]="faTrash"
+              (click)="deleteChat($event, chat.id)"
+            ></fa-icon>
+          </div>
+        </div>
+      </div>
+    }
+    <!-- END: CONVERSACIÓN ACTUAL -->
+
+    <!-- CONVERSACIONES ANTERIORES -->
+    @if ( pastChats().length > 0 ) {
+      <div class="invy__right-section invy__right-section--past">
+        <span>Anteriores</span>
+
+        <!-- Listas -->
+        <div class="invy__right-list">
+          @for ( chat of pastChats(); track chat.id ) {
+            <div class="invy__right-list-chat">
+              <a
+                [routerLink]="['/dashboard/invy', chat.id]"
+                (click)="showHistory.set(false)"
+              >
+                <span>{{ chat.title }}</span>
+              </a>
+
+              <fa-icon
+                [icon]="faTrash"
+                (click)="deleteChat($event, chat.id)"
+              ></fa-icon>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    @if ( pastChats().length === 0 && !currentChat() ) {
+      <span class="invy__right-no-chats">
+        No hay chats
+      </span>
+    }
+    <!-- END: CONVERSACIONES ANTERIORES -->
+
+  </div>
+
+</div>

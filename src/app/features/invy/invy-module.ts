@@ -13,6 +13,7 @@ import { invyRoutes } from './invy.routes';
 import { Invy } from './invy';
 // Componentes - Hijo
 import { InvyChat } from './pages/invy-chat/invy-chat';
+import { InvyHistoryPanel } from './components/invy-history-panel/invy-history-panel';
 
 // Componentes - Shared
 import { Select } from '../../shared/components/select/select';
@@ -21,14 +22,19 @@ import { Select } from '../../shared/components/select/select';
 @NgModule({
   declarations: [
     Invy,
-    InvyChat
+
+    // Pages
+    InvyChat,
+
+    // Componentes hijos
+    InvyHistoryPanel
   ],
   imports: [
     CommonModule,
     FormsModule,
     FontAwesomeModule,
     Select,
-    RouterModule.forChild(invyRoutes)
+    RouterModule.forChild(invyRoutes),
   ],
 })
 export class InvyModule {}
