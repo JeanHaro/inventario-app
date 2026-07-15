@@ -30,24 +30,50 @@
 
     > h2 {
       text-align: center;
+      
+      &::after {
+        content: '|';
+        animation: blink 0.8s step-end infinite;
+      }
     }
 
     &-title {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 2rem;
 
       text-align: left;
       padding: 2rem 0;
 
-      max-width: 18rem;
+      width: fit-content;
+      max-width: calc(100% - 8rem);
+
+      @media (min-width: 768px) {
+        max-width: 80rem;
+      }
 
       h2 {
         flex: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
 
       fa-icon {
         font-size: 1.4rem;
+        flex-shrink: 0;
+        cursor: pointer;
+      }
+
+      &-input {
+        width: fit-content;
+        max-width: calc(100% - 8rem);
+
+        @media (min-width: 768px) {
+          width: 100%;
+          max-width: 80rem;
+        }
       }
     }
   }

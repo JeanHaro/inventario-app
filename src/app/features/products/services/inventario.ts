@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 
 // RxJs
@@ -22,9 +22,7 @@ import {
 // Environment
 import { environment } from '../../../../environments/environment';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class InventarioService {
   // TODO: INYECCIONES
   private http = inject(HttpClient);

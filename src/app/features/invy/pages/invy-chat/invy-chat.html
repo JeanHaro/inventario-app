@@ -2,84 +2,23 @@
   CHAT
 ================================ -->
 <div class="invy__chat">
+  @for ( msg of messages(); track $index ) {
+    <div [class]="msg.role === 'user' ? 'invy__chat-user' : 'invy__chat-bot'">
+      @if ( profileImage() ) {
+        <img [src]="profileImage()" alt="Perfil" width="32" height="32">
+      } @else {
+        <span>{{ userInitial() }}</span>
+      }
 
-  <!-- USER -->
-  <div class="invy__chat-user">
-    <span>J</span>
+      <div [class]="'invy__chat-content invy__chat-content--' + (msg.role === 'user' ? 'user' : 'bot')">
+        <small>{{ msg.role === 'user' ? userName() : 'Invy' }}</small>
 
-    <div class="invy__chat-content invy__chat-content--user">
-      <small>{{ userName() }}</small>
-
-      <div class="invy__chat-message invy__chat-message--user">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ex consequatur ad inventore, dolor voluptatum corrupti dolorem facere ut optio repudiandae excepturi suscipit blanditiis nesciunt consectetur fugiat accusantium sint consequuntur sit.
+        <div [class]="'invy__chat-message invy__chat-message--' + (msg.role === 'user' ? 'user' : 'bot')"
+        >
+          {{ msg.content }}
+        </div>
       </div>
     </div>
-  </div>
-
-  <!-- BOT -->
-  <div class="invy__chat-bot">
-    <span>I</span>
-
-    <div class="invy__chat-content invy__chat-content--bot">
-      <small>Invy</small>
-
-      <div class="invy__chat-message invy__chat-message--bot">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ex consequatur ad inventore, dolor voluptatum corrupti dolorem facere ut optio repudiandae excepturi suscipit blanditiis nesciunt consectetur fugiat accusantium sint consequuntur sit.
-      </div>
-    </div>
-  </div>
-
-  <!-- USER -->
-  <div class="invy__chat-user">
-    <span>J</span>
-
-    <div class="invy__chat-content invy__chat-content--user">
-      <small>{{ userName() }}</small>
-
-      <div class="invy__chat-message invy__chat-message--user">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ex consequatur ad inventore, dolor voluptatum corrupti dolorem facere ut optio repudiandae excepturi suscipit blanditiis nesciunt consectetur fugiat accusantium sint consequuntur sit.
-      </div>
-    </div>
-  </div>
-
-  <!-- BOT -->
-  <div class="invy__chat-bot">
-    <span>I</span>
-
-    <div class="invy__chat-content invy__chat-content--bot">
-      <small>Invy</small>
-
-      <div class="invy__chat-message invy__chat-message--bot">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ex consequatur ad inventore, dolor voluptatum corrupti dolorem facere ut optio repudiandae excepturi suscipit blanditiis nesciunt consectetur fugiat accusantium sint consequuntur sit.
-      </div>
-    </div>
-  </div>
-
-  <!-- USER -->
-  <div class="invy__chat-user">
-    <!-- <span>J</span> -->
-    <img src="./img/profile.jpg" alt="Perfil">
-
-    <div class="invy__chat-content invy__chat-content--user">
-      <small>{{ userName() }}</small>
-
-      <div class="invy__chat-message invy__chat-message--user">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ex consequatur ad inventore, dolor voluptatum corrupti dolorem facere ut optio repudiandae excepturi suscipit blanditiis nesciunt consectetur fugiat accusantium sint consequuntur sit.
-      </div>
-    </div>
-  </div>
-
-  <!-- BOT -->
-  <div class="invy__chat-bot">
-    <span>I</span>
-
-    <div class="invy__chat-content invy__chat-content--bot">
-      <small>Invy</small>
-
-      <div class="invy__chat-message invy__chat-message--bot">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ex consequatur ad inventore, dolor voluptatum corrupti dolorem facere ut optio repudiandae excepturi suscipit blanditiis nesciunt consectetur fugiat accusantium sint consequuntur sit.
-      </div>
-    </div>
-  </div>
+  }
 </div>
 <!-- END: CHAT -->

@@ -5,8 +5,16 @@ import {
   ElementRef,
   computed,
   effect,
-  untracked
+  untracked,
+  inject
 } from '@angular/core';
+
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+
+import { toSignal } from '@angular/core/rxjs-interop';
+
+// Rxjs
+import { filter } from 'rxjs';
 
 // FontAwesome
 import {
@@ -28,6 +36,10 @@ import { SelectOption } from '../../shared/components/select/models/select.model
 type Models = 'anthropic' | 'openai';
 type ActionType = 'producto' | 'variante' | 'datos';
 
+// Servicios
+import { InvyChatService } from './services/invy-chat';
+import { ChatMessage } from './models/chat.model';
+
 @Component({
   selector: 'app-invy',
   standalone: false,
@@ -35,10 +47,14 @@ type ActionType = 'producto' | 'variante' | 'datos';
   styleUrl: './invy.scss',
 })
 export class Invy {
+  // TODO: INYECCIONES
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly chatService = inject(InvyChatService)
+
   // TODO: VIEWCHILD
   readonly textareaRef = viewChild<ElementRef<HTMLTextAreaElement>>('textareaRef'); // textarea
   readonly imageTextareaRef = viewChild<ElementRef<HTMLInputElement>>('imageTextareaRef'); // Imágenes
-
 
   // TODO: ICONOS
   readonly faCirclePlus: IconDefinition = faCirclePlus;
@@ -73,21 +89,40 @@ export class Invy {
   private readonly MAX_IMAGES = 5;
 
   // TODO: SIGNALS
-  readonly userName = signal<string>('Jean');
+  // ============================================================== USER
+  readonly userName = computed(() => this.chatService.userName());
   readonly greeting = signal<string>(
     this.getGreetingsByTime()[
       Math.floor(Math.random() * this.getGreetingsByTime().length)
     ]
   );
+  displayedGreeting = signal<string>(''); // saludo letra por letra
   modelField = signal<Models | 'defecto'>('defecto');
-  chatActive = signal<boolean>(false);
+  editingTitle = signal<boolean>(false); // title
+  titleDraft = signal<string>(''); // title
   showHistory = signal<boolean>(false); // history
   messageText = signal<string>(''); // texarea
   selectedAction = signal<ActionType | null>(null); // acciones
   selectedImages = signal<File[]>([]); // Imágenes
   imageError = signal<string | null>(null); // Imágenes
 
+  // TODO: toSignal
+  // Se dispara cada vez que una navegación termina, funciona para re-leer la ruta
+  private readonly navigationEnd = toSignal(
+    this.router.events.pipe(
+      filter( e => e instanceof NavigationEnd )
+    ),
+    { initialValue: null }
+  );
+
   // TODO: COMPUTED
+
+  // ============================================================== TEXTAREA
+  // El chat está "activo" si existe un chatId en la ruta hija, sin importar cómo se llegó ahí
+  readonly chatActive = computed<boolean>(() => {
+    this.navigationEnd(); // dependencia — obliga a recalcular en cada navegación
+    return !!this.route.snapshot.firstChild?.paramMap.get('chatId');
+  });
 
   // ============================================================== IMÁGENES
 
@@ -95,6 +130,14 @@ export class Invy {
   readonly imagePreviews = computed<string[]>(() =>
     this.selectedImages().map( file => URL.createObjectURL(file) )
   )
+
+  // ============================================================== TITLE
+
+  readonly currentChatTitle = computed(() => {
+    const id = this.route.snapshot.firstChild?.paramMap.get('chatId');
+
+    return id ? this.chatService.getChat(id)?.title ?? 'Hola' : 'Hola';
+  });
 
   // TODO: EFFECTS
 
@@ -112,7 +155,13 @@ export class Invy {
     });
   });
 
+  // TODO: HOOKS
+  constructor() {
+    this.typewriterEffect();
+  }
+
   // TODO: MÉTODOS PRIVADOS
+  // ============================================================ SALUDO
   private getGreetingsByTime(): string[] {
     const hora = new Date().getHours();
 
@@ -134,6 +183,20 @@ export class Invy {
       `Buenas noches, ${this.userName()}. ¿Qué te trae por aquí?`,
       `Trabajando hasta tarde, ${this.userName()}. ¿Qué necesitas?`,
     ];
+  }
+
+  private typewriterEffect(): void {
+    const textoCompleto = this.greeting();
+    let index = 0;
+
+    const interval = setInterval(() => {
+      index++;
+      this.displayedGreeting.set( textoCompleto.slice(0, index) );
+
+      if ( index >= textoCompleto.length ) {
+        clearInterval(interval);
+      }
+    }, 35);
   }
 
   // TODO: MÉTODOS PÚBLICOS
@@ -178,11 +241,21 @@ export class Invy {
     const texto = this.messageText().trim();
     if ( !texto ) return;
 
-    console.log('Enviando mensaje:', texto); // hasta que exista el backend
+    const mensaje: ChatMessage = { role: 'user', content: texto };
+
+    const chatIdActual = this.route.snapshot.firstChild?.paramMap.get('chatId');
+
+    if ( chatIdActual ) {
+      // Ya hay una conversación activa - solo agregamos el mensaje
+      this.chatService.addMessage(chatIdActual, mensaje);
+    } else {
+      // primer mensaje - crea la conversación y navega hacia ella
+      const nuevoId = this.chatService.createChat(mensaje);
+      this.router.navigate(['dashboard', 'invy', nuevoId]);
+    }
 
     this.messageText.set('');
 
-    // Resetea la altura del textarea tras enviar
     const element = this.textareaRef()?.nativeElement;
     if ( element ) element.style.height = 'auto';
   }
@@ -248,7 +321,26 @@ export class Invy {
     input.value = '';
   }
 
+  // Remover la imagen
   removeImage ( index: number ): void {
     this.selectedImages.update( actuales => actuales.filter( (_, i) => i !== index) )
+  }
+
+  // ============================================================== TITLE
+
+  // Iniciar editando el titulo
+  startEditingTitle(): void {
+    this.titleDraft.set(this.currentChatTitle());
+    this.editingTitle.set(true);
+  }
+
+  saveTitle(): void {
+    const id = this.route.snapshot.firstChild?.paramMap.get('chatId');
+
+    if ( id && this.titleDraft().trim() ) {
+      this.chatService.renameChat(id, this.titleDraft().trim());
+    }
+
+    this.editingTitle.set(false);
   }
 }

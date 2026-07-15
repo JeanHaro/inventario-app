@@ -91,3 +91,8 @@
     background-position: -200% 0;
   }
 }
+
+// Invy - Saludo
+@keyframes blink {
+  50% { opacity: 0; }
+}
