@@ -139,6 +139,29 @@ export class Invy {
     return id ? this.chatService.getChat(id)?.title ?? 'Hola' : 'Hola';
   });
 
+  // ============================================================= HISTORY
+
+  // Obtener el id del chat
+  readonly currentChatId = computed<string | null>(() => {
+    this.navigationEnd(); //  se recalcula en cada navegación
+
+    return this.route.snapshot.firstChild?.paramMap.get('chatId') ?? null;
+  });
+
+  // Obtener el chat con el id
+  readonly currentChat = computed(() => {
+    const id = this.currentChatId();
+
+    return id ? this.chatService.getChat(id) : undefined;
+  });
+
+  // Obtener chats anteriores
+  readonly pastChats = computed(() => {
+    const currentId = this.currentChatId();
+
+    return this.chatService.chats().filter( chat => chat.id !== currentId );
+  });
+
   // TODO: EFFECTS
 
   // ============================================================== IMÁGENES
@@ -342,5 +365,21 @@ export class Invy {
     }
 
     this.editingTitle.set(false);
+  }
+
+  // ============================================================== HISTORY
+
+  // Eliminamos el chat
+  deleteChat ( event: Event, chatId: string ): void {
+    event.stopPropagation();
+    event.preventDefault();
+
+    const esElActual = this.currentChatId() === chatId;
+
+    this.chatService.deleteChat(chatId);
+
+    if ( esElActual ) {
+      this.router.navigate(['dashboard', 'invy']);
+    }
   }
 }

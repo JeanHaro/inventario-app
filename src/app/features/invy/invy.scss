@@ -30,7 +30,7 @@
 
     > h2 {
       text-align: center;
-      
+
       &::after {
         content: '|';
         animation: blink 0.8s step-end infinite;
@@ -455,9 +455,11 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 0.5rem;
 
         border-radius: 0.5rem;
 
+        &.active,
         &:hover {
           background-color: var(--color-blanco-8);
 
@@ -466,7 +468,22 @@
           }
         }
 
+        a {
+          display: flex;
+          align-items: center;
+          flex: 1;
+          min-width: 0;
+
+          span {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+        }
+
         fa-icon {
+          flex-shrink: 0;
+
           padding-right: 0.5rem;
           opacity: 0;
 
