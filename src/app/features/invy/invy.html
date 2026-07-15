@@ -140,6 +140,17 @@
           </div>
 
           <div class="invy__message-tools-right">
+            @if ( chatActive() ) {
+              <button
+                type="button"
+                routerLink="/dashboard/invy"
+                class="invy__tools-btn btn none"
+              >
+                <fa-icon [icon]="faPlus"></fa-icon>
+                <span>Nuevo chat</span>
+              </button>
+            }
+
             <button
               type="submit"
               [disabled]="!messageText().trim()"

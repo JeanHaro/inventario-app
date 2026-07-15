@@ -29,6 +29,7 @@ import {
   faXmark,
   faRobot,
   faMicrochip,
+  faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Interfaces
@@ -65,6 +66,7 @@ export class Invy {
   readonly faTrash: IconDefinition = faTrash;
   readonly faPen: IconDefinition = faPen;
   readonly faXmark: IconDefinition = faXmark;
+  readonly faPlus: IconDefinition = faPlus;
 
   // TODO: PROPIEDADES
   readonly modelOptions: SelectOption[] = [
