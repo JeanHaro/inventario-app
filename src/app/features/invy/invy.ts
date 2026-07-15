@@ -6,7 +6,8 @@ import {
   computed,
   effect,
   untracked,
-  inject
+  inject,
+  DestroyRef
 } from '@angular/core';
 
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -51,7 +52,8 @@ export class Invy {
   // TODO: INYECCIONES
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private readonly chatService = inject(InvyChatService)
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly chatService = inject(InvyChatService);
 
   // TODO: VIEWCHILD
   readonly textareaRef = viewChild<ElementRef<HTMLTextAreaElement>>('textareaRef'); // textarea
@@ -222,6 +224,8 @@ export class Invy {
         clearInterval(interval);
       }
     }, 35);
+
+    this.destroyRef.onDestroy( () => clearInterval(interval) );
   }
 
   // TODO: MÉTODOS PÚBLICOS

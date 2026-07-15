@@ -353,6 +353,8 @@
 
     // CERRAR
     &-btn {
+      position: relative;
+
       align-self: flex-end;
 
       display: flex;
@@ -470,9 +472,6 @@
         }
 
         a {
-          display: flex;
-          align-items: center;
-          flex: 1;
           min-width: 0;
 
           span {
@@ -486,7 +485,7 @@
           flex-shrink: 0;
 
           padding-right: 0.5rem;
-          opacity: 0;
+          opacity: 0.4;
 
           cursor: pointer;
           background-color: transparent;

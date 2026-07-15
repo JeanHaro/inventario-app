@@ -4,11 +4,16 @@
 <div class="invy__chat">
   @for ( msg of messages(); track $index ) {
     <div [class]="msg.role === 'user' ? 'invy__chat-user' : 'invy__chat-bot'">
-      @if ( profileImage() ) {
-        <img [src]="profileImage()" alt="Perfil" width="32" height="32">
+      @if ( msg.role === 'user' ) {
+        @if ( profileImage() ) {
+          <img [src]="profileImage()" alt="Perfil" width="32" height="32">
+        } @else {
+          <span>{{ userInitial() }}</span>
+        }
       } @else {
-        <span>{{ userInitial() }}</span>
+        <span class="invy__chat-bot-avatar">I</span>
       }
+
 
       <div [class]="'invy__chat-content invy__chat-content--' + (msg.role === 'user' ? 'user' : 'bot')">
         <small>{{ msg.role === 'user' ? userName() : 'Invy' }}</small>
