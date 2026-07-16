@@ -1,0 +1,136 @@
+<!-- ================================
+  COMPOSITOR DE MENSAJES
+================================ -->
+<div
+  class="invy__message"
+  [class.active]="chatActive()"
+>
+
+  <!-- ACCIONES -->
+  <div class="invy__message-actions">
+    <button
+      type="button"
+      (click)="selectAction('producto')"
+      class="invy__message-btn btn b--white none"
+      [class.active]="selectedAction() === 'producto'"
+    >
+      <fa-icon [icon]="faCirclePlus"></fa-icon>
+      <span>Producto</span>
+    </button>
+
+    <button
+      type="button"
+      (click)="selectAction('variante')"
+      class="invy__message-btn b--white btn none"
+      [class.active]="selectedAction() === 'variante'"
+    >
+      <fa-icon [icon]="faCirclePlus"></fa-icon>
+      <span>Variante</span>
+    </button>
+
+    <button
+      type="button"
+      (click)="selectAction('datos')"
+      class="invy__message-btn b--white btn none"
+      [class.active]="selectedAction() === 'datos'"
+    >
+      <fa-icon [icon]="faDatabase"></fa-icon>
+      <span>Datos</span>
+    </button>
+  </div>
+
+  <!-- TEXTAREA -->
+  <form
+    class="invy__message-textarea"
+    (ngSubmit)="sendMessage()"
+  >
+    <!-- Preview de imágenes -->
+    @if ( selectedImages().length > 0 ) {
+      <div class="invy__message-images">
+        @for ( url of imagePreviews(); track $index ) {
+          <div class="invy__message-image">
+            <img [src]="url" alt="Imagen adjunta" width="60" height="60">
+
+            <button
+              type="button"
+              (click)="removeImage($index)"
+              class="invy__message-image-remove btn none"
+            >
+              <fa-icon [icon]="faXmark"></fa-icon>
+            </button>
+          </div>
+        }
+      </div>
+    }
+
+    @if ( imageError() ) {
+      <div class="invy__message-image-error">
+        <span>{{ imageError() }}</span>
+      </div>
+    }
+
+    <textarea
+      #textareaRef
+      class="none input"
+      placeholder="Pregúntale algo a Invy..."
+      [(ngModel)]="messageText"
+      [ngModelOptions]="{ standalone: true }"
+      (input)="autoResize()"
+      (keydown.enter)="onEnterPress($event)"
+      rows="1"
+    ></textarea>
+
+    <!-- Herramientas -->
+    <div class="invy__message-tools">
+      <div class="invy__message-tools-left">
+        <button
+          type="button"
+          (click)="openImageSelector()"
+          class="invy__tools-btn btn none"
+        >
+          <fa-icon [icon]="faPaperClip"></fa-icon>
+          <span>Subir archivos</span>
+        </button>
+
+        <input
+          #imageTextareaRef
+          type="file"
+          accept="image/*"
+          multiple
+          hidden
+          (change)="onImagesSelected($event)"
+        >
+
+        @if ( !chatActive() ) {
+          <shared-select
+            [options]="modelOptions"
+            [value]="modelField()"
+            (valueChange)="selectModel($event)"
+          />
+        }
+      </div>
+
+      <div class="invy__message-tools-right">
+        @if ( chatActive() ) {
+          <button
+            type="button"
+            routerLink="/dashboard/invy"
+            class="invy__tools-btn btn none"
+          >
+            <fa-icon [icon]="faPlus"></fa-icon>
+            <span>Nuevo chat</span>
+          </button>
+        }
+
+        <button
+          type="submit"
+          [disabled]="!messageText().trim()"
+          class="invy__tools-btn btn b--primary none"
+        >
+          <fa-icon [icon]="faArrowUp"></fa-icon>
+        </button>
+      </div>
+    </div>
+  </form>
+
+</div>

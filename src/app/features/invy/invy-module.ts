@@ -14,6 +14,7 @@ import { Invy } from './invy';
 // Componentes - Hijo
 import { InvyChat } from './pages/invy-chat/invy-chat';
 import { InvyHistoryPanel } from './components/invy-history-panel/invy-history-panel';
+import { InvyMessageComposer } from './components/invy-message-composer/invy-message-composer';
 
 // Componentes - Shared
 import { Select } from '../../shared/components/select/select';
@@ -27,7 +28,8 @@ import { Select } from '../../shared/components/select/select';
     InvyChat,
 
     // Componentes hijos
-    InvyHistoryPanel
+    InvyHistoryPanel,
+    InvyMessageComposer,
   ],
   imports: [
     CommonModule,
