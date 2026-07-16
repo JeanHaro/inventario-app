@@ -88,6 +88,7 @@ export class Invy {
   // ============================================================== TITLE
 
   readonly currentChatTitle = computed(() => {
+    this.navigationEnd();
     const id = this.route.snapshot.firstChild?.paramMap.get('chatId');
 
     return id ? this.chatService.getChat(id)?.title ?? 'Hola' : 'Hola';
@@ -139,14 +140,34 @@ export class Invy {
     this.destroyRef.onDestroy( () => clearInterval(interval) );
   }
 
-  // TODO: MÉTODOS PÚBLICOS
+  // ============================================================= TEXTAREA
 
+  private fileToBase64 ( file: File ): Promise<string> {
+    return new Promise( ( resolve, reject ) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // TODO: MÉTODOS PÚBLICOS
 
   // ============================================================= TEXTAREA
 
   // Recibir el mensaje actual
-  onSend ( composed: ComposedMessage ): void {
-    const mensaje: ChatMessage = { role: 'user', content: composed.text };
+  async onSend ( composed: ComposedMessage ): Promise<void> {
+    const imagenes = composed.images.length > 0
+                        ? await Promise.all(
+                          composed.images.map( file => this.fileToBase64(file) )
+                        )
+                        : undefined;
+
+    const mensaje: ChatMessage = {
+      role: 'user',
+      content: composed.text,
+      images: imagenes
+    };
     const chatIdActual = this.route.snapshot.firstChild?.paramMap.get('chatId');
 
     if ( chatIdActual ) {

@@ -54,8 +54,25 @@
 
       flex: 1;
 
+      min-width: 0;
+
       small {
         margin-bottom: 1rem;
+      }
+    }
+
+    &-images {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 0.5rem;
+
+      img {
+        width: 8rem;
+        height: 8rem;
+        object-fit: cover;
+        border-radius: 0.6rem;
       }
     }
 
@@ -64,6 +81,9 @@
       padding: 1.5rem 2rem;
       border-radius: 0.5rem;
       max-width: 50rem;
+      min-width: 0;
+      overflow-wrap: break-word;
+      word-break: break-word;
 
       &--user {
         align-self: flex-end;

@@ -18,6 +18,14 @@
       <div [class]="'invy__chat-content invy__chat-content--' + (msg.role === 'user' ? 'user' : 'bot')">
         <small>{{ msg.role === 'user' ? userName() : 'Invy' }}</small>
 
+        @if ( msg.images && msg.images.length > 0 ) {
+          <div class="invy__chat-images">
+            @for ( img of msg.images; track $index ) {
+              <img [src]="img" alt="Imagen adjunta" width="120" height="120">
+            }
+          </div>
+        }
+
         <div [class]="'invy__chat-message invy__chat-message--' + (msg.role === 'user' ? 'user' : 'bot')"
         >
           {{ msg.content }}
