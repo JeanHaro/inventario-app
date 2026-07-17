@@ -9,3 +9,15 @@ export interface Chat {
   title: string;
   messages: ChatMessage[];
 }
+
+export type AiContentBlock = | { type: 'text', text: string } | { type: 'image', imageBase64: string };
+
+export interface AiChatMessage {
+  role: 'user' | 'assistant';
+  content: string | AiContentBlock[];
+}
+
+export interface AiChatResponse {
+  role: 'assistant';
+  content: string;
+}

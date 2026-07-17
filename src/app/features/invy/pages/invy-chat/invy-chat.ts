@@ -40,4 +40,8 @@ export class InvyChat {
 
   readonly messages = computed(() => this.chat()?.messages ?? []);
 
+  // ==================================================== IA
+  readonly aiLoading = computed(() =>
+    this.chatService.aiLoading()
+  )
 }

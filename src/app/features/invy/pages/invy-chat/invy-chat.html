@@ -26,9 +26,22 @@
           </div>
         }
 
-        <div [class]="'invy__chat-message invy__chat-message--' + (msg.role === 'user' ? 'user' : 'bot')"
-        >
-          {{ msg.content }}
+        <div [class]="'invy__chat-message invy__chat-message--' + (msg.role === 'user' ? 'user' : 'bot')">
+          <div [innerHTML]="msg.content | markdown"></div>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if ( aiLoading() ) {
+    <div class="invy__chat-bot">
+      <span class="invy__chat-bot-avatar">I</span>
+      <div class="invy__chat-content invy__chat-content--bot">
+        <small>Invy</small>
+        <div class="invy__chat-message invy__chat-message--bot">
+          <span class="invy__chat-typing"></span>
+          <span class="invy__chat-typing"></span>
+          <span class="invy__chat-typing"></span>
         </div>
       </div>
     </div>

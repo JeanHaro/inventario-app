@@ -19,6 +19,8 @@ import { InvyMessageComposer } from './components/invy-message-composer/invy-mes
 // Componentes - Shared
 import { Select } from '../../shared/components/select/select';
 
+// Pipes
+import { MarkdownPipe } from './pipes/markdown/markdown-pipe';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,9 @@ import { Select } from '../../shared/components/select/select';
     // Componentes hijos
     InvyHistoryPanel,
     InvyMessageComposer,
+
+    // Pipes
+    MarkdownPipe,
   ],
   imports: [
     CommonModule,

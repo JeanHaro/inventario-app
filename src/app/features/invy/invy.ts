@@ -28,8 +28,13 @@ import {
 
 // Servicios
 import { InvyChatService } from './services/invy-chat';
-import { ChatMessage } from './models/chat.model';
-import { ComposedMessage } from './components/invy-message-composer/invy-message-composer';
+
+// Interfaces
+import { AiChatMessage, AiContentBlock, ChatMessage } from './models/chat.model';
+import {
+  ActionType,
+  ComposedMessage
+} from './components/invy-message-composer/invy-message-composer';
 
 @Component({
   selector: 'app-invy',
@@ -151,6 +156,60 @@ export class Invy {
     });
   }
 
+  // ============================================================= IA
+
+  // Genera una pista de contexto según la acción seleccionada, invisible para el usuario
+  private buildContextHint ( action: ActionType | null ): string {
+    switch (action) {
+      case 'producto':
+        return '[Contexto: el usuario se refiere a un PRODUCTO general, no a una variante específica] ';
+      case 'variante':
+        return '[Contexto: el usuario se refiere a una VARIANTE específica, no al producto en general] ';
+      case 'datos':
+        return '[Contexto: el usuario está haciendo una consulta de datos/información] ';
+      default: return '';
+    }
+  }
+
+  // Convierte el historial guardado ( formato simple ) al formato multimodal que espera / chat
+  private buildHistoryForAI ( chatId: string, currentAction: ActionType | null ): AiChatMessage[] {
+    const chat = this.chatService.getChat(chatId);
+    if ( !chat ) return [];
+
+    return chat.messages.map( ( m, index ): AiChatMessage => {
+      const esElUltimo = index === chat.messages.length - 1;
+      const hint = ( esElUltimo && m.role === 'user' )
+                            ? this.buildContextHint(currentAction)
+                            : '';
+
+      if ( m.role === 'user' && m.images && m.images.length > 0 ) {
+        const blocks: AiContentBlock[] = [];
+        const textoConHint = hint + (m.content ?? '');
+
+        if ( textoConHint.trim() ) blocks.push({
+          type: 'text',
+          text: textoConHint
+        });
+
+        m.images.forEach( img => blocks.push({
+          type: 'image',
+          imageBase64: img
+          })
+        );
+
+        return {
+          role: 'user',
+          content: blocks
+        };
+      }
+
+      return {
+        role: m.role,
+        content: m.content
+      };
+    });
+  }
+
   // TODO: MÉTODOS PÚBLICOS
 
   // ============================================================= TEXTAREA
@@ -163,19 +222,41 @@ export class Invy {
                         )
                         : undefined;
 
-    const mensaje: ChatMessage = {
+    const mensajeUsuario: ChatMessage = {
       role: 'user',
       content: composed.text,
       images: imagenes
     };
-    const chatIdActual = this.route.snapshot.firstChild?.paramMap.get('chatId');
 
-    if ( chatIdActual ) {
-      this.chatService.addMessage(chatIdActual, mensaje);
+    let chatId = this.route.snapshot.firstChild?.paramMap.get('chatId');
+
+    if ( chatId ) {
+      this.chatService.addMessage(chatId, mensajeUsuario);
     } else {
-      const nuevoId = this.chatService.createChat(mensaje);
-      this.router.navigate(['dashboard', 'invy', nuevoId]);
+      chatId = this.chatService.createChat(mensajeUsuario);
+      this.router.navigate(['dashboard', 'invy', chatId]);
     }
+
+    this.chatService.aiLoading.set(true);
+
+    const historialParaIA = this.buildHistoryForAI(chatId, composed.action);
+
+    this.chatService.sendToAI(historialParaIA, composed.provider).subscribe({
+      next: ( resp ) => {
+        this.chatService.addMessage(chatId!, {
+          role: 'assistant',
+          content: resp.content
+        });
+        this.chatService.aiLoading.set(false);
+      },
+      error: () => {
+        this.chatService.addMessage(chatId!, {
+          role: 'assistant',
+          content: 'Ocurrió un error al conectar con el asistente. Intente de nuevo.'
+        });
+        this.chatService.aiLoading.set(false);
+      }
+    })
   }
 
   // ============================================================== TITLE

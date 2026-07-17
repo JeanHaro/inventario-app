@@ -1,8 +1,26 @@
-import { effect, Service, signal } from '@angular/core';
-import { Chat, ChatMessage } from '../models/chat.model';
+import {
+  effect,
+  inject,
+  Service,
+  signal
+} from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+// RxJs
+import { Observable } from 'rxjs';
+
+// Interfaces
+import { AiChatMessage, AiChatResponse, Chat, ChatMessage } from '../models/chat.model';
+
+// Environment
+import { environment } from '../../../../environments/environment';
+
 
 @Service()
 export class InvyChatService {
+  // TODO: INYECCIONES
+  private readonly http = inject(HttpClient);
+
   // TODO: PROPIEDADES
   private readonly STORAGE_KEY = 'invy-chats';
 
@@ -10,6 +28,7 @@ export class InvyChatService {
   userName = signal<string>('Jean');
   profileImage = signal<string | null>(null);
   chats = signal<Chat[]>(this.loadFromStorage());
+  aiLoading = signal<boolean>(false);
 
   // TODO: HOOKS
   constructor() {
@@ -75,5 +94,12 @@ export class InvyChatService {
             : chat
       )
     );
+  }
+
+  sendToAI ( messages: AiChatMessage[], provider: 'openai' | 'anthropic' ): Observable<AiChatResponse> {
+    return this.http.post<AiChatResponse>(`${environment.apiUrl}/chat`, {
+      messages,
+      provider
+    })
   }
 }

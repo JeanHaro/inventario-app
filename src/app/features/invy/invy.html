@@ -22,14 +22,19 @@
       }
     }
 
-    @if ( chatActive() ) {
-      <router-outlet />
-    }
+    <div
+      class="invy__main-content"
+      [class.active]="chatActive()"
+    >
+      @if ( chatActive() ) {
+        <router-outlet />
+      }
 
-    <invy-message-composer
-      [chatActive]="chatActive()"
-      (send)="onSend($event)"
-    />
+      <invy-message-composer
+        [chatActive]="chatActive()"
+        (send)="onSend($event)"
+      />
+    </div>
 
   </div>
 

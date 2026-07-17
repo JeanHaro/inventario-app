@@ -27,12 +27,13 @@ import {
 
 // Interfaces
 import { SelectOption } from '../../../../shared/components/select/models/select.model';
-type ActionType = 'producto' | 'variante' | 'datos';
+export type ActionType = 'producto' | 'variante' | 'datos';
 type Models = 'anthropic' | 'openai';
 export interface ComposedMessage {
   text: string;
   action: ActionType | null;
   images: File[];
+  provider: 'anthropic' | 'openai'
 }
 
 @Component({
@@ -146,7 +147,8 @@ export class InvyMessageComposer {
     this.send.emit({
       text: texto,
       action: this.selectedAction(),
-      images: this.selectedImages()
+      images: this.selectedImages(),
+      provider: this.modelField() === 'defecto' ? 'openai' : this.modelField() as 'openai' | 'anthropic',
     });
 
     this.messageText.set('');

@@ -22,6 +22,7 @@
     width: 100%;
     max-width: 80rem;
     height: 100%;
+    overflow: hidden;
     margin: auto;
 
     @media (min-width: 320px) {
@@ -75,6 +76,17 @@
           max-width: 80rem;
         }
       }
+    }
+  }
+
+  &__main-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    &.active {
+      flex: 1;
+      min-height: 0;
     }
   }
 
