@@ -1,0 +1,19 @@
+<!-- ================================
+  OTP
+================================ -->
+<div class="otp-input">
+  @for ( i of indexes(); track i ) {
+    <input
+      #box
+      type="text"
+      inputmode="numeric"
+      maxlength="1"
+      autocomplete="one-time-code"
+      class="otp-input__box"
+      [value]="digits()[i]"
+      (input)="onInput($event, i)"
+      (keydown)="onKeydown($event, i)"
+      (paste)="onPaste($event)"
+    >
+  }
+</div>

@@ -11,6 +11,11 @@
 
   @media (min-width: 768px) {
     font-size: 1.6rem;
+    height: 5rem;
+  }
+
+  &.i--hidden {
+    background-color: transparent;
   }
 
   &.i--terciary {

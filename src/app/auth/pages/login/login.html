@@ -1,0 +1,147 @@
+<!-- ================================
+  LOGIN
+================================ -->
+@if ( step() === 'credenciales' ) {
+  <form
+    (ngSubmit)="onSubmit()"
+    class="login"
+    [class.is-saving]="saving()"
+    novalidate
+  >
+    <h2>Accede a tu cuenta</h2>
+
+    <!-- ================================
+      CAMPOS
+    ================================ -->
+    <div class="login__fields">
+
+      <!-- EMAIL -->
+      <div class="login__field login__field--email">
+        <input
+          [formField]="loginForm.email"
+          id="email"
+          class="none input i--hidden"
+          [class.active]="!!loginForm.email().value()"
+          [class.i--warn]="loginForm.email().invalid() && loginForm.email().touched()"
+          [class.i--shake]="shakingField() === 'email'"
+          type="email"
+          autocomplete="email"
+          (blur)="loginForm.email().invalid() && triggerShake('email')"
+        >
+        <label for="email">Correo electrónico</label>
+        <fa-icon [icon]="faEnvelopeOpen"></fa-icon>
+
+        @if ( loginForm.email().invalid() && loginForm.email().touched() ) {
+          <div class="login__field-error">
+            @for ( error of loginForm.email().errors(); track error.kind ) {
+              <span>{{ error.message }}</span>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- CONTRASEÑA -->
+      <div class="login__field login__field--password">
+        <input
+          [formField]="loginForm.password"
+          id="password"
+          class="none input i--hidden"
+          [class.active]="!!loginForm.password().value()"
+          [class.i--warn]="loginForm.password().invalid() && loginForm.password().touched()"
+          [class.i--shake]="shakingField() === 'password'"
+          type="password"
+          autocomplete="current-password"
+          (blur)="loginForm.password().invalid() && triggerShake('password')"
+        >
+        <label for="password">Contraseña</label>
+        <fa-icon [icon]="faLock"></fa-icon>
+
+        @if ( loginForm.password().invalid() && loginForm.password().touched() ) {
+          <div class="login__field-error">
+            @for ( error of loginForm.password().errors(); track error.kind ) {
+              <span>{{ error.message }}</span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+    <!-- END: CAMPOS -->
+
+    <!-- ================================
+      ACCIONES
+    ================================ -->
+    <div class="login__actions">
+      <!-- RECORDARME -->
+      <div class="login__remember-me">
+        <input type="checkbox" id="remember-me">
+
+        <label for="remember-me">
+          <fa-icon [icon]="faCheck"></fa-icon>
+          <span>Recordarme</span>
+        </label>
+      </div>
+
+      <!-- OLVIDASTE TU CONTRASEÑA -->
+      <div class="login__forgot">
+        <a href="#">¿Olvidaste tu contraseña?</a>
+      </div>
+    </div>
+    <!-- END: ACCIONES -->
+
+    <button
+      class="none btn b--primary"
+      type="submit"
+      [disabled]="saving() || loginForm().invalid()"
+    >
+      @if ( saving() ) {
+        <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
+        <span>Ingresando...</span>
+      } @else {
+        <span>Ingresar</span>
+      }
+    </button>
+  </form>
+  <!-- END: LOGIN -->
+}
+
+@if ( step() === 'otp' ) {
+  <!-- ================================
+    OTP
+  ================================ -->
+  <div class="login login--otp">
+    <h2>Verifica tu cuenta</h2>
+
+    <p class="login__otp-hint">
+      Te enviamos un código de verificación a tu correo electrónico.<br>
+      Revisalo y digítalo a continuación para continuar.
+    </p>
+
+    <shared-otp-input
+      [length]="6"
+      (codeChange)="onOtpChange($event)"
+      (completed)="onOtpCompleted($event)"
+    />
+
+    @if ( otpError() ) {
+      <div class="login__otp-error">
+        <span>{{ otpError() }}</span>
+      </div>
+    }
+
+    <button
+      class="none btn b--primary"
+      type="button"
+      [disabled]="verifyingOtp() || otpCode().length < 6"
+      (click)="verifyOtp()"
+    >
+      @if ( verifyingOtp() ) {
+        <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
+        <span>Verificando...</span>
+      } @else {
+        <span>Confirmar código</span>
+      }
+    </button>
+  </div>
+  <!-- END: otp -->
+}
+
