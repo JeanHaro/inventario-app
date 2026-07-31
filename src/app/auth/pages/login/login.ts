@@ -40,11 +40,14 @@ export class Login {
 
   // conecta el loginModel para las reglas de validacion
   loginForm = form(this.loginModel, (schemaPath) => {
-    required(schemaPath.email, { message: 'El correo es obligatorio' });
-    required(schemaPath.password, { message: 'La contraseña es obligatorio' });
     validate(schemaPath.email, ({ value }) => {
       const email = value().trim();
-      if ( email.length === 0 ) return null; // El required ya cubre el vacío
+      if ( email.length === 0 ) {
+        return {
+          kind: 'required',
+          message: 'El correo es obligatorio y no puede contener valores en blanco'
+        }
+      } // El required ya cubre el vacío
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if ( !emailRegex.test(email) ) {
@@ -52,6 +55,17 @@ export class Login {
           kind: 'invalidEmail',
           message: 'Ingresa un correo válido'
         };
+      }
+
+      return null;
+    });
+
+    validate(schemaPath.password, ({ value }) => {
+      if ( value().trim().length === 0 ) {
+        return {
+          kind: 'required',
+          message: 'La contraseña es obligatoria y no puede contener valores en blanco'
+        }
       }
 
       return null;

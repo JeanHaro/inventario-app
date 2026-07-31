@@ -64,6 +64,10 @@
         position: relative !important;
 
         margin-top: 1rem;
+
+        &.invalid {
+          color: var(--notif-critical-base);
+        }
       }
     }
 

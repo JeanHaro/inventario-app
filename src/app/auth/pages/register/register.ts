@@ -51,15 +51,27 @@ export class Register {
 
   // Conecta el registerModel con las reglas de validacion
   registerForm = form(this.registerModel, (schemaPath) => {
-    required(schemaPath.username, { message: 'El username es obligatorio' });
-    required(schemaPath.email, { message: 'El correo es obligatorio' });
-    required(schemaPath.password, { message: 'La contraseña es obligatoria' });
-    required(schemaPath.confirmPassword, { message: 'Confirma la contraseña' });
     required(schemaPath.role, { message: 'Selecciona un rol' });
+
+    validate(schemaPath.username, ({ value }) => {
+      if (value().trim().length === 0) {
+        return {
+          kind: 'required',
+          message: 'El username es obligatorio y no puede contener valores en blanco'
+        };
+      }
+
+      return null;
+    });
 
     validate(schemaPath.email, ({ value }) => {
       const email = value().trim();
-      if ( email.length === 0 ) return null; // El required ya cubre el vacío
+      if (email.length === 0) {
+        return {
+          kind: 'required',
+          message: 'El correo es obligatorio y no puede contener valores en blanco'
+        };
+      }
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if ( !emailRegex.test(email) ) {
@@ -74,13 +86,29 @@ export class Register {
 
     validate(schemaPath.password, ({ value }) => {
       const password = value();
-      if ( password.length === 0 ) return null; // El required ya cubre el vacio
+      if (password.trim().length === 0) {
+        return {
+          kind: 'required',
+          message: 'La contraseña es obligatoria y no puede contener valores en blanco'
+        };
+      }
 
       if ( password.length < 8 ) {
         return {
           kind: 'tooShort',
           message: 'Debe tener al menos 8 caracteres'
         }
+      }
+
+      return null;
+    });
+
+    validate(schemaPath.confirmPassword, ({ value }) => {
+      if (value().trim().length === 0) {
+        return {
+          kind: 'required',
+          message: 'Confirma la contraseña'
+        };
       }
 
       return null;

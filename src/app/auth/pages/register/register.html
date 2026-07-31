@@ -40,7 +40,7 @@
 
     <!-- ROL -->
     <div class="register__field register__field--role">
-      <fa-icon [icon]="faUserShield"></fa-icon>
+      <fa-icon [icon]="faUserShield" [class.invalid]="registerForm.role().invalid() && registerForm.role().touched()"></fa-icon>
       <shared-select
         [width]="'20rem'"
         [options]="roleOptions"
