@@ -16,10 +16,10 @@ import { Register } from './pages/register/register';
 
 // Componentes - Shared
 import { OtpInput } from '../shared/components/otp-input/otp-input';
+import { Select } from '../shared/components/select/select';
 
 // Rutas
 import { AuthRoutes } from './auth.routes';
-
 
 @NgModule({
   declarations: [
@@ -35,6 +35,7 @@ import { AuthRoutes } from './auth.routes';
 
     // Shared
     OtpInput,
+    Select,
 
     // Rutas
     RouterModule.forChild(AuthRoutes),

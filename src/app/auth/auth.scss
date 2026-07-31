@@ -8,20 +8,77 @@
 
   overflow-y: scroll;
 
-  @media (min-height: 800px) {
-    grid-template-rows: repeat(2, 1fr);
+  &::-webkit-scrollbar {
+    width: 0.8rem;
+  }
 
-    min-height: 100vh;
+  /* Fondo de la barra */
+  &::-webkit-scrollbar-track {
+    background-color: var(--color-blanco-2);
+  }
+
+  /* El deslizador */
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-blanco-5);
+    border-radius: 0.5rem;
+  }
+
+  /* Cambio de color al pasar el mouse */
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-blanco-6);
+  }
+
+  &.auth--register {
+
+    @media (max-width: 767px) {
+      @media (min-height: 1024px) {
+        grid-template-rows: 1fr 1.4fr;
+
+        min-height: 100vh;
+      }
+    }
+
+    .auth__content {
+      min-height: 60rem;
+    }
+  }
+
+  &:not(.auth--register) {
+    @media (max-width: 767px) {
+      @media (min-height: 840px) {
+        grid-template-rows: 1fr 1.4fr;
+
+        min-height: 100vh;
+      }
+    }
   }
 
   @media (min-width: 768px) {
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(80rem, 1fr);
+    grid-template-rows: minmax(95rem, 1fr);
 
     height: 100vh;
 
     overflow-y: auto;
     overflow-x: hidden;
+
+    @media (max-height: 1024px) {
+      &.auth--register {
+        grid-template-rows: minmax(115rem, 1fr);
+      }
+    }
+  }
+
+  @media (min-width: 1024px) {
+    &:not(.auth--register) {
+      grid-template-rows: minmax(80rem, 1fr);
+    }
+  }
+
+  @media (min-width: 1440px) {
+    @media (max-height: 1024px) {
+      grid-template-rows: minmax(95rem, 1fr) !important;
+    }
   }
 
   // IMG
@@ -63,7 +120,9 @@
   &__content {
     background-color: var(--color-blanco-2);
     border-radius: 3rem 3rem 0 0;
-    min-height: 30rem;
+    min-width: 28rem;
+    min-height: 50rem;
+    height: 100%;
 
     @media (min-width: 768px) {
       clip-path: polygon(100% 0, 100% 100%, 0 100%);

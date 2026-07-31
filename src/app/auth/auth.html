@@ -1,7 +1,10 @@
 <!-- ================================
   AUTH
 ================================ -->
-<main class="auth">
+<main
+  class="auth"
+  [class.auth--register]="isRegisterRoute()"
+>
   <!-- IMG  -->
   <div class="auth__img">
     <img src="./img/login.svg" alt="">

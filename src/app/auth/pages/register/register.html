@@ -1,1 +1,159 @@
-<p>register works!</p>
+<!-- ================================
+  REGISTER
+================================ -->
+<form
+  class="register"
+  [class.is-saving]="saving()"
+  novalidate
+  (ngSubmit)="onSubmit()"
+>
+  <h2>Registrar nuevo usuario</h2>
+
+  <!-- ================================
+    CAMPOS
+  ================================ -->
+  <div class="register__fields">
+    <!-- USERNAME -->
+    <div class="register__field register__field--username">
+      <input
+        [formField]="registerForm.username"
+        id="username"
+        class="none input i--hidden"
+        [class.active]="!!registerForm.username().value()"
+        [class.i--warn]="registerForm.username().invalid() && registerForm.username().touched()"
+        [class.i--shake]="shakingField() === 'username'"
+        type="text"
+        autocomplete="username"
+        (blur)="registerForm.username().invalid() && triggerShake('username')"
+      >
+      <label for="username">Username</label>
+      <fa-icon [icon]="faUser"></fa-icon>
+
+      @if (registerForm.username().invalid() && registerForm.username().touched()) {
+        <div class="register__field-error">
+          @for (error of registerForm.username().errors(); track error.kind) {
+            <span>{{ error.message }}</span>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- ROL -->
+    <div class="register__field register__field--role">
+      <fa-icon [icon]="faUserShield"></fa-icon>
+      <shared-select
+        [width]="'20rem'"
+        [options]="roleOptions"
+        [value]="registerModel().role"
+        [invalid]="registerForm.role().invalid() && registerForm.role().touched()"
+        [class.i--shake]="shakingField() === 'role'"
+        (valueChange)="updateRole($event)"
+        (closed)="registerForm.role().markAsTouched(); registerForm.role().invalid() && triggerShake('role')"
+      />
+
+      @if (registerForm.role().invalid() && registerForm.role().touched()) {
+        <div class="register__field-error">
+          @for (error of registerForm.role().errors(); track error.kind) {
+            <span>{{ error.message }}</span>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- EMAIL -->
+    <div class="register__field register__field--email">
+      <input
+        [formField]="registerForm.email"
+        id="email"
+        class="none input i--hidden"
+        [class.active]="!!registerForm.email().value()"
+        [class.i--warn]="registerForm.email().invalid() && registerForm.email().touched()"
+        [class.i--shake]="shakingField() === 'email'"
+        type="email"
+        autocomplete="email"
+        (blur)="registerForm.email().invalid() && triggerShake('email')"
+      >
+      <label for="email">Correo electrónico</label>
+      <fa-icon [icon]="faEnvelopeOpen"></fa-icon>
+
+      @if (registerForm.email().invalid() && registerForm.email().touched()) {
+        <div class="register__field-error">
+          @for (error of registerForm.email().errors(); track error.kind) {
+            <span>{{ error.message }}</span>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- CONTRASEÑA -->
+    <div class="register__field register__field--password">
+      <input
+        [formField]="registerForm.password"
+        id="password"
+        class="none input i--hidden"
+        [class.active]="!!registerForm.password().value()"
+        [class.i--warn]="registerForm.password().invalid() && registerForm.password().touched()"
+        [class.i--shake]="shakingField() === 'password'"
+        type="password"
+        autocomplete="new-password"
+        (blur)="registerForm.password().invalid() && triggerShake('password')"
+      >
+      <label for="password">Contraseña</label>
+      <fa-icon [icon]="faLock"></fa-icon>
+
+      @if (registerForm.password().invalid() && registerForm.password().touched()) {
+        <div class="register__field-error">
+          @for (error of registerForm.password().errors(); track error.kind) {
+            <span>{{ error.message }}</span>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- CONFIRMAR CONTRASEÑA -->
+    <div class="register__field register__field--confirm-password">
+      <input
+        [formField]="registerForm.confirmPassword"
+        id="confirm-password"
+        class="none input i--hidden"
+        [class.active]="!!registerForm.confirmPassword().value()"
+        [class.i--warn]="registerForm.confirmPassword().touched() && (registerForm.confirmPassword().invalid() || passwordMismatch())"
+        [class.i--shake]="shakingField() === 'confirmPassword'"
+        type="password"
+        autocomplete="new-password"
+        (blur)="triggerShake('confirmPassword')"
+      >
+      <label for="confirm-password">Confirmar contraseña</label>
+      <fa-icon [icon]="faLock"></fa-icon>
+
+      @if (registerForm.confirmPassword().touched() && registerForm.confirmPassword().invalid()) {
+        <div class="register__field-error">
+          @for (error of registerForm.confirmPassword().errors(); track error.kind) {
+            <span>{{ error.message }}</span>
+          }
+        </div>
+      }
+
+      @if (registerForm.confirmPassword().touched() && passwordMismatch()) {
+        <div class="register__field-error">
+          <span>Las contraseñas no coinciden</span>
+        </div>
+      }
+    </div>
+  </div>
+  <!-- END: CAMPOS -->
+
+  <button
+    class="none btn b--primary"
+    type="submit"
+    [disabled]="saving() || registerForm().invalid() || passwordMismatch()"
+  >
+    @if (saving()) {
+      <fa-icon [icon]="faSpinner" class="spin"></fa-icon>
+      <span>Creando...</span>
+    } @else {
+      <span>Crear usuario</span>
+    }
+  </button>
+</form>
+<!-- END: REGISTER -->
