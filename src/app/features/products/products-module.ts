@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { FormField } from '@angular/forms/signals';
 
+// FontAwesome
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 // Componente Padre
@@ -53,6 +54,7 @@ import { CompactNumberPipe } from '../../shared/pipes/compact-number/compact-num
     FormsModule,
     FormField,
     FontAwesomeModule,
+
     // Shared
     Select,
     SkeletonTable,

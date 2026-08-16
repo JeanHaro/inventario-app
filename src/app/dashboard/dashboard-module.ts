@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+
+// FontAwesome
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 // Componentes
@@ -18,7 +20,6 @@ import { ProfileMenu } from './layout/sidebar/components/profile-menu/profile-me
 // Rutas
 import { DashboardRoutes } from './dashboard.routes';
 
-
 @NgModule({
   declarations: [
     DashboardLayout,
@@ -33,6 +34,8 @@ import { DashboardRoutes } from './dashboard.routes';
   imports: [
     CommonModule,
     FontAwesomeModule,
+
+    // Rutas
     RouterModule.forChild(DashboardRoutes)],
 })
 export class DashboardModule {}

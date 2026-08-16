@@ -40,7 +40,11 @@ import { MarkdownPipe } from './pipes/markdown/markdown-pipe';
     CommonModule,
     FormsModule,
     FontAwesomeModule,
+
+    // Shared
     Select,
+
+    // Rutas
     RouterModule.forChild(invyRoutes),
   ],
 })

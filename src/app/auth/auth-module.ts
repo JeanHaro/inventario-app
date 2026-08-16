@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { FormField } from "@angular/forms/signals";
 
-// Font Awesome
+// FontAwesome
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 // Componentes

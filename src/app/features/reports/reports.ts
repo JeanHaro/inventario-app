@@ -1,12 +1,26 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  signal
+} from '@angular/core';
+
+import { ChartType } from 'chart.js';
 
 // Servicios
-import { InventarioService } from '../products/services/inventario';
 import { ReportService } from './services/report';
 
-// Modelos
-import { CATEGORY_LIST, Product } from '../products/models/products.model';
-import { InventoryReport, InventoryStats } from './models/report.model';
+// Interfaces
+import {
+  SelectOption
+} from '../../shared/components/select/models/select.model';
+
+import {
+  KpiCategory,
+  KpiChartConfig,
+  KpiPeriod
+} from './models/kpi.model';
+
 
 @Component({
   selector: 'app-reports',
@@ -14,78 +28,76 @@ import { InventoryReport, InventoryStats } from './models/report.model';
   templateUrl: './reports.html',
   styleUrl: './reports.scss',
 })
-export class Reports implements OnInit {
-  // ==========================
-  // Inyecciones
-  // ==========================
-  private inventarioService = inject(InventarioService);
-  private reportService = inject(ReportService);
+export class Reports {
+  // TODO: INYECCIONES
+  private readonly reportService = inject(ReportService);
 
-  // ==========================
-  // Propiedades
-  // ==========================
-
-  allProducts: Product[] = [];
-  categorias: string[] = [
-    'Todas',
-    ...CATEGORY_LIST
+  // TODO: PROPIEDADES
+  readonly periodOptions: SelectOption[] = [
+    { value: 'dia', label: 'Hoy' },
+    { value: 'semana', label: 'Esta semana' },
+    { value: 'mes', label: 'Este mes' }
   ];
 
-  categoriaSeleccionada = signal<string>('Todas');
-  reportTitle = signal<string>('');
-  // Reportes guardados
-  savedReports = signal<InventoryReport[]>([]);
+  readonly categoryOptions: SelectOption[] = [
+    { value: 'inventario', label: 'Inventario' },
+    { value: 'catalogo', label: 'Catálogo' },
+    { value: 'precios', label: 'Precios' },
+    { value: 'actividad', label: 'Actividad' }
+  ];
 
-  // ==========================
-  // Ciclo de vida
-  // ==========================
-  ngOnInit(): void {
-    this.inventarioService.getProducts().subscribe({
-      next: ( resp ) => this.allProducts = resp
-    });
+  // TODO: SIGNAL
+  selectedPeriod = signal<KpiPeriod>('dia');
+  selectedCategory = signal<KpiCategory>('inventario');
 
-    this.savedReports.set(this.reportService.getReports());
-  }
+  // TODO: COMPUTED
 
-  // ==========================
-  // Propiedades computadas
-  // ==========================
-
-  // Productos filtrados según la categoría seleccionada
-  productosFiltrados = computed(() => {
-    if (this.categoriaSeleccionada() === 'Todas') return this.allProducts;
-    return this.allProducts.filter( p => p.categoria === this.categoriaSeleccionada() );
-  });
-
-  // Estadísticas calculadas siempre sobre los productos filtrados
-  stats = computed<InventoryStats>(() =>
-    this.reportService.generateStats(this.productosFiltrados())
+  // Se recalcula automáticamente cuando cambia el periodo y categoría seleccionada
+  readonly kpis = computed(() => {
+    switch ( this.selectedCategory() ) {
+      case 'inventario':
+        return this.reportService.getInventoryKpis(this.selectedPeriod());
+      case 'catalogo':
+        return this.reportService.getCatalogKpis(this.selectedPeriod());
+      case 'precios':
+        return this.reportService.getPricingKpis(this.selectedPeriod());
+      case 'actividad':
+        return this.reportService.getActivityKpis(this.selectedPeriod());
+      }
+    }
   );
 
-  // ==========================
-  // Métodos
-  // ==========================
-  onCategoriaChange( categoria: string ): void {
-    this.categoriaSeleccionada.set(categoria);
+  // Se recalcula automáticamente cuando cambia el periodo y categoría seleccionada
+  readonly charts = computed<KpiChartConfig[]>(() => {
+    switch ( this.selectedCategory() ) {
+      case 'inventario':
+        return this.reportService.getInventoryCharts(this.selectedPeriod());
+      case 'catalogo':
+        return this.reportService.getCatalogCharts(this.selectedPeriod());
+      case 'precios':
+        return this.reportService.getPricingCharts(this.selectedPeriod());
+      case 'actividad':
+        return this.reportService.getActivityCharts(this.selectedPeriod());
+    }
+  });
+
+  readonly periodTitle = computed<string>(() => {
+  switch ( this.selectedPeriod() ) {
+    case 'dia':    return 'Reportes del día';
+    case 'semana': return 'Reportes semanales';
+    case 'mes':    return 'Reportes mensuales';
+  }
+});
+
+  // TODO: MÉTODOS PÚBLICOS
+
+  // Actualizar el valor del select del periodo
+  updatePeriod ( valor: string ): void {
+    this.selectedPeriod.set(valor as KpiPeriod);
   }
 
-  onSaveReport(): void {
-    const title = this.reportTitle().trim();
-    if (!title) return;
-
-    const activeFilters = this.categoriaSeleccionada() !== 'Todas'
-      ? [this.categoriaSeleccionada()]
-      : [];
-
-    this.reportService.saveReport(title, this.stats(), ...activeFilters);
-
-    this.savedReports.set(this.reportService.getReports());
-    this.reportTitle.set('');
-  }
-
-  onDeleteReport( id: number ): void {
-    this.reportService.deleteReport(id);
-
-    this.savedReports.set([...this.reportService.getReports()]);
+  // Actualizar el valor del select de las áreas
+  updateCategory ( valor: string ): void {
+    this.selectedCategory.set(valor as KpiCategory);
   }
 }

@@ -1,0 +1,44 @@
+<!-- ================================
+  CARD
+================================ -->
+<div class="kpi-card">
+  <!-- ================================
+    ICON
+  ================================ -->
+  @if ( icon() ) {
+    <fa-icon
+      [icon]="icon()!"
+      class="kpi-card__icon"
+    ></fa-icon>
+  }
+
+  <!-- ================================
+    CONTENT
+  ================================ -->
+  <div class="kpi-card__content">
+
+    <!-- DATA -->
+    <div class="kpi-card__data">
+      <h4 class="kpi-card__label">{{ label() }}</h4>
+
+      <div class="kpi-card__value">
+        {{ value() }} <small>{{ unit() }}</small>
+      </div>
+    </div>
+
+    <!-- TREND -->
+    <span
+      class="kpi-card__trend"
+      [class.kpi-card__trend--up]="-1 > 0"
+      [class.kpi-card__trend--down]="-1 < 0"
+    >
+      @if ( trend() !== null ) {
+        {{ trend()! > 0 ? '↑' : '↓' }}
+        {{ trend()! | number: '1.0-1' }}%
+      }
+    </span>
+
+  </div>
+
+</div>
+<!-- END: CARD -->

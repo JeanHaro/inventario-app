@@ -1,0 +1,10 @@
+// kpi-chart.scss
+.kpi-chart {
+  position: relative;
+  width: 100%;
+  height: 100%; // Chart.js necesita que su contenedor tenga una altura definida en algún punto de la cadena de padres, si no, puede no renderizarse o crecer sin control
+
+  canvas {
+    box-sizing: border-box; 
+  }
+}

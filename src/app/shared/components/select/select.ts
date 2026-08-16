@@ -9,7 +9,8 @@ import {
   viewChild
 } from '@angular/core';
 
-// Font Awesome
+
+// FontAwesome
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   IconDefinition,
