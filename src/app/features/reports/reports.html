@@ -29,8 +29,13 @@
     KPIS
   ================================ -->
   <div class="reports__kpis">
-    @for ( kpi of kpis(); track kpi.label ) {
+    @for (
+      kpi of kpis();
+      track selectedCategory() + '-' + selectedPeriod() + '-' + kpi.label;
+      let i = $index;
+    ) {
       <kpi-card
+        [style.animation-delay.ms]="i * 80"
         [label]="kpi.label"
         [value]="kpi.value"
         [unit]="kpi.unit ?? ''"
@@ -46,12 +51,17 @@
   ================================ -->
   <div class="reports__charts">
 
-    @for ( chart of charts(); track chart.title ) {
+    @for (
+      chart of charts();
+      track selectedCategory() + '-' + selectedPeriod() + '-' + chart.title;
+      let i = $index
+    ) {
       <!-- CHART -->
       <div
         class="reports__chart"
         [class.reports__chart--wide]="chart.type === 'bar'"
         [class.reports__chart--extra-wide]=" chart.type === 'line'"
+        [style.animation-delay.ms]="i * 80"
       >
         <h4>{{ chart.title }}</h4>
 
