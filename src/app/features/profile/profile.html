@@ -1,1 +1,270 @@
-<p>profile works!</p>
+<!-- ================================
+  PROFILE
+================================ -->
+<div class="profile">
+
+  <div class="profile__left">
+    <!-- ================================
+      ACERCA DE MI
+    ================================ -->
+    <div class="profile__about-me">
+
+      <!-- RESUMEN -->
+      <div class="profile__summary">
+        <img class="profile__avatar" src="./img/profile.jpg" alt="Foto de perfil">
+        <h3 class="profile__name">Jean Haro</h3>
+        <span class="profile__email">jeanch447@gmail.com</span>
+        <span class="profile__role">super_admin</span>
+        <a class="profile__link" routerLink="/profile">Editar perfil</a>
+
+        <!-- Estadisticas -->
+        <div class="profile__stats">
+
+          <div class="profile__stat">
+            <span class="profile__stat-value">10</span>
+            <span class="profile__stat-label">Acciones</span>
+          </div>
+
+          <div class="profile__stat">
+            <span class="profile__stat-value">13</span>
+            <span class="profile__stat-label">Productos creados</span>
+          </div>
+
+        </div>
+      </div>
+      <!-- END: RESUMEN -->
+
+      <!-- INFORMACIÓN GENERAL -->
+      <div class="profile__general">
+        <h3>Información general</h3>
+
+        <!-- Campos -->
+        <dl class="profile__fields">
+
+          <div class="profile__field">
+            <dt class="profile__field-label">Nombres</dt>
+            <dd class="profile__field-value">Jean Carlos</dd>
+          </div>
+
+          <div class="profile__field">
+            <dt class="profile__field-label">Apellidos</dt>
+            <dd class="profile__field-value">Haro Luyo</dd>
+          </div>
+
+          <div class="profile__field">
+            <dt class="profile__field-label">Teléfono</dt>
+            <dd class="profile__field-value">+51 943 940 788</dd>
+          </div>
+
+          <div class="profile__field">
+            <dt class="profile__field-label">País</dt>
+            <dd class="profile__field-value">Perú</dd>
+          </div>
+
+          <div class="profile__field">
+            <dt class="profile__field-label">Departamento</dt>
+            <dd class="profile__field-value">Lima</dd>
+          </div>
+
+          <div class="profile__field">
+            <dt class="profile__field-label">Distrito</dt>
+            <dd class="profile__field-value">Los Olivos</dd>
+          </div>
+
+          <div class="profile__field">
+            <dt class="profile__field-label">Estado</dt>
+            <dd class="profile__field-value">Activo</dd>
+          </div>
+
+          <div class="profile__field">
+            <dt class="profile__field-label">Fecha de creación</dt>
+            <dd class="profile__field-value">05/07/26 16:15</dd>
+          </div>
+
+          <div class="profile__field">
+            <dt class="profile__field-label">Actualizado el</dt>
+            <dd class="profile__field-value">16/07/26 20:23</dd>
+          </div>
+
+        </dl>
+
+      </div>
+      <!-- END: INFORMACIÓN GENERAL -->
+
+    </div>
+    <!-- END: ACERCA DE MI -->
+
+    <!-- ================================
+      ACTIVIDADES
+    ================================ -->
+    <div class="profile__activities">
+
+      <!-- TABS -->
+      <div class="profile__tabs">
+
+        <button class="none btn profile__tab">
+          Mis actividades
+        </button>
+
+        <button class="none btn profile__tab">
+          Actividades generales
+        </button>
+
+        <button class="none btn profile__tab">
+          Actividades con IA
+        </button>
+
+        <!-- Indicador animado -->
+        <div class="product__tab-indicator"></div>
+
+      </div>
+
+      <!-- CONTENIDO DE ACTIVIDADES -->
+      <div class="profile__activities-content">
+
+        <!-- Timeline -->
+        <div class="profile__activity-timeline">
+          @for ( activity of activities(); track activity.id ) {
+            <!-- Item -->
+            <div
+              class="profile__activity-item"
+              [class]="'profile__activity-item--' + activity.tipo"
+            >
+              <!-- Icono -->
+              <div class="profile__activity-icon">
+                <fa-icon [icon]="activity.icono"></fa-icon>
+              </div>
+
+              <!-- Cuerpo -->
+              <div class="profile__activity-row">
+
+                <div class="profile__activity-type">
+                  <span>{{ activity.tipoLabel }}</span>
+                </div>
+
+                <div class="profile__activity-target">
+                  <span class="profile__activity-label">Elemento</span>
+                  <span class="profile__activity-value">
+                    {{ activity.elementoNombre }}
+                  </span>
+                </div>
+
+                <div class="profile__activity-detail">
+                  <span class="profile__activity-label">Detalle</span>
+                  <span class="profile__activity-value">
+                    {{ activity.detalle }}
+                  </span>
+                </div>
+
+                @if ( showUsers() ) {
+                  <div class="profile__activity-user">
+                    <span class="profile__activity-label">Usuario</span>
+                    <span class="profile__activity-value">
+                      {{ activity.usuarioNombre }}</span>
+                  </div>
+                }
+
+                <div class="profile__activity-date">
+                  <span>{{ activity.fecha }}</span>
+                </div>
+
+                <button
+                  type="button"
+                  (click)="viewActivityDetails(activity.id)"
+                  class="none btn profile__activity-btn"
+                >
+                  <fa-icon [icon]="faEye"></fa-icon>
+                  <span>Ver</span>
+                </button>
+
+              </div>
+              <!-- END: Cuerpo -->
+
+            </div>
+          } @empty {
+            <div class="profile__activities-empty">
+              <span>No hay actividades para mostrar</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+    <!-- END: ACTIVIDADES -->
+
+  </div>
+
+  <div class="profile__right">
+
+    <!-- ================================
+      ACCESOS
+    ================================ -->
+    <div class="profile__access">
+      <h4>Accesos de super admin</h4>
+
+      <a href="#">
+        <fa-icon [icon]="faUsers"></fa-icon>
+        Ver todos los usuarios
+      </a>
+
+      <a href="#">
+        <fa-icon [icon]="faUserPlus"></fa-icon>
+        Crear usuario
+      </a>
+    </div>
+    <!-- END: ACCESOS -->
+
+    <!-- ================================
+      SISTEMA
+    ================================ -->
+    <div class="profile__system">
+      <h4>Resumen del sistema</h4>
+
+      <div class="profile__stats">
+
+        <div class="profile__stat">
+          <span class="profile__stat-label">Usuarios activos</span>
+          <span class="profile__stat-value">4</span>
+        </div>
+
+        <div class="profile__stat">
+          <span class="profile__stat-label">Productos creados</span>
+          <span class="profile__stat-value">5</span>
+        </div>
+
+        <div class="profile__stat">
+          <span class="profile__stat-label">Stock bajo</span>
+          <span class="profile__stat-value">2</span>
+        </div>
+
+      </div>
+
+    </div>
+    <!-- END: SISTEMA -->
+
+    <!-- ================================
+      CONFIGURACIÓN
+    ================================ -->
+    <div class="profile__settings">
+      <h4>Configuración</h4>
+
+      <a href="#">
+        <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>
+        Configuración 1
+      </a>
+
+      <a href="#">
+        <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>
+        Configuración 2
+      </a>
+
+      <a href="#">
+        <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>
+        Configuración 3
+      </a>
+
+    </div>
+    <!-- END: CONFIGURACIÓN -->
+
+  </div>
+
+</div>
