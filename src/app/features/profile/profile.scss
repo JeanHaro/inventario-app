@@ -1,0 +1,83 @@
+// ================================
+// PROFILE
+// ================================
+.profile {
+  display: flex;
+  flex-direction: column;
+
+
+  padding: 2rem;
+  height: calc(100vh - 15rem);
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  // Scrollbar
+
+  // Chrome - Edge - Safari
+  &::-webkit-scrollbar {
+    width: 1rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-blanco-4);
+    border-radius: 99.9rem;
+    border: 0.2rem solid var(--color-blanco-1);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-blanco-5);
+  }
+
+  // Quitamos las flechas del scrll
+  &::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  // ================================
+  // ACERCA DE MI
+  // ================================
+  &__about-me {
+    display: flex;
+    flex-direction: column;
+  }
+
+  // Resumen
+  &__summary {
+    display: flex;
+    flex-direction: column;
+
+    background-color: var(--color-blanco-1);
+    padding: 2rem;
+    border-radius: 0.8rem;
+    box-shadow: 1px 1px 8px 1px rgba(0, 0, 0, 0.1);
+
+    img {
+      border-radius: 50%;
+      width: 12rem;
+      height: 12rem;
+      margin: 0 auto 2rem;
+    }
+
+    h3,
+    span,
+    a {
+      text-align: center;
+    }
+  }
+
+  &__email {
+    margin: 0.5rem 0;
+    font-size: 1.4rem;
+  }
+
+  &__role {
+    width: fit-content;
+    margin: auto;
+  }
+}
+
